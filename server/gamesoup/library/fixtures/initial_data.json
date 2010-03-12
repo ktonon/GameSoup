@@ -1,0 +1,467 @@
+[
+    {
+        "pk": 1, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "An empty interface. If you have an object of type any, then you don't know anything about it.", 
+            "signature": "", 
+            "methods": [], 
+            "is_built_in": false, 
+            "name": "Any"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "Represents a value that doesn't contain anything.", 
+            "signature": "", 
+            "methods": [], 
+            "is_built_in": true, 
+            "name": "Nothing"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "A true or false value", 
+            "signature": "", 
+            "methods": [], 
+            "is_built_in": true, 
+            "name": "Boolean"
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "A sequence of characters.", 
+            "signature": "", 
+            "methods": [], 
+            "is_built_in": true, 
+            "name": "String"
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "A floating point decimal number.", 
+            "signature": "", 
+            "methods": [], 
+            "is_built_in": true, 
+            "name": "Float"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "A whole number either negative, zero, or positive.", 
+            "signature": "", 
+            "methods": [], 
+            "is_built_in": true, 
+            "name": "Integer"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "A cell is a unit of a board.", 
+            "signature": "", 
+            "methods": [], 
+            "is_built_in": false, 
+            "name": "Cell"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "Represents a bound executable piece of code that returns a value.", 
+            "signature": "Any call()\r\n", 
+            "methods": [
+                6
+            ], 
+            "is_built_in": false, 
+            "name": "Function"
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "For collections of objects, allows each object in the collection to be visited one at a time.", 
+            "signature": "Nothing each(Function visitor)", 
+            "methods": [
+                10
+            ], 
+            "is_built_in": false, 
+            "name": "Iterable"
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "Represents an procedure that can be called at specific points during game play. Actions can be hooked up to a target object, given a specific event name. When the target fires the event, the action is called.", 
+            "signature": "Nothing call()\r\n", 
+            "methods": [
+                12
+            ], 
+            "is_built_in": false, 
+            "name": "Action"
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "A collection of cells. For any two cells, you can ask the question \"Are these two cells adjacent?\" Note that if A and B are adjacent the B and A are adjacent.", 
+            "signature": "Boolean areAdjacent(Cell a, Cell b)\r\nIterable adjacentTo(Cell a)\r\n", 
+            "methods": [
+                17, 
+                16
+            ], 
+            "is_built_in": false, 
+            "name": "Board"
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "A object which can be asked a \"yes\" or \"no\" question.", 
+            "signature": "Boolean call()", 
+            "methods": [
+                13
+            ], 
+            "is_built_in": false, 
+            "name": "Predicate"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "Like standing in a line. New things get enqueued to the end and the oldest things get dequeued from the front.", 
+            "signature": "Nothing enqueue(Any object)\r\nAny dequeue()", 
+            "methods": [
+                4, 
+                3
+            ], 
+            "is_built_in": false, 
+            "name": "Queue"
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "Both readable and writeable.", 
+            "signature": "String read()\r\nNothing write(String w)", 
+            "methods": [
+                7, 
+                8
+            ], 
+            "is_built_in": false, 
+            "name": "ReadWrite"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "Can be converted to a string by reading it.", 
+            "signature": "String read()", 
+            "methods": [
+                7
+            ], 
+            "is_built_in": false, 
+            "name": "Readable"
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "An object which can receive a value and then do something with it.", 
+            "signature": "Nothing receive(Any object)", 
+            "methods": [
+                14
+            ], 
+            "is_built_in": false, 
+            "name": "Receiver"
+        }
+    }, 
+    {
+        "pk": 21, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "Represents an object which must be registered before it can be used.", 
+            "signature": "Nothing register()\r\n", 
+            "methods": [
+                11
+            ], 
+            "is_built_in": false, 
+            "name": "Registerable"
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "Is visible during gameplay.", 
+            "signature": "Nothing render()", 
+            "methods": [
+                9
+            ], 
+            "is_built_in": false, 
+            "name": "Renderable"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "Like a stack of plates. The last plate you pushed onto the stack is the first plate to be popped off.", 
+            "signature": "Nothing push(Any object)\r\nAny pop()\r\n", 
+            "methods": [
+                2, 
+                1
+            ], 
+            "is_built_in": false, 
+            "name": "Stack"
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "A object which can be used to validate strings, answering \"yes\" or \"no\".", 
+            "signature": "Boolean isValid(String w)", 
+            "methods": [
+                15
+            ], 
+            "is_built_in": false, 
+            "name": "StringValidator"
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "Can be updated by writing a string.", 
+            "signature": "Nothing write(String w)", 
+            "methods": [
+                8
+            ], 
+            "is_built_in": false, 
+            "name": "Writable"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                1
+            ], 
+            "code": "",
+            "name": "Button", 
+            "parameters": [], 
+            "visible": true, 
+            "signature": "", 
+            "has_state": false, 
+            "description": "A simple push button. Connect actions to its \"click\" event to make it useful."
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                1, 
+                20, 
+                11, 
+                14, 
+                12
+            ], 
+            "code": "",
+            "name": "TextInput", 
+            "parameters": [
+                10, 
+                9
+            ], 
+            "visible": true, 
+            "signature": "Integer width\r\nFloat scale\r\n", 
+            "has_state": false, 
+            "description": "For entering text."
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                1, 
+                14
+            ], 
+            "code": "",
+            "name": "Label", 
+            "parameters": [
+                11
+            ], 
+            "visible": true, 
+            "signature": "String value", 
+            "has_state": false, 
+            "description": "A simple way to place text on the screen. The value never changes throughout the game."
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                1, 
+                15, 
+                4, 
+                18, 
+                14, 
+                3
+            ], 
+            "code": "",
+            "name": "List", 
+            "parameters": [], 
+            "visible": true, 
+            "signature": "", 
+            "has_state": true, 
+            "description": "A vertical sequence of items that can be updated during the game."
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                1, 
+                11, 
+                18, 
+                14, 
+                12
+            ], 
+            "code": "",
+            "name": "TextField", 
+            "parameters": [], 
+            "visible": true, 
+            "signature": "", 
+            "has_state": true, 
+            "description": "A text output field that can be updated during the game."
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                1, 
+                19
+            ], 
+            "code": "",
+            "name": "WordOnBoardPath", 
+            "parameters": [
+                21, 
+                20
+            ], 
+            "visible": false, 
+            "signature": "Readable word\r\nBoard board\r\n", 
+            "has_state": false, 
+            "description": "Give a word, can a sequence of adjacent cells be found on a board where letters on those cells spell out the word?"
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                1, 
+                7, 
+                14
+            ], 
+            "code": "exported.HexagonalGrid = Class.create({\n\tinitialize: function(radius) {\n\t\tthis._radius = radius;\n\t},\n\t/********************************************************/\n\t/* Interface\n\t/********************************************************/\n\trender: function() {\n\t\t\n\t},\n\tadjacentTo: function(cell) {\n\t\t\n\t},\n\tareAdjacent: function(a, b) {\n\t\t\n\t}\n});\n", 
+            "name": "HexagonalGrid", 
+            "parameters": [
+                19
+            ], 
+            "visible": true, 
+            "signature": "Integer radius", 
+            "has_state": true, 
+            "description": "A board in which each cell is shaped like a hexagon."
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                1, 
+                7, 
+                14
+            ], 
+            "code": "exported.SquareGrid = Class.create({\n\tinitialize: function(node) {\n\t\tthis._node = $(node);\n\t\tthis._colCount = this._node.down('.argument[name=colCount]').getAttribute('value');\n\t\tthis._rowCount = this._node.down('.argument[name=rowCount]').getAttribute('value');\n\t\t// this._initializeDOM();\n\t},\n\t_initializeDOM: function() {\n\t\tthis._node = new Element('div');\n\t\tthis._node.addClassName('board')\n\t\tthis._node.addClassName('square-grid');\n\t},\n\t/********************************************************/\n\t/* Interface\n\t/********************************************************/\n\tadjacentTo: function(cell) {\n\t\t\n\t},\n\tareAdjacent: function(a, b) {\n\t\t\n\t}\n});\n", 
+            "name": "SquareGrid", 
+            "parameters": [
+                18, 
+                17
+            ], 
+            "visible": true, 
+            "signature": "Integer rowCount\r\nInteger colCount", 
+            "has_state": true, 
+            "description": "A board arranged in rows and columns."
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                1, 
+                21
+            ], 
+            "code": "",
+            "name": "EventConnection", 
+            "parameters": [
+                23, 
+                24, 
+                22
+            ], 
+            "visible": false, 
+            "signature": "Any observed\r\nAction action\r\nString event\r\n", 
+            "has_state": false, 
+            "description": "Call an action when an observed object fires an event."
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                16, 
+                1
+            ], 
+            "code": "",
+            "name": "SubmitStringWithCheck", 
+            "parameters": [
+                14, 
+                13, 
+                15
+            ], 
+            "visible": false, 
+            "signature": "ReadWrite source\r\nReceiver destination\r\nStringValidator validator\r\n", 
+            "has_state": false, 
+            "description": "Action that reads a string from a source and if it is ok, sends it to a receiver. The source is cleared."
+        }
+    }
+]
