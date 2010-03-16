@@ -4,6 +4,7 @@ Storing collections of types and their configuration data to create compeleted g
 
 
 import re
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
 from django.db.models.signals import *
@@ -29,6 +30,11 @@ class Game(models.Model):
 
     def possible_settings_for(self, variable):
         return self.object_set.filter(type__implements=variable.interface)
+
+    def get_assembler_link(self):
+        return '<a href="%s" title="Assemble this game">Objects: %d</a>' % (reverse('games:assemble_game', args=[self.id]), self.object_set.count())
+    get_assembler_link.short_description = 'Assembler'
+    get_assembler_link.allow_tags = True
 
 
 class Object(models.Model):

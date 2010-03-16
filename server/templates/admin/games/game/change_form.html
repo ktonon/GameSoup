@@ -1,0 +1,5 @@
+{% extends "admin/change_form_custom.html" %}
+
+{% block extra-object-tools %}
+<li><a href="{% url games:assemble_game object_id %}">Assemble</a></li>
+{% endblock extra-object-tools %}

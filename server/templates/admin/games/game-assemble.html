@@ -1,0 +1,8 @@
+{% extends "admin/games/base.html" %}
+
+{% block bc_inner %}
+{{ block.super }}
+&rsaquo; <a href="{% url admin:games_game_changelist %}">Games</a>
+&rsaquo; <a href="{% url admin:games_game_change game.id %}">{{ game }}</a>
+&rsaquo; Assemble game
+{% endblock bc_inner %}
