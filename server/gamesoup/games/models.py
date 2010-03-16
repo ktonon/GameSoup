@@ -36,6 +36,12 @@ class Game(models.Model):
     get_assembler_link.short_description = 'Assembler'
     get_assembler_link.allow_tags = True
 
+    def is_empty(self):
+        return self.object_set.count() == 0
+    
+    def palette_query(self):
+        return 'instances__game=%d' % self.id
+
 
 class Object(models.Model):
     '''
