@@ -20,5 +20,6 @@ admin.site.register(Game, GameAdmin)
 #         (None, {'fields': ('game', 'type', 'x', 'y', 'width', 'height', 'satisfied', 'per_player')}),
 #         )
 #     list_display = ('id', 'game', 'type', 'x', 'y', 'width', 'height', 'satisfied', 'per_player')
-#     inlines = [BindingInline]
+#     raw_id_fields = ('game', 'type')
+#     # inlines = [BindingInline]
 # admin.site.register(Object, ObjectAdmin)

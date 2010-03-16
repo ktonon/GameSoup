@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'gamesoup.games',
     'gamesoup.matches',
     
+    'alphacabbage.django.helpers',
     # 'studyplay.people',
     # 'gamesoup.library',
     # 'studyplay.play',

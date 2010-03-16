@@ -10,7 +10,7 @@
 {% block coltype %}colMS{% endblock coltype %}
 
 {% block content %}
-<div class="content-main">
+<div id="content-main">
     <div class="module {{ error|yesno:"errors," }}">
         <h2>{{ error|yesno:"Failure!,Success!" }}</h2>
         {% if bu_messages %}

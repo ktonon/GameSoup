@@ -1,8 +1,34 @@
 {% extends "admin/games/base.html" %}
+{% load adminmedia helpers %}
 
 {% block bc_inner %}
 {{ block.super }}
 &rsaquo; <a href="{% url admin:games_game_changelist %}">Games</a>
 &rsaquo; <a href="{% url admin:games_game_change game.id %}">{{ game }}</a>
-&rsaquo; Assemble game
+&rsaquo; Assemble {{ game.name.lower }}
 {% endblock bc_inner %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" charset="utf-8" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" charset="utf-8" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" charset="utf-8" src="{% media_url %}js/lib/prototype.js"></script>
+<script type="text/javascript" charset="utf-8" src="{% media_url %}js/lib/effects.js"></script>
+<script type="text/javascript" charset="utf-8" src="{% media_url %}js/lib/dragdrop.js"></script>
+{% endblock extrahead %}
+
+{% block content %}
+<div id="content-main">
+    <ul class="object-tools">
+        <li>
+            {# Take advantage of Django's Related object lookup feature. JavaScript to search for an object using the django admin interface (in a popup window) and set a field with its ID already exists, so we'll hook into this and take over once the ID has been set. #}
+            {# The input and the link are connected by their id fields. The link must be the same as the input, with "lookup_" as a prefix. #}
+            <input id="id_browse" value="" style="display: none" />
+            <a id="lookup_id_browse" class="addlink" onclick="return showRelatedObjectLookupPopup(this);" href="{% url admin:library_type_changelist %}" title="Instantiate a new object by browsing through the available types.">Browse</a>
+        </li>
+        <li><a id="search-link" class="addlink" href="." title="Instantiate a new object by searching using objects already in your game.">Search</a></li>
+    </ul>
+    
+    
+</div>
+{% endblock content %}
