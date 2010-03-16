@@ -1,5 +1,4 @@
 from django.db import models
-from gamesoup.library.choices import *
 
 
 class SignatureManager(models.Manager):

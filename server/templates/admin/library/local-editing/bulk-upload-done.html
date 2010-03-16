@@ -1,0 +1,14 @@
+{% extends "admin/base_site.html" %}
+
+
+{% block content %}
+<h2>{{ error|yesno:"Failure!,Success!" }}</h2>
+{% if bu_messages %}
+<h3>Please note the following</h3>
+<ul>
+{% for message in bu_messages %}
+	<li>{{ message|safe }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock content %}

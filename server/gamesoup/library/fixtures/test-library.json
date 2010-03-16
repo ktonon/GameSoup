@@ -1,0 +1,66 @@
+[
+    {
+        "pk": 1, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "A built-in interface", 
+            "signature": "", 
+            "methods": [], 
+            "is_built_in": true, 
+            "name": "BuiltIn"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "An empty interface", 
+            "signature": "", 
+            "methods": [], 
+            "is_built_in": false, 
+            "name": "Empty"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "An interface with a single method", 
+            "signature": "BuiltIn method1()", 
+            "methods": [
+                1
+            ], 
+            "is_built_in": false, 
+            "name": "OneMethod"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "An interface with two methods", 
+            "signature": "BuiltIn method1()\nEmpty method2(BuiltIn param)\n", 
+            "methods": [
+                1,
+                2
+            ], 
+            "is_built_in": false, 
+            "name": "TwoMethods"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                3
+            ], 
+            "code": "",
+            "name": "SimpleType", 
+            "visible": false, 
+            "signature": "", 
+            "has_state": false, 
+            "description": ""
+        }
+    }
+]

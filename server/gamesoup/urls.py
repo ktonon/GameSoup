@@ -8,6 +8,14 @@ urlpatterns = patterns('',
     # Example:
     # (r'^gamesoup/', include('gamesoup.foo.urls')),
 
+    # User authentication
+    url(r'^login/$', 'django.contrib.auth.views.login', name='login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
+    
+    # Admin site:
+    # includes views for the library and games apps
+    (r'^admin/games/', include('gamesoup.games.urls')),
+    (r'^admin/library/', include('gamesoup.library.urls')),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),
 )

@@ -15,7 +15,6 @@ class Game(models.Model):
     A collection of modules and configuration that defines a Disposition game.
     '''
     name = models.CharField(max_length=50)
-    slug = models.SlugField()
     description = models.TextField(blank=True)
 
     class Meta:
@@ -37,7 +36,7 @@ class Object(models.Model):
     An instance of a type.
     '''
     game = models.ForeignKey(Game)
-    type = models.ForeignKey(Type)
+    type = models.ForeignKey(Type, related_name='instances')
     x = models.IntegerField(default=0)
     y = models.IntegerField(default=0)
     width = models.IntegerField(default=4)

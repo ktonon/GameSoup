@@ -20,7 +20,7 @@ class Interface(models.Model):
     '''
     name = IdentifierField()
     description = models.TextField(blank=True)
-    methods = models.ManyToManyField('Method', related_name='used_in_interface', blank=True, editable=False)
+    methods = models.ManyToManyField('Method', related_name='used_in', blank=True, editable=False)
     signature = SignatureField(parse_interface_signature, verbose_name='Methods', multiline=True, blank=True)
     is_built_in = models.BooleanField(default=False)
 
@@ -50,7 +50,7 @@ class Type(models.Model):
     name = IdentifierField()
     description = models.TextField(blank=True)
     implements = models.ManyToManyField('Interface', limit_choices_to={'is_built_in': False}, blank=True, related_name='implemented_by', help_text='Interfaces implemented by this type.')
-    parameters = models.ManyToManyField('Variable', related_name='parameter_of_type', blank=True, editable=False)
+    parameters = models.ManyToManyField('Variable', related_name='parameter_of', blank=True, editable=False)
     signature = SignatureField(parse_type_signature, verbose_name='Parameters', multiline=True, blank=True)
     visible = models.BooleanField(default=True)
     has_state = models.BooleanField(default=False)
