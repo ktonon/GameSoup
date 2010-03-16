@@ -6,6 +6,18 @@ from gamesoup.library.local_editing import pack_types, unpack_types
 from gamesoup.library.models import *
 
 
+###############################################################################
+# LOCAL EDITING
+
+
+@staff_member_required
+def local_editing(request):
+    context = {
+        'title': 'Local editing',
+    }
+    return render_to_response('admin/library/local-editing/index.html', context)
+
+
 @staff_member_required
 def bulk_download(request):
     response = HttpResponse(mimetype='application/x-tar')
@@ -26,7 +38,7 @@ def bulk_upload(request):
                 messages = [str(e)]
                 error = True
             context = {
-                'title': 'Bulk Upload Done',
+                'title': 'Bulk upload',
                 'bu_messages': messages,
                 'error': error,
             }
@@ -34,7 +46,7 @@ def bulk_upload(request):
     else:
         form = BulkUploadForm()
     context = {
-        'title': 'Bulk Upload',
+        'title': 'Bulk upload',
         'form': form,
     }
     return render_to_response('admin/library/local-editing/bulk-upload.html', context)

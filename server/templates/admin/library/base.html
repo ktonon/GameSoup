@@ -1,0 +1,6 @@
+{% extends "admin/base_custom.html" %}
+
+{% block bc_inner %}
+{{ block.super }}
+&rsaquo; <a href="{% url admin:app_list "library" %}">Library</a>
+{% endblock bc_inner %}

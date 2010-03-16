@@ -1,11 +1,33 @@
-{% extends "admin/base_site.html" %}
+{% extends "admin/library/local-editing/base.html" %}
+{% load adminmedia %}
+
+{% block bc_inner %}
+{{ block.super }}
+&rsaquo; Bulk upload
+{% endblock bc_inner %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />{% endblock %}
 
 {% block content %}
-<p>Please upload your tarball.</p>
-<form action="." method="post" enctype="multipart/form-data">
-	<table>
-		{{ form }}
-		<tr><td>&nbsp;</td><td><input type="submit" value="Upload" /></td></tr>
-	</table>
-</form>
+<div class="content-main">
+    <form action="." method="post" enctype="multipart/form-data">
+        <div>
+            {% if form.errors %}<p class="errornote">Please correct the error below.</p>{% endif %}
+            <ul class="errorlist">{% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}</ul>
+            <fieldset class="module aligned">
+                <div class="form-row tarball {{ form.tarball.errors|yesno:"errors," }}">
+                    {{ form.tarball.errors }}
+                    <div>
+                        <label class="required" for="id_tarball">{{ form.tarball.label }}:</label>
+                        {{ form.tarball }}
+                        <p class="help">{{ form.tarball.help_text }}</p>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="submit-row">
+                <input class="default" type="submit" name="_save" value="Upload" />
+            </div>
+        </div>
+    </form>        
+</div>
 {% endblock content %}

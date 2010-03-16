@@ -18,11 +18,11 @@ class Interface(models.Model):
     '''
     A set of public methods available on instances of an object.
     '''
-    name = IdentifierField()
-    description = models.TextField(blank=True)
+    name = IdentifierField(help_text='A unique name. Should be specified using MixedCase with no spaces.')
+    description = models.TextField(blank=True, help_text='This will serve as a human-readable, searchable account of this interface. Make this very detailed, because this will be the primary description of this interface for game designers.')
     methods = models.ManyToManyField('Method', related_name='used_in', blank=True, editable=False)
-    signature = SignatureField(parse_interface_signature, verbose_name='Methods', multiline=True, blank=True)
-    is_built_in = models.BooleanField(default=False)
+    signature = SignatureField(parse_interface_signature, verbose_name='Methods', multiline=True, blank=True, help_text='One method per line. Each is in the format "<span style="font-family: monospace">InterfaceName methodName(I1 param1, I2 param2)</span>", where the parameters are optional')
+    is_built_in = models.BooleanField(default=False, help_text="Built-in interfaces are provided by the underlying language (JavaScript) or library (Prototype) and do not require a Type to be implemented.")
 
     class Meta:
         ordering = ['name']

@@ -10,8 +10,8 @@ class ViewsTest(test.TestCase):
         self.client.login(**self.cred)
         
     def test_restricted_to_staff(self):
-        for operation in ('local-editing/bulk-upload', 'local-editing/bulk-download'):
-            url = '/admin/library/%s/' % operation
+        for operation in ('local-editing/', 'local-editing/bulk-upload/', 'local-editing/bulk-download.tar'):
+            url = '/admin/library/%s' % operation
             template = 'admin/login.html'
             # Try accessing without logging in.
             self.client.logout()
@@ -24,5 +24,5 @@ class ViewsTest(test.TestCase):
             self.assertTemplateNotUsed(r, template)
 
     def test_bulk_download(self):
-        r = self.client.get('/admin/library/local-editing/bulk-download/')
+        r = self.client.get('/admin/library/local-editing/bulk-download.tar')
         self.assertEquals(r['Content-Type'], 'application/x-tar')

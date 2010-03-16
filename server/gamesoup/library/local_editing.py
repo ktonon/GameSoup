@@ -35,7 +35,7 @@ def pack_types(username, outfile):
     
     # Tar them and read the tarred file into the outfile
     os.chdir(settings.LOCAL_EDITING_WORKSPACE)
-    subprocess.call(['tar', '-cvvf', tar_file, username])
+    subprocess.call(['tar', '-cf', tar_file, username])
     f = open(tar_file)
     outfile.write(f.read())
     f.close()

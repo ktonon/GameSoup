@@ -1,0 +1,16 @@
+{% extends "admin/library/base.html" %}
+
+{% block bc_inner %}
+{{ block.super }}
+&rsaquo; Local editing
+{% endblock bc_inner %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css" />{% endblock %}
+{% block bodyclass %}dashboard{% endblock bodyclass %}
+{% block coltype %}colMS{% endblock coltype %}
+
+{% block content %}
+<div class="content-main">
+    {% include "admin/library/local-editing/index-partial.html" %}
+</div>
+{% endblock content %}
