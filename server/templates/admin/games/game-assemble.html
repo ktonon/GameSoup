@@ -10,6 +10,8 @@
 
 {% block extrahead %}
 {{ block.super }}
+<link rel="stylesheet" href="{% media_url %}css/gamesoup/assembler.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+<link rel="stylesheet" href="{% media_url %}css/gamesoup/layout.css" type="text/css" media="screen" title="no title" charset="utf-8" />
 <script type="text/javascript" charset="utf-8" src="{% admin_media_prefix %}js/core.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/lib/prototype.js"></script>
@@ -19,7 +21,8 @@
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/utils.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/urls.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/tracer.js"></script>
-<script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/assembler/assembler.js"></script>
+<script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/layout/tabset.js"></script>
+<script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/games/assembler.js"></script>
 {% endblock extrahead %}
 
 {% block content %}
@@ -40,6 +43,27 @@
         </li>
     </ul>
     
+    <div id="message-box"></div>
     
+    <div id="assembler" class="tabset">
+        <div class="tab tab0" id="code">
+            <h1 class="handle">Code</h1>
+            <div class="content">
+                
+            </div>
+        </div>
+        <div class="tab tab1" id="canvas">
+            <h1 class="handle">Canvas</h1>
+            <div class="content">
+                
+            </div>            
+        </div>
+        <div class="tab tab2" id="extras">
+            <h1 class="handle">Extras</h1>
+            <div class="content">
+                
+            </div>            
+        </div>
+    </div>
 </div>
 {% endblock content %}

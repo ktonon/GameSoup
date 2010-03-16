@@ -1,0 +1,21 @@
+body {
+	background: #e8e8e8;
+}
+.object-tools {
+	background: white;
+	padding: 5px;
+	border: solid 1px #ccc;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;	
+}
+#message-box {
+	margin: 5px 0;
+	height: 20px;
+}
+
+#assembler .tab {
+	height: 600px;
+}
+
+#assembler .tab .content {
+}
