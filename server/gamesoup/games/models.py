@@ -81,6 +81,9 @@ class Object(models.Model):
             return param.interface.is_built_in or Type.objects.filter(module__in_game=self.game, implements=param.interface).count() > 0
         return all(map(satisfiable, self.type.parameters.all()))
 
+    def parameters_short(self):
+        return ', '.join([p.name for p in self.type.parameters.all()])
+
     @staticmethod
     def pre_save(sender, instance, **kwargs):
         # Update cached values

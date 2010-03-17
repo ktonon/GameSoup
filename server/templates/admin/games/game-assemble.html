@@ -1,5 +1,5 @@
 {% extends "admin/games/base.html" %}
-{% load adminmedia helpers %}
+{% load adminmedia helpers games %}
 
 {% block bc_inner %}
 {{ block.super }}
@@ -10,8 +10,12 @@
 
 {% block extrahead %}
 {{ block.super }}
+<link rel="stylesheet" href="{% media_url %}css/gamesoup/general.css" type="text/css" media="screen" title="no title" charset="utf-8" />
 <link rel="stylesheet" href="{% media_url %}css/gamesoup/assembler.css" type="text/css" media="screen" title="no title" charset="utf-8" />
 <link rel="stylesheet" href="{% media_url %}css/gamesoup/layout.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+<style type="text/css">
+	#canvas .content {background-image: url('{% media_url %}images/gamesoup/games/game-grid.png');}
+</style>
 <script type="text/javascript" charset="utf-8" src="{% admin_media_prefix %}js/core.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/lib/prototype.js"></script>
@@ -23,6 +27,8 @@
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/tracer.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/layout/tabset.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/games/assembler.js"></script>
+<script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/games/objects.js"></script>
+<script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/games/canvas.js"></script>
 {% endblock extrahead %}
 
 {% block content %}
@@ -45,25 +51,25 @@
     
     <div id="message-box"></div>
     
-    <div id="assembler" class="tabset">
-        <div class="tab tab0" id="code">
-            <h1 class="handle">Code</h1>
-            <div class="content">
-                
+    <div id="assembler" class="tabset game" gameID="{{ game.id }}">
+        <div id="object-list" class="tab tab0 outer-container">
+            <h1 class="handle">Objects</h1>
+            <div class="content inner-container">
+                {% objects game %}
             </div>
         </div>
-        <div class="tab tab1" id="canvas">
+        <div id="canvas" class="tab tab1 outer-container" style="z-index: 10">
             <h1 class="handle">Canvas</h1>
-            <div class="content">
-                
+            <div class="content inner-container">
+                {% canvas game %}
             </div>            
         </div>
-        <div class="tab tab2" id="extras">
-            <h1 class="handle">Extras</h1>
-            <div class="content">
-                
-            </div>            
-        </div>
+        {# <div class="tab tab2" id="extras"> #}
+        {#     <h1 class="handle">Extras</h1> #}
+        {#     <div class="content"> #}
+        {#          #}
+        {#     </div>             #}
+        {# </div> #}
     </div>
 </div>
 {% endblock content %}

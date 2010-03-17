@@ -1,0 +1,8 @@
+{% for obj in objects %}
+<div id="object-shaper-{{ obj.id }}" class="object-shaper outer-container" objectID="{{ obj.id }}" position="{{ obj.x }},{{ obj.y }}" size="{{ obj.width }},{{ obj.height }}">
+    <div class="inner-container">
+        <span class="title" title="Click to show the corresponding configuration section for this object.">{{ obj.type.name }}</span>
+        <div class="resize" title="Drag this box to resize the object"></div>
+    </div>
+</div>
+{% endfor %}

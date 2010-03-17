@@ -1,21 +1,33 @@
-body {
-	background: #e8e8e8;
+body {background: #e8e8e8;}
+.object-tools {background: white; padding: 5px; border: solid 1px #ccc; -moz-border-radius: 10px; -webkit-border-radius: 10px;}
+#assembler .tab {height: 581px;}
+
+
+/* Object List */
+#object-list table {width: 100%;}
+#object-list tbody th, #object-list td {padding: 10px 0px;}
+#object-list tbody th {padding: 10px; cursor: pointer;}
+#type-name {
+	width: 180px;
 }
-.object-tools {
-	background: white;
-	padding: 5px;
-	border: solid 1px #ccc;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;	
-}
+
+
+/* Canvas */
+#canvas .content {background-repeat: repeat;}
+.object-shaper {background: #69c; border: dashed 1px #036; color: #036; opacity: 0.75; cursor: move; z-index: 5;}
+.object-shaper .title {font-size: 10pt; margin: 5px; cursor: help;}
+.object-shaper .resize {position: absolute;	width: 18px; height: 18px; background: #036; bottom: 0px; right: 0px; z-index: 11; cursor: se-resize;}
+.object-shaper.highlight {background-color: yellow; color: #993; border-color: #993;}
+.object-shaper.highlight .resize {background-color: #993;}
+
+
+/* Message Box */
 #message-box {
-	margin: 5px 0;
-	height: 20px;
-}
-
-#assembler .tab {
-	height: 600px;
-}
-
-#assembler .tab .content {
+	margin: 0;
+	font-size: 18pt;
+	text-align: center;
+	font-weight: bold;
+	color: #999;
+	text-shadow: #666 1px 1px;
+	height: 1em;
 }

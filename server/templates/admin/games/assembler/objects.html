@@ -1,0 +1,20 @@
+<div class="module">
+    <table>
+        <thead>
+            <tr>
+                <th id="type-name">Type name</th>
+                <th>Satisfied</th>
+                <th>Per player</th>
+                <th>Parameters</th>
+            </tr>
+        </thead>
+        {% for obj in objects %}
+        <tr id="object-{{ obj.id }}" class="object {% cycle row1,row2 %}" objectID="{{ obj.id }}">
+            <th class="type-name">{{ obj.type.name }}</th>
+            <td class="satisfied"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.satisfied|yesno:"yes,no" }}.gif"></td>
+            <td class="per-player"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.per_player|yesno:"yes,no" }}.gif"></td>
+            <td class="parameters">{{ obj.parameters_short }}</td>
+        </tr>
+        {% endfor %}
+    </table>    
+</div>

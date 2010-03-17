@@ -1,25 +1,42 @@
 (function() {
-gamesoup.namespace('gamesoup.builder');
+gamesoup.namespace('gamesoup.games');
 
 var gs = gamesoup;
-var mod = gamesoup.builder;
+var mod = gamesoup.games;
+
+mod.Canvas = Class.create();
+mod.Canvas.addMethods({
+	initialize: function(node, options) {
+		this._node = $(node);
+		this._options = options;
+		this._shapers = this._node.select('.object-shaper').collect(this.addShaper.bind(this));
+	},
+	addShaper: function(node) {
+		return new mod.ObjectShaper(node, this._options);
+	}
+});
+gs.tracerize('Canvas', mod.Canvas);
+
 
 // For positioning and resizing elements on the canvas.
 mod.ObjectShaper = Class.create();
-mod.ObjectShaper.addMethods(mod.ObjectHighlighter);
+// mod.ObjectShaper.addMethods(mod.ObjectHighlighter);
 mod.ObjectShaper.addMethods({
-	initialize: function(node) {
+	initialize: function(node, options) {
 		this._node = $(node);
 		this._objectID = this._node.getAttribute('objectID');
+		this._options = {objectID: this._objectID};
+		Object.extend(this._options, options);
 		this._resizeNode = this._node.down('.resize');
 		// Other initialization
 		this._setPositionAndSize();
-		this.installHighlighter();
+		// this.installHighlighter();
 		// Make draggable
 		new Draggable(this._node, {
 			handle: this._renderedNode,
 			snap: 20,
-			onEnd: this.savePosition.bind(this)
+			onEnd: this.savePosition.bind(this),
+			onDrag: this.updatePosition.bind(this)
 		});
 		// Make resizeable
 		if (this._resizeNode) {
@@ -51,14 +68,20 @@ mod.ObjectShaper.addMethods({
 	/********************************************************/
 	/* COMMANDS
 	/********************************************************/
+	updatePosition: function() {
+		var x = gs.utils.cssNumber(this._node, 'left') / gs.gridSize;
+		var y = gs.utils.cssNumber(this._node, 'top') / gs.gridSize;
+		mod.messageBox.post('(' + x + ', ' + y + ')');
+	},
 	savePosition: function() {
 		var x = gs.utils.cssNumber(this._node, 'left') / gs.gridSize;
 		var y = gs.utils.cssNumber(this._node, 'top') / gs.gridSize;
-		var url = gs.utils.makeURL('updateObjectPosition', {objectID: this.getObjectID()})
+		var url = gs.utils.makeURL('updateObjectPosition', this._options)
 		new Ajax.Request(url, {
 			method: 'post',
 			postBody: 'position=' + x + ',' + y
-		})
+		});
+		mod.messageBox.clear();
 	},
 	updateSize: function() {
 		var h = function(u, offset) {return (u * gs.gridSize + offset + 'px')};
@@ -68,6 +91,7 @@ mod.ObjectShaper.addMethods({
 			width: h(width, -2),
 			height: h(height, -2)
 		});
+		mod.messageBox.post(width + ' x ' + height);
 	},
 	saveSize: function() {
 		var width = this._g('left');
@@ -83,7 +107,7 @@ mod.ObjectShaper.addMethods({
 				top: (this._size[1] - 1) * gs.gridSize + 'px'
 			});
 		} else {
-			var url = gs.utils.makeURL('updateObjectSize', {objectID: this.getObjectID()});
+			var url = gs.utils.makeURL('updateObjectSize', this._options);
 			new Ajax.Request(url, {
 				method: 'post',
 				postBody: 'size=' + width + ',' + height,
@@ -97,6 +121,7 @@ mod.ObjectShaper.addMethods({
 				}.bind(this, width, height)
 			})
 		}
+		mod.messageBox.clear();
 	},
 	/********************************************************/
 	/* HELPERS
