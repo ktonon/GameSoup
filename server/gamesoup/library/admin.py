@@ -15,10 +15,11 @@ class TypeAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('name', 'description', 'visible', 'has_state', 'implements', 'signature', 'code')}),
         )
-    list_display = ('name', 'visible', 'has_state')
-    list_filter = ('visible', 'has_state')
+    list_display = ('name', 'description', 'visible')
+    list_filter = ('visible',)
     filter_horizontal = ('implements',)
-    search_fields = ('name', 'implements__name')
+    search_fields = ('name', 'description', 'implements__name')
+    actions = None
 admin.site.register(Type, TypeAdmin)
 
 

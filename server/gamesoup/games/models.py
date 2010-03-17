@@ -85,18 +85,25 @@ class Object(models.Model):
         return ', '.join([p.name for p in self.type.parameters.all()])
 
     @staticmethod
-    def pre_save(sender, instance, **kwargs):
-        # Update cached values
-        instance.satisfied = instance.parameter_bindings.count() == instance.type.parameters.count()
-
-    @staticmethod
     def post_delete(sender, instance, **kwargs):
         # Remove any bindings which this object is a part of
         # Do this for both directions.
         instance.parameter_bindings.all().delete()
         instance.bound_to.all().delete()
 
-pre_save.connect(Object.pre_save, sender=Object)        
+    @staticmethod
+    def update_cache(sender, instance, **kwargs):
+        if sender.__name__ == 'Binding':
+            obj = instance.instance
+        else:
+            obj = instance
+        sat = obj.parameter_bindings.count() == obj.type.parameters.count()
+        if obj.satisfied != sat:
+            obj.satisfied = sat
+            if sender != obj.__class__:
+                obj.save()
+
+pre_save.connect(Object.update_cache, sender=Object)
 post_delete.connect(Object.post_delete, sender=Object)
 
 
@@ -118,4 +125,7 @@ class Binding(models.Model):
         if self.parameter.interface.is_built_in:
             return self.built_in_argument
         else:
-            return 'object-%d' % self.object_argument.id
+            return '%d' % self.object_argument.id
+
+post_save.connect(Object.update_cache, sender=Binding)
+post_delete.connect(Object.update_cache, sender=Binding)

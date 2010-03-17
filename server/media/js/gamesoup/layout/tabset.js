@@ -10,6 +10,10 @@ mod.TabSet = Class.create({
 		this._tabs = this._node.select('.tab').collect(this.addTab.bind(this));
 		this._node.observe('tab:requestFocus', this.focusTab.bind(this));
 	},
+	release: function() {
+		this._tabs.invoke('release');
+		this._node.stopObserving('tab:requestFocus');
+	},
 	addTab: function(node) {
 		return new mod.Tab(node)
 	},
@@ -27,6 +31,9 @@ mod.Tab = Class.create({
 		this._handleNode = this._node.down('h1.handle');
 		// Events
 		this._handleNode.observe('click', function() {this._node.fire('tab:requestFocus')}.bind(this));
+	},
+	release: function() {
+		this._handleNode.stopObserving('click');
 	},
 	demote: function() {
 		var z = new Number(this._node.getStyle('z-index'));

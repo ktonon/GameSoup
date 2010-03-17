@@ -1,0 +1,27 @@
+{% load games markup %}
+<div handler="ConfigureObject" title="{{ title }}" objectID="{{ obj.id }}">
+    <p>{{ obj.type.description|textile }}</p>
+    {% if nothing_to_configure %}
+    <h2>There is nothing to configure.</h2>
+    {% else %}
+    {% if built_ins %}
+    <h2>Simple parameters</h2>
+    <fieldset class="module aligned">        
+        {% for param in built_ins %}
+        <div class="form-row built-in" interface="{{ param.interface.name }}" name="{{ param.name }}" parameterID="{{ param.id }}" value="{% binding obj param %}"></div>
+        {% endfor %}
+    </fieldset>        
+    {% endif %}
+    {% if refs %}
+    <h2>References to other objects</h2>
+    <fieldset class="module aligned">
+        {% for param in refs %}
+        <div class="form-row ref {% satisfiable_parameter obj param %}" interfaceID="{{ param.interface.id }}" name="{{ param.name }}" parameterID="{{ param.id }}" boundTo="{% binding obj param %}"></div>
+        {% endfor %}
+    </fieldset>        
+    {% endif %}
+    {% endif %}
+    <div class="submit-row">
+        <input class="default" type="button" value="Done" />
+    </div>
+</div>

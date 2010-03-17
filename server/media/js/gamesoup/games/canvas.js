@@ -11,6 +11,9 @@ mod.Canvas.addMethods({
 		this._options = options;
 		this._shapers = this._node.select('.object-shaper').collect(this.addShaper.bind(this));
 	},
+	release: function() {
+		this._shapers.invoke('release');
+	},
 	addShaper: function(node) {
 		return new mod.ObjectShaper(node, this._options);
 	}
@@ -31,22 +34,19 @@ mod.ObjectShaper.addMethods({
 		// Other initialization
 		this._setPositionAndSize();
 		// this.installHighlighter();
-		// Make draggable
-		new Draggable(this._node, {
+		// Make shapers
+		this._positionDraggable = new Draggable(this._node, {
 			handle: this._renderedNode,
 			snap: 20,
 			onEnd: this.savePosition.bind(this),
 			onDrag: this.updatePosition.bind(this)
 		});
-		// Make resizeable
-		if (this._resizeNode) {
-			new Draggable(this._resizeNode, {
-				handle: this._resizeNode,
-				snap: 20,
-				onEnd: this.saveSize.bind(this),
-				onDrag: this.updateSize.bind(this)
-			});			
-		}
+		this._sizeDraggable = new Draggable(this._resizeNode, {
+			handle: this._resizeNode,
+			snap: 20,
+			onEnd: this.saveSize.bind(this),
+			onDrag: this.updateSize.bind(this)
+		});			
 	},
 	_setPositionAndSize: function() {
 		var g = function(x) {return new Number(x)};
@@ -58,6 +58,10 @@ mod.ObjectShaper.addMethods({
 			width: this._size[0] * gs.gridSize - 2 + 'px',
 			height: this._size[1] * gs.gridSize - 2 + 'px'
 		});
+	},
+	release: function() {
+		this._positionDraggable.destroy();
+		this._sizeDraggable.destroy();
 	},
 	/********************************************************/
 	/* QUERIES

@@ -7,9 +7,14 @@ var mod = gamesoup.utils;
 
 mod.urls = $H({
 	// Assembler
-    instantiateObject: new Template('/admin/games/game/#{gameID}/type/#{typeID}/instantiate/'),
+	refreshAssembler: new Template('/admin/games/game/#{gameID}/refresh-assembler/'),
+    instantiateType: new Template('/admin/games/game/#{gameID}/type/#{typeID}/instantiate/'),
 	updateObjectPosition: new Template('/admin/games/game/#{gameID}/object/#{objectID}/update-position/'),
-	updateObjectSize: new Template('/admin/games/game/#{gameID}/object/#{objectID}/update-size/')
+	updateObjectSize: new Template('/admin/games/game/#{gameID}/object/#{objectID}/update-size/'),
+	objectConfigureDialog: new Template('/admin/games/game/#{gameID}/object/#{objectID}/configure/'),
+	deleteObject: new Template('/admin/games/game/#{gameID}/object/#{objectID}/delete/'),
+	saveParameterBinding: new Template('/admin/games/game/#{gameID}/object/#{objectID}/parameter/#{parameterID}/save/'),
+	candidateRefs: new Template('/admin/games/game/#{gameID}/object/#{objectID}/parameter/#{parameterID}/candidate-refs/')
 });
 
 mod.makeURL = function(urlName, context) {

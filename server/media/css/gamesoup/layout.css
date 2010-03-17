@@ -11,10 +11,7 @@
 	padding: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
-/*	-moz-border-radius-topright: 10px;
-	-moz-border-radius-bottomright: 10px;
-	-moz-border-radius-bottomleft: 10px;	
-*/}
+}
 .tab h1.handle {
 	position: absolute;
 	left: 20px;
@@ -31,7 +28,7 @@
 	-moz-border-radius-topright: 10px;
 }
 .tab0 {left: 0px; z-index: 10;}
-.tab1 {left: 201px; z-index: 9;}
+.tab1 {left: 200px; z-index: 9;}
 .tab2 {left: 400px; z-index: 8;}
 .tab0, .tab0 h1.handle {background: #ffe8e8;}
 .tab0 h1.handle {border-bottom-color: #ffe8e8;}
