@@ -5,12 +5,17 @@ body {background: #e8e8e8;}
 
 /* Object List */
 #object-list table {width: 100%;}
-#object-list tbody th, #object-list td {padding: 10px 0px;}
-#object-list tbody th {padding: 10px; cursor: pointer;}
-#type-name {
-	width: 180px;
-}
-
+#object-list tbody th, #object-list td {padding: 10px 5px;}
+#type {width: 180px;}
+.type {cursor: pointer;}
+#satisfied, #satisfiable {width: 50px;}
+.satisfied, .satisfiable {text-align: center;}
+#ownership {width: 50px;}
+.ownership {cursor: pointer;}
+#object-list .row1 {background: #e8e8e8;}
+#object-list .row2 {background: #fff;}
+.parameters .bound {font-weight: normal; color: #666;}
+.parameters .unbound {font-weight: bold; color: red;}
 
 /* Canvas */
 #canvas .content {background-repeat: repeat;}

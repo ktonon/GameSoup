@@ -11,15 +11,15 @@ class GameAdmin(admin.ModelAdmin):
 admin.site.register(Game, GameAdmin)
 
 
-# class BindingInline(admin.TabularInline):
-#     model = Binding
-#     fk_name = 'instance'
-#     extra = 0
+class BindingInline(admin.TabularInline):
+    model = Binding
+    fk_name = 'instance'
+    extra = 1
 class ObjectAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('game', 'type', 'x', 'y', 'width', 'height', 'satisfied', 'per_player')}),
         )
     list_display = ('id', 'game', 'type', 'x', 'y', 'width', 'height', 'satisfied', 'per_player')
     raw_id_fields = ('game', 'type')
-    # inlines = [BindingInline]
+    inlines = [BindingInline]
 admin.site.register(Object, ObjectAdmin)

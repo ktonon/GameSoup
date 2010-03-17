@@ -2,18 +2,24 @@
     <table>
         <thead>
             <tr>
-                <th id="type-name">Type name</th>
-                <th>Satisfied</th>
-                <th>Per player</th>
-                <th>Parameters</th>
+                <th id="type">Type</th>
+                <th id="satisfied" title="Have all the parameters been set?">Satisfied</th>
+                <th id="satisfiable" title="Is it possible to set all the parameters given the objects already in the game?">Satisfiable</th>
+                <th id="ownership" title="Is it common to all players, or do each get their own copy?">Ownership</th>
+                <th id="parameters" title="Parameters in red still need to be set.">Parameters</th>
             </tr>
         </thead>
         {% for obj in objects %}
         <tr id="object-{{ obj.id }}" class="object {% cycle row1,row2 %}" objectID="{{ obj.id }}">
-            <th class="type-name">{{ obj.type.name }}</th>
+            <th class="type">{{ obj.type.name }}</th>
             <td class="satisfied"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.satisfied|yesno:"yes,no" }}.gif"></td>
-            <td class="per-player"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.per_player|yesno:"yes,no" }}.gif"></td>
-            <td class="parameters">{{ obj.parameters_short }}</td>
+            <td class="satisfiable"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.is_satisfiable|yesno:"yes,no" }}.gif"></td>
+            <td class="ownership">{{ obj.per_player|yesno:"player,game" }}</td>
+            <td class="parameters">
+                {% for param in obj.type.parameters.all %}
+                <span class="{{ param.bindings.count|yesno:"bound,unbound" }}">{{ param.name }}</span> {{ forloop.last|yesno:",-"}}
+                {% endfor %}
+            </td>
         </tr>
         {% endfor %}
     </table>    

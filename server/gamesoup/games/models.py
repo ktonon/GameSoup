@@ -78,7 +78,7 @@ class Object(models.Model):
         '''
         def satisfiable(param):
             # Is there a type in the game for the required interface?
-            return param.interface.is_built_in or Type.objects.filter(module__in_game=self.game, implements=param.interface).count() > 0
+            return param.interface.is_built_in or Type.objects.filter(instances__game=self.game, implements=param.interface).count() > 0
         return all(map(satisfiable, self.type.parameters.all()))
 
     def parameters_short(self):
