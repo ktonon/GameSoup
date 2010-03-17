@@ -33,12 +33,20 @@
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/games/canvas.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/games/handlers.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/games/parameters.js"></script>
+<script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/games/selectors.js"></script>
 {% endblock extrahead %}
 
 {% block content %}
 <div id="content-main">
     <ul class="object-tools">
-        <li><a id="search-link" class="addlink" href="." title="Instantiate a new object by searching using objects already in your game.">Search</a></li>
+        <li>
+            <input id="id_search_required_by" class="id-dropbox" value="" style="display: none" />
+            <a id="lookup_id_search_required_by" class="addlink" href="" link="{% url admin:library_type_changelist %}" title="Find objects that are required by existing.">obj &rarr; x</a>
+        </li>
+        <li>
+            <input id="id_search_requires" class="id-dropbox" value="" style="display: none" />
+            <a id="lookup_id_search_requires" class="addlink" href="" link="{% url admin:library_type_changelist %}" title="Find new objects that require existing ones.">x &rarr; obj</a>
+        </li>
         <li>
             {# Take advantage of Django's Related object lookup feature. JavaScript to search for an object using the django admin interface (in a popup window) and set a field with its ID already exists, so we'll hook into this and take over once the ID has been set. #}
             {# The input and the link are connected by their id fields. The link must be the same as the input, with "lookup_" as a prefix. #}
@@ -66,7 +74,9 @@
         </div>
     </div>
     
-    <div id="curtain" style="display: none">
+    <div id="curtain" style="display: none"></div>
+
+    <div id="scratch" style="display: none">
         <div class="inner-container">        
         </div>
     </div>

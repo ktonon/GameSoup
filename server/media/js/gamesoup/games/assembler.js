@@ -20,9 +20,12 @@ mod.Assembler = Class.create({
 		this._refresherNode = new Element('div', {style: 'display: block'});
 		this._node.insert({bottom: this._refresherNode});
 		// Object creators
-		this._searchButton = $$('.search-link')[0];
+		this._searchRequires = $('lookup_id_search_requires');
+		this._searchRequiredBy = $('lookup_id_search_required_by');
 		this._idDropboxes = $$('.id-dropbox');
 		// Event handlers
+		this._searchRequires.observe('click', this.search.bind(this, gs.utils.makeURL('searchRequires')));
+		this._searchRequiredBy.observe('click', this.search.bind(this, gs.utils.makeURL('searchRequiredBy')));
 		this._node.observe('object:requestConfig', this.showObjectConfigDialog.bind(this));
 		this._node.observe('object:requestDeletion', this.deleteObject.bind(this));
 		$('content-main').observe('assembler:refreshRequired', this.refresh.bind(this));
@@ -93,6 +96,29 @@ mod.Assembler = Class.create({
 				this._objects = new mod.ObjectList('object-list', this._options);				
 			}.bind(this)
 		});
+	},
+	search: function(url, event) {
+		event.stop();
+		var button = event.target;
+		$('curtain').show();
+		mod.messageBox.post('Please select the objects you would like to use in the search');
+		var selector = new gamesoup.games.selectors.MultipleObjectSelector($$('.object'));
+		$('scratch').observe('selector:released', function(selector, url, button) {
+			mod.messageBox.clear();
+			$('scratch').stopObserving('selector:released');
+			$('curtain').hide();
+			var ids = selector.getSelectedObjectIDs();
+			new Ajax.Request(url, {
+				method: 'post',
+				postBody: 'object_ids=' + ids.join(','),
+				evalJS: true,
+				onSuccess: function(button, transport) {
+					var ids = transport.responseJSON;
+					button.setAttribute('href', button.getAttribute('link') + '?id__in=' + ids.join(','));
+					showRelatedObjectLookupPopup(button);
+				}.bind(this, button)
+			})
+		}.bind(this, selector, url, button));
 	}
 });
 gs.tracerize('Assembler', mod.Assembler);

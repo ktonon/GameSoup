@@ -45,7 +45,8 @@ body {background: #e8e8e8;}
 }
 
 /* Curtain */
-#curtain {position: fixed; z-index: 100; background: black; left: 0; right: 0; top: 0; bottom: 0; opacity: 0.75;}
+#curtain {position: fixed; z-index: 100; background: black; left: 0; right: 0; top: 0; bottom: 0; opacity: 0.80;}
+#scratch {position: fixed; z-index: 100; left: 0; right: 0; top: 0; bottom: 0;}
 
 /* Dialog */
 #dialog {
@@ -87,3 +88,4 @@ body {background: #e8e8e8;}
 
 .unsatisfiable label {color: red;}
 .bound-to-disclosure {margin: 0 20px; font-size: 12pt;}
+input[type=button].selected {background: #69c; color: white;;}

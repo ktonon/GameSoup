@@ -129,7 +129,7 @@ mod.Reference = Class.create(mod.Parameter, {
 			// Event handlers
 			this._widget.observe('click', this.bindRef.bind(this));			
 		} else {
-			this._node.insert({bottom: '<div class="note">This parameter is unsatisfiable. Try using <strong>&ldquo;Search +&rdquo;</strong> to find an appropraite object.</div>'});
+			this._node.insert({bottom: '<div class="note">This parameter is unsatisfiable. Try using <strong>&ldquo;obj &rarr; x&rdquo;</strong> to find an appropraite object.</div>'});
 		}
 	},
 	release: function() {
@@ -156,15 +156,15 @@ mod.Reference = Class.create(mod.Parameter, {
 			onSuccess: function(transport) {
 				var objects = transport.responseJSON.collect(function(id) {return $(id)});
 				gs.games.messageBox.post('Please bind ' + this._name + ' to one of the following objects...');
-				var selectorSet = new mod.ObjectSelectorSet(objects);
-				$('curtain').observe('selector:released', function(selectorSet) {
+				var selector = new gamesoup.games.selectors.SingleObjectSelector(objects);				
+				$('scratch').observe('selector:released', function(selector) {
 					gs.games.messageBox.clear();
-					var objectID = selectorSet.getSelectedObjectID();
-					$('curtain').stopObserving('selector:released');
+					var objectID = selector.getSelectedObjectID();
+					$('scratch').stopObserving('selector:released');
 					this.setValue(objectID);
 					this.save();
-					this._node.fire('dialog:requestResume');					
-				}.bind(this, selectorSet));
+					this._node.fire('dialog:requestResume');
+				}.bind(this, selector));
 			}.bind(this)
 		});
 	},
@@ -178,43 +178,6 @@ mod.Reference = Class.create(mod.Parameter, {
 	}	
 });
 gs.tracerize('Reference', mod.Reference);
-
-
-mod.ObjectSelectorSet = Class.create({
-	initialize: function(objects) {
-		this._scratch = $('curtain').down('.inner-container');
-		this._objects = objects;
-		this._selectors = this._objects.collect(this.addSelector.bind(this));
-		// Event handlers
-		// this._scratch.observe('selector:selected', )
-	},
-	selectAndRelease: function(event) {
-		var selector = event.target;
-		this._selectedObjectID = selector.getAttribute('objectID');
-		this._selectors.invoke('stopObserving', 'click');
-		this._scratch.innerHTML = '';
-		this._scratch.fire('selector:released');
-	},
-	getSelectedObjectID: function() {
-		return this._selectedObjectID;
-	},
-	addSelector: function(node) {
-		var original = node.down('.type input[type=button]');
-		var selector = new Element('input', {
-			objectID: node.getAttribute('objectID'),
-			type: 'button', 
-			value: original.getAttribute('value'), 
-			style: 'text-align: left; font-weight: bold; position: absolute'
-		});
-		this._scratch.insert({bottom: selector});
-		selector.clonePosition(original, {
-			offsetTop: -2,
-			offsetLeft: 1
-		});
-		selector.observe('click', this.selectAndRelease.bind(this));
-		return selector;
-	}
-});
 
 
 })();

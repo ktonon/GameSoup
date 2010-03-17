@@ -14,7 +14,9 @@ mod.urls = $H({
 	objectConfigureDialog: new Template('/admin/games/game/#{gameID}/object/#{objectID}/configure/'),
 	deleteObject: new Template('/admin/games/game/#{gameID}/object/#{objectID}/delete/'),
 	saveParameterBinding: new Template('/admin/games/game/#{gameID}/object/#{objectID}/parameter/#{parameterID}/save/'),
-	candidateRefs: new Template('/admin/games/game/#{gameID}/object/#{objectID}/parameter/#{parameterID}/candidate-refs/')
+	candidateRefs: new Template('/admin/games/game/#{gameID}/object/#{objectID}/parameter/#{parameterID}/candidate-refs/'),
+	searchRequires: new Template('/admin/games/search-requires/'),
+	searchRequiredBy: new Template('/admin/games/search-required-by/')
 });
 
 mod.makeURL = function(urlName, context) {

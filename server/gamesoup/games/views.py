@@ -8,6 +8,38 @@ from gamesoup.games.models import *
 
 
 @staff_member_required
+@require_post
+def search_requires(request):
+    obj_ids = map(int, filter(bool, request.POST['object_ids'].split(',')))
+    qs = Type.objects.all()
+    for obj_id in obj_ids:
+        obj = Object.objects.get(pk=obj_id)
+        qs = qs.filter(parameters__interface__implemented_by=obj.type)
+    type_ids = [t.id for t in qs]
+    response = HttpResponse(mimetype='application/json')
+    response.write(json.dumps(type_ids))
+    return response
+
+
+@staff_member_required
+@require_post
+def search_required_by(request):
+    from django.db.models import Q
+    obj_ids = map(int, filter(bool, request.POST['object_ids'].split(',')))
+    qs = Type.objects.all()
+    for obj_id in obj_ids:
+        obj = Object.objects.get(pk=obj_id)
+        query = Q()
+        for param in obj.type.parameters.all():
+            query = query | Q(implements=param.interface)
+        qs = qs.filter(query)
+    type_ids = [t.id for t in qs]
+    response = HttpResponse(mimetype='application/json')
+    response.write(json.dumps(type_ids))
+    return response
+    
+
+@staff_member_required
 def assemble_game(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     context = {
