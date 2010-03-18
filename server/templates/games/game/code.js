@@ -22,7 +22,7 @@ gamesoup.library.types.{{ type.name }}.addMethods(gamesoup.library.mixins.Statef
 /*===============================================================================================*/
 
 gamesoup.matches.objects = {};
-{% for obj in objects %}gamesoup.matches.objects[{{ obj.id }}] = new gamesoup.library.types.{{ obj.type.name|ljust:"40" }}();
+{% for obj in objects %}gamesoup.matches.objects[{{ obj.id }}] = new gamesoup.library.types.{{ obj.type.name|ljust:"40" }}("object-" + {{ obj.id }});
 {% endfor %}
 
 

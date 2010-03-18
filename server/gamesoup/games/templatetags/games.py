@@ -41,11 +41,11 @@ def satisfiable_parameter(object, parameter):
 def set_object_parameters(object):
     result = ''
     for binding in object.parameter_bindings.all():
-        w = 'gamesoup.games.objects[%d]._%s = ' % (object.id, binding.parameter.name)
+        w = 'gamesoup.matches.objects[%d]._%s = ' % (object.id, binding.parameter.name)
         if binding.parameter.interface.is_built_in:
             w += json.dumps(_built_in[binding.parameter.interface.name](binding.built_in_argument))
         else:
-            w += 'gamesoup.games.objects[%d]' % binding.object_argument.id
+            w += 'gamesoup.matches.objects[%d]' % binding.object_argument.id
         result += '%s;\n' % w
     return result
 

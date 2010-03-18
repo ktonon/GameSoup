@@ -7,7 +7,10 @@ var mod = gamesoup.matches;
 mod.Engine = Class.create({
     initialize: function(node) {
         this._node = $(node);
-        console.log('Engine loaded!');
+        this._objects = $H(mod.objects).values();
+        this._objects.each(function(obj) {
+            this._node.insert({bottom: obj.createDOM()});
+        }.bind(this));
     }
 });
 
