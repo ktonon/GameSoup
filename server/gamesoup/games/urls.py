@@ -2,6 +2,10 @@ from django.conf.urls.defaults import *
 
 
 urlpatterns = patterns('gamesoup.games.views',
+    # Code
+    url(r'^game/(?P<game_id>\d+)/code/$', 'game_code', name='game_code'),
+    
+    # Dynamic
     url(r'^search-requires/$', 'search_requires', name='search_requires'),
     url(r'^search-required-by/$', 'search_required_by', name='search_required_by'),
     url(r'^game/(?P<game_id>\d+)/assemble/$', 'assemble_game', name='assemble_game'),

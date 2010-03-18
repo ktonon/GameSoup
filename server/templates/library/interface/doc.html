@@ -1,0 +1,7 @@
+{% load markup %}
+<strong>{{ interface.name }}</strong>
+{% if interface.description %}
+{{ interface.description|textile }}
+{% else %}
+<a href="{% url admin:library_interface_change interface.id %}" class="popup">{{ "_undocumented_"|textile }}</a>
+{% endif %}

@@ -1,3 +1,4 @@
+import json
 from django import template
 
 
@@ -34,3 +35,24 @@ def satisfiable_parameter(object, parameter):
     from gamesoup.games.models import Object
     sat = Object.objects.filter(game=object.game, type__implements=parameter.interface).count() > 0
     return not sat and 'unsatisfiable' or ''
+
+
+@register.simple_tag
+def set_object_parameters(object):
+    result = ''
+    for binding in object.parameter_bindings.all():
+        w = 'gamesoup.games.objects[%d]._%s = ' % (object.id, binding.parameter.name)
+        if binding.parameter.interface.is_built_in:
+            w += json.dumps(_built_in[binding.parameter.interface.name](binding.built_in_argument))
+        else:
+            w += 'gamesoup.games.objects[%d]' % binding.object_argument.id
+        result += '%s;\n' % w
+    return result
+
+
+_built_in = {
+    'Integer': int,
+    'Float': float,
+    'String': str,
+    'Boolean': bool,
+}

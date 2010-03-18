@@ -1,0 +1,34 @@
+/*
+ * Type: SubmitStringWithCheck
+ * Action that reads a string from a source and if it is ok, sends it to a receiver. The source is cleared.
+ */
+gamesoup.library.types.SubmitStringWithCheck = Class.create(gamesoup.library.types.BaseType);
+
+/*****************************************************************************/
+/*                                Parameters                                
+/*****************************************************************************/
+//                                REFERENCES                                
+// this._destination                                -- Receiver
+// this._source                                     -- ReadWrite
+// this._validator                                  -- StringValidator
+
+/*****************************************************************************/
+/*                            Interface Methods                             
+/*****************************************************************************/
+gamesoup.library.types.SubmitStringWithCheck.addMethods({
+    
+    /*
+     * Nothing call()                               -- used in Action
+     */
+    call: function() {
+        
+    }
+});
+
+/*****************************************************************************/
+/*                          Implementation methods                          
+/*                    Do not use outside of this module!                    
+/*****************************************************************************/
+gamesoup.library.types.SubmitStringWithCheck.addMethods({
+    // Helper methods go here...
+});

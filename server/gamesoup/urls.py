@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     # includes views for the library and games apps
     (r'^admin/games/', include('gamesoup.games.urls', namespace='games', app_name='games')),
     (r'^admin/library/', include('gamesoup.library.urls', namespace='library', app_name='library')),
+    (r'^admin/matches/', include('gamesoup.matches.urls', namespace='matches', app_name='matches')),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),
 )

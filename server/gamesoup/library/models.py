@@ -4,9 +4,12 @@ Stores the components from which games are made. The most important of these are
 
 
 import re
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
 from django.db.models.signals import *
+from django.template import Context
+from django.template.loader import get_template
 from alphacabbage.django.choices import *
 from gamesoup.library.errors import *
 from gamesoup.library.fields import *
@@ -29,6 +32,18 @@ class Interface(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def implemented_by_short(self):
+        return ', '.join([type.name for type in self.implemented_by.all()])
+    implemented_by_short.short_description = 'Implemented by'
+
+    def doc_link(self):
+        return '<a href="%s">%s</a>' % (
+            reverse('library:interface_documentation', args=[self.id]),
+            self.signature.replace('\n', '<br/>')
+        )
+    doc_link.allow_tags = True
+    doc_link.short_description = 'Documentation'
 
     @staticmethod
     def post_save(sender, instance, **kwargs):
@@ -62,12 +77,56 @@ class Type(models.Model):
     def __unicode__(self):
         return self.name
 
+    def is_conflicted(self):
+        '''
+        Do two distinct methods of this type have the same name?
+        Two methods are distinct if their signatures are different.
+        Methods are included in types via interfaces. Some interfaces
+        declare distinct methods with the same name. We must detect
+        this problem early and notify the developer.
+        '''
+        return self.conflicting_methods().count() > 0
+    is_conflicted.boolean = True
+
+    def conflicting_methods(self):
+        qs = Method.objects.filter(used_in__implemented_by=self).distinct()
+        counts = {}
+        for method in qs:
+            counts[method.name] = counts.get(method.name, 0) + 1
+        names = [name for name, count in counts.items() if count > 1]
+        return qs.filter(name__in=names).order_by('name')
+        
+    @classmethod
+    def reset_code(cls):
+        for type in cls.objects.all():
+            type.code = ''
+            type.save()
+    
+    @staticmethod
+    def pre_save(sender, instance, **kwargs):
+        # Provide boilerplate code
+        if not instance.code and instance.id:
+            t = get_template('library/type/boilerplate.js')
+            type = instance
+            c = Context({
+                'type': type,
+                'built_ins': type.parameters.filter(interface__is_built_in=True),
+                'references': type.parameters.filter(interface__is_built_in=False),
+                'has_parameters': type.parameters.count() != 0,
+                'methods': Method.objects.filter(used_in__implemented_by=type).distinct(),
+            })
+            type.code = t.render(c)
+
     @staticmethod
     def post_save(sender, instance, **kwargs):
         # Parse signature and set parameters
         d = parse_type_signature(instance.signature)
+        old = set(instance.parameters.all()) - set(d['parameters'])
+        for param in old:
+            instance.parameters.remove(param)
         instance.parameters.add(*d['parameters'])
 
+pre_save.connect(Type.pre_save, sender=Type)
 post_save.connect(Type.post_save, sender=Type)
 
 
@@ -76,6 +135,7 @@ class Method(models.Model):
     Method signature.
     '''
     name = models.CharField(max_length=200, blank=True, editable=False)
+    description = models.TextField(blank=True)
     parameters = models.ManyToManyField('Variable', related_name='parameter_of_method', blank=True, editable=False)
     returned = models.ForeignKey('Variable', related_name='returned_from_method', blank=True, editable=False)
     signature = SignatureField(parse_method_signature, unique=True)
@@ -86,8 +146,12 @@ class Method(models.Model):
         ordering = ['name']
         
     def __unicode__(self):
-        return self.signature
+        return '%s used in %s' % (self.signature, self.used_in_short())
         
+    def used_in_short(self):
+        return ', '.join([interface.name for interface in self.used_in.all()])
+    used_in_short.short_description = 'Used in'
+    
     @staticmethod
     def pre_save(sender, instance, **kwargs):
         d = parse_method_signature(instance.signature)

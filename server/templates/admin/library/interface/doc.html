@@ -1,0 +1,34 @@
+{% extends "admin/library/interface/base.html" %}
+{% load helpers markup %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css" />
+<link rel="stylesheet" href="{% media_url %}css/gamesoup/documentation.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+{% endblock %}
+{% block bodyclass %}dashboard{% endblock bodyclass %}
+{% block coltype %}colMS{% endblock coltype %}
+
+
+{% block bc_inner %}
+{{ block.super }}
+&rsaquo; <a href="{% url admin:library_interface_change interface.id %}">{{ interface }}</a>
+&rsaquo; Documentation
+{% endblock bc_inner %}
+
+{% block content %}
+<table class="interface module">
+    <tr>
+        <td>{{ interface.description|textile }}</td>
+    </tr>
+</table>
+
+<table class="methods module">
+    <caption>Methods</caption>
+    {% for method in interface.methods.all %}
+    <tr>
+        <td>{% include 'library/method/doc.html' %}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

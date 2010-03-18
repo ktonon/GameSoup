@@ -7,6 +7,37 @@ from gamesoup.library.models import *
 
 
 ###############################################################################
+# DOCUMENTATION
+
+
+@staff_member_required
+def multiple_interface_documentation(request):
+    query = {}
+    if request.GET:
+        g = lambda value: ',' in value and map(str, value.split(',')) or str(value)
+        query = dict([(str(key), g(value)) for key, value in request.GET.items()])
+    try:
+        qs = Interface.objects.filter(**query).order_by('name')
+    except Exception:
+        qs = Interface.objects.all()
+    context = {
+        'title': 'Interface Documentation',
+        'interfaces': qs,
+    }
+    return render_to_response('admin/library/interface/multiple_docs.html', context)
+
+
+@staff_member_required
+def interface_documentation(request, interface_id):
+    interface = get_object_or_404(Interface, pk=interface_id)
+    context = {
+        'title': '%s Documentation' % interface.name,
+        'interface': interface,
+    }
+    return render_to_response('admin/library/interface/doc.html', context)
+
+
+###############################################################################
 # LOCAL EDITING
 
 

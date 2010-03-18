@@ -2,9 +2,35 @@ import json
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import *
 from django.shortcuts import *
+from django.template import Context
+from django.template.loader import get_template
 from alphacabbage.django.helpers import get_pair_or_404
 from alphacabbage.django.decorators import require_post
 from gamesoup.games.models import *
+
+
+###############################################################################
+# CODE
+
+
+@staff_member_required
+def game_code(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
+    t = get_template('games/game/code.js')
+    c = Context({
+        'game': game,
+        'types': Type.objects.filter(instances__game=game).distinct().order_by('name'),
+        'objects': game.object_set.all(),
+        'stateful_objects': game.object_set.filter(type__has_state=True),
+        'visible_objects': game.object_set.filter(type__visible=True),
+    })
+    response = HttpResponse(mimetype='text/javascript')
+    response.write(t.render(c))
+    return response
+
+
+###############################################################################
+# DYNAMIC
 
 
 @staff_member_required

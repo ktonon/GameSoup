@@ -1,0 +1,7 @@
+{% load markup %}
+<strong>{{ method.signature }}</strong>
+{% if method.description %}
+{{ method.description|textile }}
+{% else %}
+<a href="{% url admin:library_method_change method.id %}" class="popup">{{ "_undocumented_"|textile }}</a>
+{% endif %}

@@ -36,6 +36,14 @@ class Game(models.Model):
     get_assembler_link.short_description = 'Assembler'
     get_assembler_link.allow_tags = True
 
+    def code_url(self):
+        return reverse('games:game_code', args=[self.id])
+
+    def code_link(self):
+        return '<a href="%s" title="See the source code for this game">Code</a>' % self.code_url()
+    code_link.short_description = 'Code'
+    code_link.allow_tags = True
+
     def is_empty(self):
         return self.object_set.count() == 0
     
