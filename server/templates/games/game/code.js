@@ -8,9 +8,13 @@
 {% for type in types %}
 /*...............................................................................................*/
 /*{{ type.name|center:"95"}}*/ (function () {
-{{ type.code }}{% if type.visible %}
+{{ type.code }}{% if type.visible or type.has_state %}
+
+/*****************************************************************************/
+/*{{ "Mixins"|center:"75" }}*/
+/*****************************************************************************/{% if type.visible %}
 gamesoup.library.types.{{ type.name }}.addMethods(gamesoup.library.mixins.Visible);{% endif %}{% if type.has_state %}
-gamesoup.library.types.{{ type.name }}.addMethods(gamesoup.library.mixins.Stateful);{% endif %}
+gamesoup.library.types.{{ type.name }}.addMethods(gamesoup.library.mixins.Stateful);{% endif %}{% endif %}
 
 })(); // End of {{ type.name }}
 
@@ -22,7 +26,7 @@ gamesoup.library.types.{{ type.name }}.addMethods(gamesoup.library.mixins.Statef
 /*===============================================================================================*/
 
 gamesoup.matches.objects = {};
-{% for obj in objects %}gamesoup.matches.objects[{{ obj.id }}] = new gamesoup.library.types.{{ obj.type.name|ljust:"40" }}("object-" + {{ obj.id }});
+{% for obj in objects %}gamesoup.matches.objects[{{ obj.id }}] = new gamesoup.library.types.{{ obj.type.name|ljust:"25" }}("object-" + {{ obj.id }});
 {% endfor %}
 
 

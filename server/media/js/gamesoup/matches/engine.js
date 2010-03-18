@@ -7,10 +7,26 @@ var mod = gamesoup.matches;
 mod.Engine = Class.create({
     initialize: function(node) {
         this._node = $(node);
+        this.createObjectLists();
+        this.createDOM();
+    },
+    createObjectLists: function() {
         this._objects = $H(mod.objects).values();
+        this._statefulObjects = this._objects.filter(function(obj) {return obj.isStateful()});
+        this._visibleObjects = this._objects.filter(function(obj) {return obj.isVisible()});        
+    },
+    createDOM: function() {
+        this._canvasNode = new Element('div', {id: 'gamesoup-canvas', style: 'position: relative'});
+        this._codeNode = new Element('div', {id: 'gamesoup-code', style: 'display: none'});
+        this._node.insert({bottom: this._canvasNode});
+        this._node.insert({bottom: this._codeNode});
+        // Add objects to DOM
         this._objects.each(function(obj) {
-            this._node.insert({bottom: obj.createDOM()});
+            var node = obj.createDOM();
+            var root = obj.isVisible() ? this._canvasNode : this._codeNode;
+            root.insert({bottom: node});
         }.bind(this));
+        this._visibleObjects.invoke('scale');
     }
 });
 

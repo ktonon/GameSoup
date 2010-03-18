@@ -12,6 +12,12 @@ mod.BaseType = Class.create({
         this._node = new Element('div', {id: this._id});
         this._node.innerHTML = this._id;
         return this._node;
+    },
+    isVisible: function() {
+        return false;
+    },
+    isStateful: function() {
+        return false;
     }
 });
 
