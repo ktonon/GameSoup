@@ -1,0 +1,15 @@
+#gamesoup-canvas {
+    position: relative;
+    margin: 20px 0;
+}
+.cell {
+    border: solid 1px #333;
+    border-top-color: #999;
+    border-left-color: #999;
+    background: #567;
+}
+input[type=button] {margin: 0;}
+input[type=text] {margin: 0; padding: 0; background: #e8e8e8; border-color: #999;}
+.box {border: solid 1px #999;}
+ul.list {margin: 0; padding: 0; overflow: auto;}
+ul.list li {list-style: none; padding: 0; margin: 10px; font-size: 12pt;}

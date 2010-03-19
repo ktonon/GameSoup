@@ -5,7 +5,7 @@
 gamesoup.library.types.List = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
-/*                            Interface Methods                             
+/*                             Interface Methods                             */
 /*****************************************************************************/
 gamesoup.library.types.List.addMethods({
     
@@ -59,11 +59,45 @@ gamesoup.library.types.List.addMethods({
     render: function() {
         
     }
+
 });
 
 /*****************************************************************************/
-/*                          Implementation methods                          
-/*                    Do not use outside of this module!                    
+/*           These methods are called by the gamesoup match engine.          */
+/*                         Do not call them yourself!                        */
+/*                    They are called in the order shown.                    */
+/*****************************************************************************/
+gamesoup.library.types.List.addMethods({ 
+    
+    /*
+     * Extend the DOM and apply styling.
+     */
+    render: function() {
+        // this._node has already been created by this point
+        this._node.insert({bottom: '<ul class="box list inner-container"></ul>'});
+        this._listNode = this._node.down('.list');
+    },
+    
+    stateSchema: function() {
+        
+    },
+    
+    initialState: function() {
+        
+    },
+    
+    /*
+     * Perform custom initialization.
+     */
+    register: function() {
+         
+    }
+    
+});
+
+/*****************************************************************************/
+/*                           Implementation methods                          */
+/*                     Do not use outside of this module!                    */
 /*****************************************************************************/
 gamesoup.library.types.List.addMethods({
     // Helper methods go here...

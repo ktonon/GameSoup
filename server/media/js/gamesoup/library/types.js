@@ -10,7 +10,6 @@ mod.BaseType = Class.create({
     },
     createDOM: function() {
         this._node = new Element('div', {id: this._id});
-        this._node.innerHTML = this._id;
         return this._node;
     },
     isVisible: function() {

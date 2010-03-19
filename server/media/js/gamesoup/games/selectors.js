@@ -40,6 +40,8 @@ mod.SingleObjectSelector = Class.create({
 		return selector;
 	}
 });
+gs.tracerize('SingleObjectSelector', mod.SingleObjectSelector);
+
 
 mod.MultipleObjectSelector = Class.create({
 	initialize: function(objects) {
@@ -49,8 +51,8 @@ mod.MultipleObjectSelector = Class.create({
 		this._selectors = this._objects.collect(this.addSelector.bind(this));
 		this._doneButton = new Element('input', {
 			type: 'button',
-			value: 'Done',
-			style: 'position: fixed; bottom: 100px; right: 100px; font-size: 32pt; -moz-border-radius: 10px'
+			value: 'Search',
+			style: 'position: fixed; top: 190px; left: 230px; font-size: 18pt; padding: 100px'
 		});
 		this._scratch.insert({bottom: this._doneButton});
 		this._doneButton.observe('click', this.release.bind(this));
@@ -92,5 +94,6 @@ mod.MultipleObjectSelector = Class.create({
 		return selector;
 	}	
 });
+gs.tracerize('MultipleObjectSelector', mod.MultipleObjectSelector);
     
 })();

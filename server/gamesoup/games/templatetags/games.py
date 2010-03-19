@@ -56,3 +56,31 @@ _built_in = {
     'String': str,
     'Boolean': bool,
 }
+
+class ParameterBindingNode(template.Node):
+    def __init__(self, obj_varname, param_varname, binding_varname):
+        self.obj_var = template.Variable(obj_varname)
+        self.param_var = template.Variable(param_varname)
+        self.binding_varname = binding_varname
+    def render(self, context):
+        from gamesoup.games.models import Binding
+        obj = self.obj_var.resolve(context)
+        param = self.param_var.resolve(context)
+        try:
+            binding = Binding.objects.get(instance=obj, parameter=param)
+        except Binding.DoesNotExist:
+            binding = None
+        context[self.binding_varname] = binding
+        return u''
+
+@register.tag
+def parameter_binding(parser, token):
+    '''
+    Get the parameter binding for the given object.
+        {%% parameter_binding obj param as binding %%}
+    '''
+    try:
+        tag_name, obj_varname, param_varname, _as, binding_varname = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError, "Invalid usage"
+    return ParameterBindingNode(obj_varname, param_varname, binding_varname)

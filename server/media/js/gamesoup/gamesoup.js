@@ -15,4 +15,6 @@ gamesoup.namespace = function(namespace) {
     });
 }
 
+gamesoup.gridSize = 20;
+
 })();

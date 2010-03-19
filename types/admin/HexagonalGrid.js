@@ -5,13 +5,14 @@
 gamesoup.library.types.HexagonalGrid = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
-/*                                Parameters                                
+/*                                 Parameters                                */
 /*****************************************************************************/
-//                                BUILT-INS                                 
+//                                 BUILT-INS                                 
 // this._radius                                     -- Integer
 
+
 /*****************************************************************************/
-/*                            Interface Methods                             
+/*                             Interface Methods                             */
 /*****************************************************************************/
 gamesoup.library.types.HexagonalGrid.addMethods({
     
@@ -35,11 +36,44 @@ gamesoup.library.types.HexagonalGrid.addMethods({
     render: function() {
         
     }
+
 });
 
 /*****************************************************************************/
-/*                          Implementation methods                          
-/*                    Do not use outside of this module!                    
+/*           These methods are called by the gamesoup match engine.          */
+/*                         Do not call them yourself!                        */
+/*                    They are called in the order shown.                    */
+/*****************************************************************************/
+gamesoup.library.types.HexagonalGrid.addMethods({ 
+    
+    /*
+     * Extend the DOM and apply styling.
+     */
+    render: function() {
+        // this._node has already been created by this point
+        
+    },
+    
+    stateSchema: function() {
+        
+    },
+    
+    initialState: function() {
+        
+    },
+    
+    /*
+     * Perform custom initialization.
+     */
+    register: function() {
+         
+    }
+    
+});
+
+/*****************************************************************************/
+/*                           Implementation methods                          */
+/*                     Do not use outside of this module!                    */
 /*****************************************************************************/
 gamesoup.library.types.HexagonalGrid.addMethods({
     // Helper methods go here...

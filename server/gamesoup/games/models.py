@@ -59,8 +59,8 @@ class Object(models.Model):
     type = models.ForeignKey(Type, related_name='instances')
     x = models.IntegerField(default=0)
     y = models.IntegerField(default=0)
-    width = models.IntegerField(default=4)
-    height = models.IntegerField(default=2)
+    width = models.IntegerField(default=5)
+    height = models.IntegerField(default=5)
     per_player = models.BooleanField(default=False)
     # parameter_bindings (See Binding.instance field)
     

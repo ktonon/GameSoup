@@ -16,7 +16,7 @@ mod.Engine = Class.create({
         this._visibleObjects = this._objects.filter(function(obj) {return obj.isVisible()});        
     },
     createDOM: function() {
-        this._canvasNode = new Element('div', {id: 'gamesoup-canvas', style: 'position: relative'});
+        this._canvasNode = new Element('div', {id: 'gamesoup-canvas'});
         this._codeNode = new Element('div', {id: 'gamesoup-code', style: 'display: none'});
         this._node.insert({bottom: this._canvasNode});
         this._node.insert({bottom: this._codeNode});
@@ -26,7 +26,9 @@ mod.Engine = Class.create({
             var root = obj.isVisible() ? this._canvasNode : this._codeNode;
             root.insert({bottom: node});
         }.bind(this));
+        // Scale and render visible objects
         this._visibleObjects.invoke('scale');
+        this._visibleObjects.invoke('render');
     }
 });
 

@@ -5,16 +5,17 @@
 gamesoup.library.types.EventConnection = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
-/*                                Parameters                                
+/*                                 Parameters                                */
 /*****************************************************************************/
-//                                BUILT-INS                                 
+//                                 BUILT-INS                                 
 // this._event                                      -- String
-//                                REFERENCES                                
+//                                 REFERENCES                                
 // this._action                                     -- Action
 // this._observed                                   -- Any
 
+
 /*****************************************************************************/
-/*                            Interface Methods                             
+/*                             Interface Methods                             */
 /*****************************************************************************/
 gamesoup.library.types.EventConnection.addMethods({
     
@@ -24,11 +25,28 @@ gamesoup.library.types.EventConnection.addMethods({
     register: function() {
         
     }
+
 });
 
 /*****************************************************************************/
-/*                          Implementation methods                          
-/*                    Do not use outside of this module!                    
+/*           These methods are called by the gamesoup match engine.          */
+/*                         Do not call them yourself!                        */
+/*                    They are called in the order shown.                    */
+/*****************************************************************************/
+gamesoup.library.types.EventConnection.addMethods({ 
+    
+    /*
+     * Perform custom initialization.
+     */
+    register: function() {
+         
+    }
+    
+});
+
+/*****************************************************************************/
+/*                           Implementation methods                          */
+/*                     Do not use outside of this module!                    */
 /*****************************************************************************/
 gamesoup.library.types.EventConnection.addMethods({
     // Helper methods go here...

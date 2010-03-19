@@ -27,7 +27,8 @@ mod.ConfigureObject = Class.create({
 		return new ParamClass(node, this._options);
 	},
 	addRef: function(node) {
-		return new gamesoup.games.parameters.Reference(node, this._options);
+	    var RefClass = gamesoup.games.parameters[node.hasClassName('unsatisfiable') ? 'UnsatisfiableReference' : 'Reference'];
+		return new RefClass(node, this._options);
 	}
 })
 gs.tracerize('ConfigureObject', mod.ConfigureObject);

@@ -9,12 +9,12 @@ mod.Visible = {
         return true;
     },
     setPosition: function(x, y) {
-        this._x = x * 20;
-        this._y = y * 20;
+        this._x = x * gs.gridSize;
+        this._y = y * gs.gridSize;
     },
     setSize: function(width, height) {
-        this._width = width * 20;
-        this._height = height * 20;
+        this._width = width * gs.gridSize;
+        this._height = height * gs.gridSize;
     },
     scale: function() {
         this._node.setStyle({
@@ -22,8 +22,7 @@ mod.Visible = {
             left: this._x + 'px',
             top: this._y + 'px',
             width: this._width + 'px',
-            height: this._height + 'px',
-            background: '#999'
+            height: this._height + 'px'
         });
     }
 };

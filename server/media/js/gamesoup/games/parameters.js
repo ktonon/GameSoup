@@ -81,7 +81,7 @@ mod.String = Class.create(mod.BuiltIn, {
 		return errors;
 	}
 });
-gs.tracerize('Text', mod.Text);
+gs.tracerize('String', mod.String);
 
 
 mod.Integer = Class.create(mod.String, {
@@ -123,14 +123,10 @@ gs.tracerize('Float', mod.Float);
 mod.Reference = Class.create(mod.Parameter, {
 	initialize: function($super, node, options) {
 		$super(node, options);
-		if (!this._node.hasClassName('unsatisfiable')) {
-			this.createWidget();
-			this._boundToDisclosure.update(this._node.getAttribute('boundTo'));
-			// Event handlers
-			this._widget.observe('click', this.bindRef.bind(this));			
-		} else {
-			this._node.insert({bottom: '<div class="note">This parameter is unsatisfiable. Try using <strong>&ldquo;obj &rarr; x&rdquo;</strong> to find an appropraite object.</div>'});
-		}
+		this.createWidget();
+		this._boundToDisclosure.update(this._node.getAttribute('boundTo'));
+		// Event handlers
+		this._widget.observe('click', this.bindRef.bind(this));			
 	},
 	release: function() {
 		this._widget.stopObserving();
@@ -178,6 +174,65 @@ mod.Reference = Class.create(mod.Parameter, {
 	}	
 });
 gs.tracerize('Reference', mod.Reference);
+
+
+// What this one does:
+//   * Query the server for types that can satisfy this reference
+//   * Let the user pick a type from the popup
+//   * Drop the chosen type id into a dropbox
+//   * Instantiate an object for that type
+//   * Bind the parameter to the newly instantiated object
+mod.UnsatisfiableReference = Class.create(mod.Parameter, {
+    initialize: function($super, node, options) {
+        $super(node, options);
+		this.createWidget();
+		// Event handlers
+		this._widget.observe('click', this.search.bind(this));
+		this._watchForNewObject = $('assembler').observe('assembler:objectAdded', this.bindNewObject.bind(this));
+	},
+	release: function() {
+		this._widget.stopObserving('click');
+		$('assembler').stopObserving('assembler:objectAdded', this._watchForNewObject);
+	},
+	createWidget: function() {
+	    this._node.insert({bottom: '<input type="text" id="id_unsatref" style="display: none" />'});
+		this._node.insert({bottom: '<input type="button" id="lookup_id_unsatref" value="Search" title="None of the objects in your game can satisfy this parameter. Search the library for one that does." />'});
+        this._dropbox = this._node.down('input[type=text]');
+		this._widget = this._node.down('input[type=button]');
+	},
+	search: function() {
+		this._node.fire('dialog:requestSuspend');
+		var url = gs.utils.makeURL('searchRequiredByParameter', this._options);
+		new Ajax.Request(url, {
+			method: 'get',
+			evalJS: true,
+			onSuccess: function(transport) {
+				var type_ids = transport.responseJSON;
+				this._widget.setAttribute('href', gs.utils.makeURL('browseTypes') + '?id__in=' + type_ids.join(','));
+				showRelatedObjectLookupPopup(this._widget);
+				// Now a popup appears with a list of possible types.
+				// When the user selects a type, its id will get put into the dropbox
+				// and 'dropbox:change' will fire.
+				// The Assembler is already watching for this event and will take
+				// care of instantiating the object and refreshing the page.
+			}.bind(this)
+		});
+	},
+	bindNewObject: function(event) {
+	    var url = gs.utils.makeURL('saveParameterBinding', this._options);
+		new Ajax.Request(url, {
+			method: 'post',
+			postBody: 'value=' + event.memo.objectID,
+			onSuccess: function() {
+        	    this.release();
+        	    this._widget.replace(new Template('<span class="note">This parameter has been bound to the newly created #{typeName}.<span>').evaluate(event.memo));
+			    this._node.fire('parameter:saved')
+                this._node.fire('dialog:requestResume');		
+			}.bind(this)
+		});
+	}	
+});
+gs.tracerize('UnsatisfiableReference', mod.UnsatisfiableReference);
 
 
 })();

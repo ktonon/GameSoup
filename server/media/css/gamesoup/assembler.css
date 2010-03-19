@@ -14,28 +14,36 @@ body {background: #e8e8e8;}
 #satisfied, #satisfiable {width: 50px;}
 .satisfied, .satisfiable {text-align: center;}
 #ownership {width: 50px;}
-.ownership {cursor: pointer;}
+.ownership.stateful {cursor: pointer;}
 #object-list .row1 {background: #e8e8e8;}
 #object-list .row2 {background: #fff;}
-.parameters .bound {font-weight: normal; color: #666;}
+#object-list .row1.highlight, #object-list .row2.highlight {background: #9cf;}
+#object-list .highlight .type input {background: #9cf;}
+.parameters .bound {font-weight: normal; color: #999;}
+.parameters .bound.reference {cursor: pointer;}
+.parameters .bound .note {color: #66f;}
 .parameters .unbound {font-weight: bold; color: red;}
 #delete-link {width: 20px;}
 .delete-link {font-size: 18pt; color: red; cursor: pointer;}
 
 /* Canvas */
-#canvas .content {background-repeat: repeat;}
-.object-shaper {background: #69c; border: dashed 1px #036; color: #036; opacity: 0.75; cursor: move; z-index: 5;}
-.object-shaper .title {font-size: 10pt; margin: 5px; cursor: help;}
-.object-shaper .resize {position: absolute;	width: 18px; height: 18px; background: #036; bottom: 0px; right: 0px; z-index: 11; cursor: se-resize;}
-.object-shaper.highlight {background-color: yellow; color: #993; border-color: #993;}
-.object-shaper.highlight .resize {background-color: #993;}
-
+#canvas .content {background-repeat: repeat}
+.object-shaper {background: #999; border: dashed 1px #036; color: black; font-size: 9pt; opacity: 0.75; cursor: move; z-index: 5; overflow: hidden;}
+.object-shaper .title {font-size: 12pt; margin: 5px; cursor: help;}
+.object-shaper p {margin: 5px;}
+.object-shaper .resize {position: absolute;	width: 18px; height: 18px; background: #333; bottom: 0px; right: 0px; z-index: 11; cursor: se-resize;}
+.object-shaper.game-owned {background: #9cf;}
+.object-shaper.game-owned .resize {background: #036;}
+.object-shaper.player-owned {background: #69c;}
+.object-shaper.player-owned .resize {background: #036;}
+#canvas .object-shaper.highlight {background-color: yellow; color: #993; border-color: #993;}
+#canvas .object-shaper.highlight .resize {background-color: #993;}
 
 /* Message Box */
 #message-box {
 	position: absolute;
 	top: 95px;
-	width: 100%;
+	width: 95%;
 	z-index: 101;
 	font-size: 18pt;
 	text-align: center;
@@ -88,4 +96,4 @@ body {background: #e8e8e8;}
 
 .unsatisfiable label {color: red;}
 .bound-to-disclosure {margin: 0 20px; font-size: 12pt;}
-input[type=button].selected {background: #69c; color: white;;}
+input[type=button].selected {background: #69c; color: white;}

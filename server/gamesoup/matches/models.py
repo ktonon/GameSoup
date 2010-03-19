@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 from gamesoup.games.models import *
 
@@ -11,3 +12,8 @@ class Match(models.Model):
 
     class Meta:
         verbose_name_plural = 'Matches'
+    
+    def play_link(self):
+        return '<a href="%s">play</a>' % reverse('matches:play_match', args=[self.id])
+    play_link.short_description = 'Play'
+    play_link.allow_tags = True

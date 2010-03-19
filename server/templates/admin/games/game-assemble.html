@@ -41,11 +41,11 @@
     <ul class="object-tools">
         <li>
             <input id="id_search_required_by" class="id-dropbox" value="" style="display: none" />
-            <a id="lookup_id_search_required_by" class="addlink" href="" link="{% url admin:library_type_changelist %}" title="Find objects that are required by existing.">obj &rarr; x</a>
+            <a id="lookup_id_search_required_by" class="addlink" href="" link="{% url admin:library_type_changelist %}" title="Find objects that can satisfy parameters of existing ones.">SATISFY: existing &rarr; <span class="bright">?</span></a>
         </li>
         <li>
             <input id="id_search_requires" class="id-dropbox" value="" style="display: none" />
-            <a id="lookup_id_search_requires" class="addlink" href="" link="{% url admin:library_type_changelist %}" title="Find new objects that require existing ones.">x &rarr; obj</a>
+            <a id="lookup_id_search_requires" class="addlink" href="" link="{% url admin:library_type_changelist %}" title="Find objects require existing ones as parameters.">EXPLORE: <span class="bright">?</span> &rarr; existing</a>
         </li>
         <li>
             {# Take advantage of Django's Related object lookup feature. JavaScript to search for an object using the django admin interface (in a popup window) and set a field with its ID already exists, so we'll hook into this and take over once the ID has been set. #}

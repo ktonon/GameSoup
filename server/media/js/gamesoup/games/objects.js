@@ -33,23 +33,51 @@ mod.Object.addMethods({
 		this._node.setAttribute('deleteURL', gs.utils.makeURL('deleteObject', this._options));
 		this._typeButton = this._node.down('.type input[type=button]');
 		this._deleteButton = this._node.down('.delete-link');
+		this._boundRefs = this._node.select('.parameter.bound.reference');
+		this._ownershipNode = this._node.down('.ownership.stateful');
 		// Event handlers
 		this._typeButton.observe('click', function() {this._node.fire('object:requestConfig')}.bind(this));
 		this._deleteButton.observe('click', function() {this._node.fire('object:requestDeletion')}.bind(this));
+		if (this._ownershipNode) this._ownershipNode.observe('click', this.toggleOwnership.bind(this));
+		// Highlighting
+		this._boundRefs.each(function(node) {
+		    var boundToID = node.getAttribute('boundTo');
+		    var boundToNode = $('object-' + boundToID)
+            node.observe('mouseover', function(otherNode, event) {otherNode.addClassName('highlight');}.curry(boundToNode));
+            node.observe('mouseout', function(otherNode, event) {otherNode.removeClassName('highlight');}.curry(boundToNode));		        
+	    }.bind(this));
+	    this._node.observe('mouseover', this.showShaper.bind(this, 'add'));
+	    this._node.observe('mouseout', this.showShaper.bind(this, 'remove'));
 	},
 	release: function() {
+	    this._node.stopObserving('mouseover');
+	    this._node.stopObserving('mouseout');
 		this._typeButton.stopObserving('click');
 		this._deleteButton.stopObserving('click');
+		if (this._ownershipNode) this._ownershipNode.stopObserving('click');
+		this._boundRefs.invoke('stopObserving');
 	},
 	/********************************************************/
 	/* QUERIES
 	/********************************************************/
 	getObjectID: function() {
 		return this._objectID;
-	}
+	},
 	/********************************************************/
 	/* COMMANDS
 	/********************************************************/
+	showShaper: function(action) {
+	    var shaper = $('object-shaper-' + this._objectID);
+	    if (shaper) shaper[action + 'ClassName']('highlight');
+	},
+	toggleOwnership: function() {
+	    var url = gs.utils.makeURL('toggleObjectOwnership', this._options);
+	    new Ajax.Request(url, {
+	        method: 'post',
+	        evalJS: true,
+	        onSuccess: function(transport) {this._node.fire('assembler:refreshRequired')}.bind(this)
+	    })
+	}
 });
 gs.tracerize('Object', mod.Object);
 

@@ -30,20 +30,28 @@ def game_code(request, game_id):
 
 
 ###############################################################################
-# DYNAMIC
-
+# SEARCH
+# In these methods we use "or [0]" because of the way the type ids are
+# used by the javascript client. Eventually, these types are used in a query
+# to a django change list view that takes the form "id__in=%s" % ','.join(type_ids)
+# If we use an empty list, this results in an invalid query, and django by default
+# will show all types, which is not what we want. If we use [0] instead,
+# then the query reads "id__in=0", which will not return any types.
 
 @staff_member_required
 @require_post
 def search_requires(request):
     obj_ids = map(int, filter(bool, request.POST['object_ids'].split(',')))
-    qs = Type.objects.all()
-    for obj_id in obj_ids:
-        obj = Object.objects.get(pk=obj_id)
-        qs = qs.filter(parameters__interface__implemented_by=obj.type)
-    type_ids = [t.id for t in qs]
+    if obj_ids:
+        qs = Type.objects.all()
+        for obj_id in obj_ids:
+            obj = Object.objects.get(pk=obj_id)
+            qs = qs.filter(parameters__interface__implemented_by=obj.type)
+        type_ids = [t.id for t in qs]
+    else:
+        type_ids = []
     response = HttpResponse(mimetype='application/json')
-    response.write(json.dumps(type_ids))
+    response.write(json.dumps(type_ids or [0])) # See comment above
     return response
 
 
@@ -52,18 +60,34 @@ def search_requires(request):
 def search_required_by(request):
     from django.db.models import Q
     obj_ids = map(int, filter(bool, request.POST['object_ids'].split(',')))
-    qs = Type.objects.all()
-    for obj_id in obj_ids:
-        obj = Object.objects.get(pk=obj_id)
-        query = Q()
-        for param in obj.type.parameters.all():
-            query = query | Q(implements=param.interface)
-        qs = qs.filter(query)
-    type_ids = [t.id for t in qs]
+    if obj_ids:
+        qs = Type.objects.all()
+        for obj_id in obj_ids:
+            obj = Object.objects.get(pk=obj_id)
+            query = Q()
+            for param in obj.type.parameters.all():
+                query = query | Q(implements=param.interface)
+            qs = qs.filter(query)
+        type_ids = [t.id for t in qs]
+    else:
+        type_ids = []
     response = HttpResponse(mimetype='application/json')
-    response.write(json.dumps(type_ids))
+    response.write(json.dumps(type_ids or [0])) # See comment above
+    return response
+
+
+@staff_member_required
+def search_required_by_parameter(request, parameter_id):
+    param = get_object_or_404(Variable, pk=parameter_id)
+    type_ids = [t.id for t in Type.objects.filter(implements=param.interface)]
+    response = HttpResponse(mimetype='application/json')
+    response.write(json.dumps(type_ids or [0])) # See comment above
     return response
     
+
+###############################################################################
+# DYNAMIC
+
 
 @staff_member_required
 def assemble_game(request, game_id):
@@ -87,10 +111,15 @@ def refresh_assembler(request, game_id):
 @staff_member_required
 @require_post
 def instantiate_type(request, game_id, type_id):
+    '''
+    Instantiate a new object and returns {objectID: obj.id} in a JSON response.
+    '''
     game = get_object_or_404(Game, pk=game_id)
     type = get_object_or_404(Type, pk=type_id)
-    game.object_set.create(type=type)
-    return HttpResponse()
+    obj = game.object_set.create(type=type)
+    response = HttpResponse(mimetype='application/json')
+    response.write(json.dumps({'objectID': obj.id, 'typeName': type.name}))
+    return response
 
 
 @staff_member_required
@@ -109,6 +138,17 @@ def update_object_size(request, game_id, object_id):
     obj.width, obj.height = _get_numbers(request.POST, 'size')
     obj.save()
     return HttpResponse()
+
+
+@staff_member_required
+@require_post
+def toggle_object_ownership(request, game_id, object_id):
+    game, obj = get_pair_or_404(Game, 'object_set', game_id, object_id)
+    obj.per_player = not obj.per_player
+    obj.save()
+    response = HttpResponse(mimetype='application/json')
+    response.write(json.dumps({'ownership': obj.per_player and 'player' or 'game'}))
+    return response
 
 
 @staff_member_required
@@ -165,7 +205,7 @@ def candidate_refs(request, game_id, object_id, parameter_id):
         param = obj.type.parameters.get(pk=parameter_id)
     except Variable.DoesNotExist:
         raise Http404()
-    qs = Object.objects.filter(type__implements=param.interface)
+    qs = game.object_set.filter(type__implements=param.interface)
     response = HttpResponse(mimetype='application/json')
     response.write(json.dumps(['object-%d' % obj.id for obj in qs]))
     return response

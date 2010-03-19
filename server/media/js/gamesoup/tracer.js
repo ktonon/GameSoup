@@ -35,6 +35,7 @@ mod.Tracer = Class.create({
     },
     tracerize: function(className, klass) {
         // Only traces instance methods.
+        console.log('Trazerizing: ', className, klass)
         var attributeNames = $H(klass.prototype).keys();
         for (var i = 0; i < attributeNames.length; i++) {
             var attributeName = attributeNames[i];

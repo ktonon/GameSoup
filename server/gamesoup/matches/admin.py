@@ -6,5 +6,5 @@ class MatchAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('game', 'state')}),
         )
-    list_display = ('game',)
+    list_display = ('game', 'play_link')
 admin.site.register(Match, MatchAdmin)

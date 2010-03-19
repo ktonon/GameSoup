@@ -1,3 +1,4 @@
+{% load games %}
 <div class="module">
     <table>
         <thead>
@@ -16,10 +17,13 @@
             <td class="type"><input type="button" value="{{ obj.type.name }}" /></td>
             <td class="satisfied"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.satisfied|yesno:"yes,no" }}.gif"></td>
             <td class="satisfiable"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.is_satisfiable|yesno:"yes,no" }}.gif"></td>
-            <td class="ownership">{{ obj.per_player|yesno:"player,game" }}</td>
+            <td class="ownership {{ obj.type.has_state|yesno:"stateful," }}" {% if obj.type.has_state %}title="This object has game state. Click to change whether that state is shared (game ownership) or each player gets their own state."{% endif %}>{% if obj.type.has_state %}{{ obj.per_player|yesno:"player,game" }}{% endif %}</td>
             <td class="parameters">
                 {% for param in obj.type.parameters.all %}
-                <span class="{{ param.bindings.count|yesno:"bound,unbound" }}">{{ param.name }}</span> {{ forloop.last|yesno:",-"}}
+                {% parameter_binding obj param as binding %}
+                <span class="parameter {{ binding|yesno:"bound,unbound" }} {{ param.interface.is_built_in|yesno:"built-in,reference" }}" {% if binding and not param.interface.is_built_in %}boundTo="{{ binding.object_argument.id }}" title="The referenced object is highlighted."{% endif %}>
+                    {{ param.name }}{% if binding %}:<span class="note">{% if param.interface.is_built_in %}{{ binding.built_in_argument }}{% else %}{{ binding.object_argument }}{% endif %}</span>{% endif %}
+                </span> {% if not forloop.last %}&bull;{% endif %}
                 {% endfor %}
             </td>
             <td class="delete-link" title="Remove this object">x</td>

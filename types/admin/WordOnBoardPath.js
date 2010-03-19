@@ -5,14 +5,14 @@
 gamesoup.library.types.WordOnBoardPath = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
-/*                                Parameters                                
-/*****************************************************************************/
-//                                REFERENCES                                
+/*                                 Parameters                                */
+/*****************************************************************************///                                 REFERENCES                                
 // this._board                                      -- Board
 // this._word                                       -- Readable
 
+
 /*****************************************************************************/
-/*                            Interface Methods                             
+/*                             Interface Methods                             */
 /*****************************************************************************/
 gamesoup.library.types.WordOnBoardPath.addMethods({
     
@@ -22,11 +22,28 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
     isValid: function(w) {
         
     }
+
 });
 
 /*****************************************************************************/
-/*                          Implementation methods                          
-/*                    Do not use outside of this module!                    
+/*           These methods are called by the gamesoup match engine.          */
+/*                         Do not call them yourself!                        */
+/*                    They are called in the order shown.                    */
+/*****************************************************************************/
+gamesoup.library.types.WordOnBoardPath.addMethods({ 
+    
+    /*
+     * Perform custom initialization.
+     */
+    register: function() {
+         
+    }
+    
+});
+
+/*****************************************************************************/
+/*                           Implementation methods                          */
+/*                     Do not use outside of this module!                    */
 /*****************************************************************************/
 gamesoup.library.types.WordOnBoardPath.addMethods({
     // Helper methods go here...

@@ -5,9 +5,6 @@ var gs = gamesoup;
 var mod = gamesoup.games;
 
 
-gs.gridSize = 20;
-
-
 mod.Assembler = Class.create({
 	initialize: function(node) {
 		this._node = $(node);
@@ -24,12 +21,24 @@ mod.Assembler = Class.create({
 		this._searchRequiredBy = $('lookup_id_search_required_by');
 		this._idDropboxes = $$('.id-dropbox');
 		// Event handlers
-		this._searchRequires.observe('click', this.search.bind(this, gs.utils.makeURL('searchRequires')));
-		this._searchRequiredBy.observe('click', this.search.bind(this, gs.utils.makeURL('searchRequiredBy')));
+		this._searchRequires.observe('click', this.search.bind(this, gs.utils.makeURL('searchRequires'), 'Find objects that require all of the selected objects as parameters. Select one or more and click "Search".'));
+		this._searchRequiredBy.observe('click', this.search.bind(this, gs.utils.makeURL('searchRequiredBy'), 'Find objects that satisfy at least one parameter on all of the selected objects. Select one or more and click "Search"'));
 		this._node.observe('object:requestConfig', this.showObjectConfigDialog.bind(this));
 		this._node.observe('object:requestDeletion', this.deleteObject.bind(this));
+		// As the game configuration changes the Assembler will
+		// get out of sync with those changes. The easiest way to
+		// fix this is to completely reset it. Instead of doing
+		// a page refresh, which requires all scripts to be reloaded,
+		// we can query the server for the updated DOM of the object list
+		// and canvas, and then recreate the javascript wrappers from them.
 		$('content-main').observe('assembler:refreshRequired', this.refresh.bind(this));
-		this._idDropboxes.invoke('observe', 'dropbox:change', function(event) {
+		// Assumes that all dropboxes are used for collecting
+		// type ids which need to be instantiated into objects
+		// When the object gets added to the game, addObjectToGame
+		// will fire 'assembler:objectAdded', which can be used
+		// to perform actions afterwards such as binding that object
+		// to other objects.
+        $('content-main').observe('dropbox:change', function(event) {
 			var dropbox = event.target;
 			var id = dropbox.getValue();
 			this.addObjectToGame(id);
@@ -50,7 +59,11 @@ mod.Assembler = Class.create({
 		var url = gs.utils.makeURL('instantiateType', options);
 		new Ajax.Request(url, {
 			method: 'post',
-			onSuccess: this.refresh.bind(this)
+			evalJS: true,
+			onSuccess: function(transport) {
+			    this.refresh();
+			    this._node.fire('assembler:objectAdded', transport.responseJSON);
+			}.bind(this)
 		})
 	},
 	showObjectConfigDialog: function(event) {
@@ -97,11 +110,11 @@ mod.Assembler = Class.create({
 			}.bind(this)
 		});
 	},
-	search: function(url, event) {
+	search: function(url, message, event) {
 		event.stop();
 		var button = event.target;
 		$('curtain').show();
-		mod.messageBox.post('Please select the objects you would like to use in the search');
+		mod.messageBox.post(message);
 		var selector = new gamesoup.games.selectors.MultipleObjectSelector($$('.object'));
 		$('scratch').observe('selector:released', function(selector, url, button) {
 			mod.messageBox.clear();
@@ -142,6 +155,7 @@ gs.tracerize('MessageBox', mod.MessageBox);
 document.observe('dom:loaded', function() {
 	gamesoup.games.messageBox = new gamesoup.games.MessageBox('message-box');
 	gamesoup.games.assembler = new gamesoup.games.Assembler('assembler');
+	$('canvas').fire('tab:requestFocus');
 });
 })();
 
@@ -158,4 +172,18 @@ function dismissRelatedLookupPopup(win, chosenId) {
     }
 	elem.fire('dropbox:change') // <== Customization
     win.close();
+}
+
+function showRelatedObjectLookupPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^lookup_/, '');
+    name = id_to_windowname(name);
+    var href = triggeringLink.getAttribute('href'); // <== Customization (allows use of non-anchors)
+    if (href.search(/\?/) >= 0) {
+        href += '&pop=1';
+    } else {
+        href += '?pop=1';
+    }
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
 }

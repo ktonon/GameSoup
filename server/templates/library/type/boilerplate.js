@@ -31,7 +31,8 @@ gamesoup.library.types.{{ type.name }}.addMethods({
     {{ method.name }}: function({% for param in method.parameters.all %}{{ param.name }}{% if not forloop.last %}, {% endif %}{% endfor %}) {
         
     }{% if not forloop.last %},{% endif %}
-{% endfor %}});{% endif %}
+{% endfor %}
+});{% endif %}
 
 /*****************************************************************************/
 /*{{ "These methods are called by the gamesoup match engine."|center:"75"}}*/
@@ -40,7 +41,11 @@ gamesoup.library.types.{{ type.name }}.addMethods({
 /*****************************************************************************/
 gamesoup.library.types.{{ type.name }}.addMethods({ {% if type.visible %}
     
+    /*
+     * Extend the DOM and apply styling.
+     */
     render: function() {
+        // this._node has already been created by this point
         
     },{% endif %}{% if type.has_state %}
     
@@ -52,6 +57,9 @@ gamesoup.library.types.{{ type.name }}.addMethods({ {% if type.visible %}
         
     },{% endif %}
     
+    /*
+     * Perform custom initialization.
+     */
     register: function() {
          
     }

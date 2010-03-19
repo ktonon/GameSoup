@@ -33,7 +33,9 @@ mod.ObjectShaper.addMethods({
 		this._resizeNode = this._node.down('.resize');
 		// Other initialization
 		this._setPositionAndSize();
-		// this.installHighlighter();
+        // Event handlers
+	    this._node.observe('mouseover', this.showConfig.bind(this, 'add'));
+	    this._node.observe('mouseout', this.showConfig.bind(this, 'remove'));
 		// Make shapers
 		this._positionDraggable = new Draggable(this._node, {
 			handle: this._renderedNode,
@@ -72,6 +74,10 @@ mod.ObjectShaper.addMethods({
 	/********************************************************/
 	/* COMMANDS
 	/********************************************************/
+	showConfig: function(action) {
+	    var config = $('object-' + this._objectID);
+	    config[action + 'ClassName']('highlight');
+	},
 	updatePosition: function() {
 		var x = gs.utils.cssNumber(this._node, 'left') / gs.gridSize;
 		var y = gs.utils.cssNumber(this._node, 'top') / gs.gridSize;

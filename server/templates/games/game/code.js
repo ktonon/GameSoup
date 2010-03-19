@@ -1,14 +1,14 @@
 {% load games library %}/*
  * Game: {{ game.name }}{% code_doc game %}
  */
-
+{% if types %}
 /*===============================================================================================*/
 /*{{ "Types"|center:"95" }}*/
 /*===============================================================================================*/
 {% for type in types %}
 /*...............................................................................................*/
 /*{{ type.name|center:"95"}}*/ (function () {
-{{ type.code }}{% if type.visible or type.has_state %}
+{{ type.code|safe }}{% if type.visible or type.has_state %}
 
 /*****************************************************************************/
 /*{{ "Mixins"|center:"75" }}*/
@@ -19,8 +19,8 @@ gamesoup.library.types.{{ type.name }}.addMethods(gamesoup.library.mixins.Statef
 })(); // End of {{ type.name }}
 
 
-{% endfor %}
-
+{% endfor %}{% endif %}
+{% if objects %}
 /*===============================================================================================*/
 /*{{ "Instantiate Objects"|center:"95" }}*/
 /*===============================================================================================*/
@@ -43,4 +43,4 @@ gamesoup.matches.objects = {};
 gamesoup.matches.objects[{{ obj.id }}].setSize({{ obj.width }}, {{ obj.height }});
 {% endif %}
 
-{% endfor %}
+{% endfor %}{% endif %}

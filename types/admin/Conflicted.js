@@ -7,4 +7,3 @@
  *     Nothing call()                               -- used in Action
  *     Boolean call()                               -- used in Predicate
  */
-

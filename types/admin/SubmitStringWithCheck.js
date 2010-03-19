@@ -5,15 +5,15 @@
 gamesoup.library.types.SubmitStringWithCheck = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
-/*                                Parameters                                
-/*****************************************************************************/
-//                                REFERENCES                                
+/*                                 Parameters                                */
+/*****************************************************************************///                                 REFERENCES                                
 // this._destination                                -- Receiver
 // this._source                                     -- ReadWrite
 // this._validator                                  -- StringValidator
 
+
 /*****************************************************************************/
-/*                            Interface Methods                             
+/*                             Interface Methods                             */
 /*****************************************************************************/
 gamesoup.library.types.SubmitStringWithCheck.addMethods({
     
@@ -23,11 +23,28 @@ gamesoup.library.types.SubmitStringWithCheck.addMethods({
     call: function() {
         
     }
+
 });
 
 /*****************************************************************************/
-/*                          Implementation methods                          
-/*                    Do not use outside of this module!                    
+/*           These methods are called by the gamesoup match engine.          */
+/*                         Do not call them yourself!                        */
+/*                    They are called in the order shown.                    */
+/*****************************************************************************/
+gamesoup.library.types.SubmitStringWithCheck.addMethods({ 
+    
+    /*
+     * Perform custom initialization.
+     */
+    register: function() {
+         
+    }
+    
+});
+
+/*****************************************************************************/
+/*                           Implementation methods                          */
+/*                     Do not use outside of this module!                    */
 /*****************************************************************************/
 gamesoup.library.types.SubmitStringWithCheck.addMethods({
     // Helper methods go here...
