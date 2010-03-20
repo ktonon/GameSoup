@@ -1,17 +1,13 @@
 /*
- * Type: EventConnection
- * Call an action when an observed object fires an event.
+ * Type: GameStart
+ * Connect an action to this object to have it execute at the start of the game.
  */
-gamesoup.library.types.EventConnection = Class.create(gamesoup.library.types.BaseType);
+gamesoup.library.types.GameStart = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
 /*                                 Parameters                                */
-/*****************************************************************************/
-//                                 BUILT-INS                                 
-// this._event                                      -- String
-//                                 REFERENCES                                
+/*****************************************************************************///                                 REFERENCES                                
 // this._action                                     -- Action
-// this._observed                                   -- Any
 
 
 /*****************************************************************************/
@@ -19,13 +15,13 @@ gamesoup.library.types.EventConnection = Class.create(gamesoup.library.types.Bas
 /*                         Do not call them yourself!                        */
 /*                    They are called in the order shown.                    */
 /*****************************************************************************/
-gamesoup.library.types.EventConnection.addMethods({ 
+gamesoup.library.types.GameStart.addMethods({ 
     
     /*
      * Perform custom initialization.
      */
     register: function() {
-         
+        $('gamesoup-engine').observe('game:start', this._action.call.bind(this._action));
     }
     
 });
@@ -34,6 +30,6 @@ gamesoup.library.types.EventConnection.addMethods({
 /*                           Implementation methods                          */
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
-gamesoup.library.types.EventConnection.addMethods({
+gamesoup.library.types.GameStart.addMethods({
     // Helper methods go here...
 });

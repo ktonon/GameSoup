@@ -106,7 +106,7 @@ mod.ObjectShaper.addMethods({
 	saveSize: function() {
 		var width = this._g('left');
 		var height = this._g('top');
-		if (width <= 1 || height <= 1) {
+		if (width <= 0 || height <= 0) {
 			// Revert the resizer
 			this._node.setStyle({
 				width: this._size[0] * gs.gridSize - 2 + 'px',

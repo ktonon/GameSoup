@@ -4,17 +4,18 @@
         <thead>
             <tr>
                 <th id="type">Type</th>
+                <th id="delete-link">&nbsp;</th>
                 <th id="satisfied" title="Have all the parameters been set?">Satisfied</th>
                 <th id="satisfiable" title="Is it possible to set all the parameters given the objects already in the game?">Satisfiable</th>
                 <th id="ownership" title="Is it common to all players, or do each get their own copy?">Ownership</th>
                 <th id="parameters" title="Parameters in red still need to be set.">Parameters</th>
-                <th id="delete-link">&nbsp;</th>
             </tr>
         </thead>
         {% if objects %}
         {% for obj in objects %}
         <tr id="object-{{ obj.id }}" class="object {% cycle row1,row2 %} {{ obj.satisfied|yesno:",unsatisfied" }} {{ obj.is_satisfiable|yesno:",unsatisfiable" }}" objectID="{{ obj.id }}">
             <td class="type"><input type="button" value="{{ obj.type.name }}" /></td>
+            <td class="delete-link" title="Remove this object">x</td>
             <td class="satisfied"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.satisfied|yesno:"yes,no" }}.gif"></td>
             <td class="satisfiable"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.is_satisfiable|yesno:"yes,no" }}.gif"></td>
             <td class="ownership {{ obj.type.has_state|yesno:"stateful," }}" {% if obj.type.has_state %}title="This object has game state. Click to change whether that state is shared (game ownership) or each player gets their own state."{% endif %}>{% if obj.type.has_state %}{{ obj.per_player|yesno:"player,game" }}{% endif %}</td>
@@ -26,7 +27,6 @@
                 </span> {% if not forloop.last %}&bull;{% endif %}
                 {% endfor %}
             </td>
-            <td class="delete-link" title="Remove this object">x</td>
         </tr>
         {% endfor %}
         {% else %}

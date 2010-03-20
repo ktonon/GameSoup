@@ -9,6 +9,9 @@ mod.Engine = Class.create({
         this._node = $(node);
         this.createObjectLists();
         this.createDOM();
+        this._objects.invoke('register');
+        // Start the game
+        this._node.fire('game:start');
     },
     createObjectLists: function() {
         this._objects = $H(mod.objects).values();
@@ -34,6 +37,6 @@ mod.Engine = Class.create({
 
 
 document.observe('dom:loaded', function() {
-    gamesoup.matches.engine = new gamesoup.matches.Engine('gamesoup-game-engine');
+    gamesoup.matches.engine = new gamesoup.matches.Engine('gamesoup-engine');
 });
 })();

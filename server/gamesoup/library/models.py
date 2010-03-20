@@ -103,9 +103,15 @@ class Type(models.Model):
             type.save()
     
     @staticmethod
-    def pre_save(sender, instance, **kwargs):
+    def post_save(sender, instance, **kwargs):
+        # Parse signature and set parameters
+        d = parse_type_signature(instance.signature)
+        old = set(instance.parameters.all()) - set(d['parameters'])
+        for param in old:
+            instance.parameters.remove(param)
+        instance.parameters.add(*d['parameters'])
         # Provide boilerplate code
-        if not instance.code and instance.id:
+        if not instance.code:
             t = get_template('library/type/boilerplate.js')
             type = instance
             c = Context({
@@ -116,17 +122,8 @@ class Type(models.Model):
                 'methods': Method.objects.filter(used_in__implemented_by=type).distinct(),
             })
             type.code = t.render(c)
+            type.save() # CAREFUL: This will cause post_save to be called again, but this time, code will be True and this block won't execute
 
-    @staticmethod
-    def post_save(sender, instance, **kwargs):
-        # Parse signature and set parameters
-        d = parse_type_signature(instance.signature)
-        old = set(instance.parameters.all()) - set(d['parameters'])
-        for param in old:
-            instance.parameters.remove(param)
-        instance.parameters.add(*d['parameters'])
-
-pre_save.connect(Type.pre_save, sender=Type)
 post_save.connect(Type.post_save, sender=Type)
 
 

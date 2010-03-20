@@ -30,10 +30,10 @@
 .tab0 {left: 0px; z-index: 10;}
 .tab1 {left: 200px; z-index: 9;}
 .tab2 {left: 400px; z-index: 8;}
-.tab0, .tab0 h1.handle {background: #ffe8e8;}
-.tab0 h1.handle {border-bottom-color: #ffe8e8;}
-.tab1, .tab1 h1.handle {background: #e8e8ff;}
-.tab1 h1.handle {border-bottom-color: #e8e8ff;}
-.tab2, .tab2 h1.handle {background: #e8ffe8;}
-.tab2 h1.handle {border-bottom-color: #e8ffe8;}
+.tab0, .tab0 h1.handle {background: #bcd;}
+.tab0 h1.handle {border-bottom-color: #bcd;}
+.tab1, .tab1 h1.handle {background: #ace;}
+.tab1 h1.handle {border-bottom-color: #ace;}
+.tab2, .tab2 h1.handle {background: #9cf;}
+.tab2 h1.handle {border-bottom-color: #9cf;}
 .tab .content {background: white; width: 100%; height: 100%; overflow: auto;}

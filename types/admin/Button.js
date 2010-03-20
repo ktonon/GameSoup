@@ -1,6 +1,6 @@
 /*
  * Type: Button
- * A simple push button. Connect actions to its "click" event to make it useful.
+ * A simple push button. Takes an action as a parameter. When the button is clicked, the action is performed.
  */
 gamesoup.library.types.Button = Class.create(gamesoup.library.types.BaseType);
 
@@ -9,6 +9,8 @@ gamesoup.library.types.Button = Class.create(gamesoup.library.types.BaseType);
 /*****************************************************************************/
 //                                 BUILT-INS                                 
 // this._label                                      -- String
+//                                 REFERENCES                                
+// this._action                                     -- Action
 
 
 /*****************************************************************************/
@@ -27,13 +29,14 @@ gamesoup.library.types.Button.addMethods({
         var s = (this._width / this._label.length * 1.5).round();
         s = s > this._height / 2 ? (this._height / 2).round() : s;
         this._node.insert({bottom: t.evaluate({label: this._label, size: s})});
+        this._buttonNode = this._node.down('input[type=button]');
     },
     
     /*
      * Perform custom initialization.
      */
     register: function() {
-         
+         this._buttonNode.observe('click', this._action.call.bind(this._action));
     }
     
 });

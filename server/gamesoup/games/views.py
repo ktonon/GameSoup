@@ -10,6 +10,65 @@ from gamesoup.games.models import *
 
 
 ###############################################################################
+# FLOW
+
+
+@staff_member_required
+def game_flow(request, game_id, format):
+    import yapgvb, os.path
+    game = get_object_or_404(Game, pk=game_id)
+    # subprocess.call(['dot', '-T', 'png'], )
+    response = HttpResponse(mimetype=format == 'svg' and 'image/svg+xml' or 'image/png')
+    g = yapgvb.Digraph('Flow')
+    # g.rankdir = 'LR'
+    nodes = {}
+    for obj in game.object_set.all():
+        n = g.add_node(obj.id, label=obj.type.name)
+        n.width = len(obj.type.name) / 10
+        n.style = 'filled'
+        if obj.type.visible:
+            n.shape = 'box'
+        if obj.type.has_state:
+            if obj.per_player:
+                n.fillcolor = '#6699cc'
+            else:
+                n.fillcolor = '#99ccff'
+        nodes[obj.id] = n
+    for ref in Binding.objects.filter(instance__game=game, parameter__interface__is_built_in=False):
+        e = g.add_edge(nodes[ref.instance.id], nodes[ref.object_argument.id])
+        e.label = ref.parameter.name
+        e.color = 'gray'
+        e.fontcolor = 'blue'
+        e.labelfloat = True
+        e.fontsize = 14
+        e.len = 3
+    # Danglers
+    for param in Variable.objects.filter(parameter_of__instances__game=game, interface__is_built_in=False):
+        if param.bindings.filter(instance__game=game).count() == 0:
+            for obj in Object.objects.filter(game=game, type__parameters=param):
+                n = g.add_node('missing_param_%d_%d' % (obj.id, param.id), label='')
+                n.color = 'white'
+                e = g.add_edge(nodes[obj.id], n)
+                e.color = 'red'
+                e.fontcolor = 'red'
+                e.label = param.name
+            # e = g.add_edge(nodes[ref.instance.id], nodes[ref.object_argument.id])
+            # e.label = ref.parameter.name
+            # e.color = 'gray'
+            # e.fontcolor = 'blue'
+            # e.labelfloat = True
+            # e.fontsize = 14
+            # e.len = 3
+            
+    g.layout(yapgvb.engines.dot)
+    scratch_path = os.path.join(settings.MEDIA_ROOT, 'flow-scratch', 'game-%d.%s' % (game.id, format))
+    g.render(scratch_path)
+    scratch = open(scratch_path)
+    response.write(scratch.read())
+    return response
+
+
+###############################################################################
 # CODE
 
 

@@ -107,6 +107,10 @@ mod.Assembler = Class.create({
 				$('object-list').down('.content').replace(refresher.remove());
 				refresher.removeClassName('.object-list-refresher');
 				this._objects = new mod.ObjectList('object-list', this._options);				
+				// Reset the flow
+				var flow = $('flow').down('img');
+				var src = flow.src.split('#')[0];
+				flow.src = src + '#' + new Date();
 			}.bind(this)
 		});
 	},

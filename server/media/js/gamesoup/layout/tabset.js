@@ -9,6 +9,7 @@ mod.TabSet = Class.create({
 		this._node = $(node);
 		this._tabs = this._node.select('.tab').collect(this.addTab.bind(this));
 		this._node.observe('tab:requestFocus', this.focusTab.bind(this));
+		document.observe('keydown', this.walk.bind(this));
 	},
 	release: function() {
 		this._tabs.invoke('release');
@@ -21,6 +22,23 @@ mod.TabSet = Class.create({
 		var node = event.target;
 		this._tabs.invoke('demote');
 		node.setStyle({zIndex: 10});
+		this._currentTab = node;
+	},
+	/*
+	 * Walk through tabs using left and right keys
+	 */
+	walk: function(event) {
+	    var code = event.keyCode;
+	    var other;
+	    if (code == Event.KEY_LEFT) {
+	        other = this._currentTab.previous();
+	    } else if (code == Event.KEY_RIGHT) {
+	        other = this._currentTab.next();
+	    }
+	    if (other) {
+	        other.fire('tab:requestFocus');
+	    }
+    	
 	}
 });
 gs.tracerize('TabSet', mod.TabSet);

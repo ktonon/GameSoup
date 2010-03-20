@@ -2,6 +2,9 @@ from django.conf.urls.defaults import *
 
 
 urlpatterns = patterns('gamesoup.games.views',
+    # Flow
+    url(r'^game/(?P<game_id>\d+)/flow.(?P<format>png|svg)$', 'game_flow', name='game_flow'),
+
     # Code
     url(r'^game/(?P<game_id>\d+)/code/$', 'game_code', name='game_code'),
     

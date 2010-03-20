@@ -21,6 +21,13 @@ def canvas(game):
     }
 
 
+@register.inclusion_tag('admin/games/assembler/flow.html')
+def flow(game):
+    return {
+        'game': game,
+    }
+
+
 @register.simple_tag
 def binding(object, parameter):
     from gamesoup.games.models import Binding
