@@ -75,7 +75,7 @@ mod.Object.addMethods({
 	    new Ajax.Request(url, {
 	        method: 'post',
 	        evalJS: true,
-	        onSuccess: function(transport) {this._node.fire('assembler:refreshRequired')}.bind(this)
+	        onSuccess: function(transport) {this._node.fire('assembler:systemChanged')}.bind(this)
 	    })
 	}
 });

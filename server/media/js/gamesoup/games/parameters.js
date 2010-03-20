@@ -56,7 +56,7 @@ mod.BuiltIn = Class.create(mod.Parameter, {
 			new Ajax.Request(url, {
 				method: 'post',
 				postBody: 'value=' + this.getValue(),
-				onSuccess: function() {this._node.fire('parameter:saved')}.bind(this)
+				onSuccess: function() {this._node.fire('assembler:systemChanged')}.bind(this)
 			});
 		}
 	}
@@ -144,7 +144,6 @@ mod.Reference = Class.create(mod.Parameter, {
 		return this._node.getAttribute('boundTo');
 	},
 	bindRef: function() {
-		this._node.fire('dialog:requestSuspend');
 		var url = gs.utils.makeURL('candidateRefs', this._options);
 		new Ajax.Request(url, {
 			method: 'get',
@@ -152,15 +151,12 @@ mod.Reference = Class.create(mod.Parameter, {
 			onSuccess: function(transport) {
 				var objects = transport.responseJSON.collect(function(id) {return $(id)});
 				gs.games.messageBox.post('Please bind ' + this._name + ' to one of the following objects...');
-				var selector = new gamesoup.games.selectors.SingleObjectSelector(objects);				
-				$('scratch').observe('selector:released', function(selector) {
+				new gamesoup.games.selectors.SingleObjectSelector(objects, function(objectID) {
+				    // Called after the selector returns
 					gs.games.messageBox.clear();
-					var objectID = selector.getSelectedObjectID();
-					$('scratch').stopObserving('selector:released');
 					this.setValue(objectID);
 					this.save();
-					this._node.fire('dialog:requestResume');
-				}.bind(this, selector));
+				}.bind(this));
 			}.bind(this)
 		});
 	},
@@ -169,7 +165,7 @@ mod.Reference = Class.create(mod.Parameter, {
 		new Ajax.Request(url, {
 			method: 'post',
 			postBody: 'value=' + this.getValue(),
-			onSuccess: function() {this._node.fire('parameter:saved')}.bind(this)
+			onSuccess: function() {this._node.fire('assembler:systemChanged')}.bind(this)
 		});
 	}	
 });
@@ -201,7 +197,6 @@ mod.UnsatisfiableReference = Class.create(mod.Parameter, {
 		this._widget = this._node.down('input[type=button]');
 	},
 	search: function() {
-		this._node.fire('dialog:requestSuspend');
 		var url = gs.utils.makeURL('searchRequiredByParameter', this._options);
 		new Ajax.Request(url, {
 			method: 'get',
@@ -226,8 +221,7 @@ mod.UnsatisfiableReference = Class.create(mod.Parameter, {
 			onSuccess: function() {
         	    this.release();
         	    this._widget.replace(new Template('<span class="note">This parameter has been bound to the newly created #{typeName}.<span>').evaluate(event.memo));
-			    this._node.fire('parameter:saved')
-                this._node.fire('dialog:requestResume');		
+			    this._node.fire('assembler:systemChanged');
 			}.bind(this)
 		});
 	}	

@@ -31,7 +31,8 @@ mod.Assembler = Class.create({
 		// a page refresh, which requires all scripts to be reloaded,
 		// we can query the server for the updated DOM of the object list
 		// and canvas, and then recreate the javascript wrappers from them.
-		$('content-main').observe('assembler:refreshRequired', this.refresh.bind(this));
+		$('content-main').observe('assembler:systemChanged', this.refresh.bind(this));
+		this._setupTransactionSupport();
 		// Assumes that all dropboxes are used for collecting
 		// type ids which need to be instantiated into objects
 		// When the object gets added to the game, addObjectToGame
@@ -51,6 +52,8 @@ mod.Assembler = Class.create({
 		this._dialog.release();
 		this._node.stopObserving();
 		$('content-main').stopObserving('assembler:refreshRequired');
+		$('content-main').stopObserving('assembler:transactionStarted');
+		$('content-main').stopObserving('assembler:transactionCompleted');
 		this._idDropboxes.invoke('stopObserving');
 	},
 	addObjectToGame: function(id) {
@@ -66,6 +69,9 @@ mod.Assembler = Class.create({
 			}.bind(this)
 		})
 	},
+	/********************************************************/
+	/* OBJECTS
+	/********************************************************/
 	showObjectConfigDialog: function(event) {
 		var node = event.target;
 		var url = node.getAttribute('configURL');
@@ -86,7 +92,47 @@ mod.Assembler = Class.create({
 			onSuccess: this.refresh.bind(this)
 		});
 	},
+	search: function(url, message, event) {
+		event.stop();
+		var button = event.target;
+		$('curtain').show();
+		mod.messageBox.post(message);
+		new gamesoup.games.selectors.MultipleObjectSelector($$('.object'), function(url, button, objectIDs) {
+			mod.messageBox.clear();
+			$('curtain').hide();
+			new Ajax.Request(url, {
+				method: 'post',
+				postBody: 'object_ids=' + objectIDs.join(','),
+				evalJS: true,
+				onSuccess: function(button, transport) {
+					var typeIDs = transport.responseJSON;
+					button.setAttribute('href', button.getAttribute('link') + '?id__in=' + typeIDs.join(','));
+					showRelatedObjectLookupPopup(button);
+				}.bind(this, button)
+			})
+		}.bind(this, url, button));
+	},
+    /********************************************************/
+    /* KEEPING THINGS FRESH
+    /********************************************************/
+    /*
+     * This is bound to the assembler:systemChanged event.
+     * To keep the assembler from destroying objects during
+     * transactions (for example xhrs), this code is guarded
+     * by the events assembler:transaction started and
+     * assembler:transaction ended.
+     */
 	refresh: function() {
+	    // Guard for transactions
+	    if (this.inTransaction()) {
+	        this._waitingForTransactionToEnd = $('content-main').observe('assembler:allTransactionsCompleted', this.refresh.bind(this));
+	        return;
+	    }
+	    // Stop waiting for the allTransactionsCompleted event
+	    if (this._waitingForTransactionToEnd) {
+	        $('content-main').stopObserving('assembler:allTransactionsCompleted', this._waitingForTransactionToEnd);
+	        this._waitingForTransactionToEnd = null;
+	    }
 		// Reload the object list and canvas
 		// Calls release to make sure event handlers and draggables are removed
 		var url = gs.utils.makeURL('refreshAssembler', this._options);
@@ -114,28 +160,22 @@ mod.Assembler = Class.create({
 			}.bind(this)
 		});
 	},
-	search: function(url, message, event) {
-		event.stop();
-		var button = event.target;
-		$('curtain').show();
-		mod.messageBox.post(message);
-		var selector = new gamesoup.games.selectors.MultipleObjectSelector($$('.object'));
-		$('scratch').observe('selector:released', function(selector, url, button) {
-			mod.messageBox.clear();
-			$('scratch').stopObserving('selector:released');
-			$('curtain').hide();
-			var ids = selector.getSelectedObjectIDs();
-			new Ajax.Request(url, {
-				method: 'post',
-				postBody: 'object_ids=' + ids.join(','),
-				evalJS: true,
-				onSuccess: function(button, transport) {
-					var ids = transport.responseJSON;
-					button.setAttribute('href', button.getAttribute('link') + '?id__in=' + ids.join(','));
-					showRelatedObjectLookupPopup(button);
-				}.bind(this, button)
-			})
-		}.bind(this, selector, url, button));
+	_setupTransactionSupport: function() {
+	    var main = $('content-main');
+	    this._transactionCount = 0;
+	    main.observe('assembler:transactionStarted', function() {this._transactionCount++}.bind(this));
+	    main.observe('assembler:transactionCompleted', function() {
+	        this._transactionCount--;
+	        if (this._transactionCount == 0) {
+	            this._node.fire('assembler:allTransactionsCompleted');
+	        }
+	        else if (this._transactionCount < 0) {
+	            console.error('Transaction count fell below 0!');
+	        }
+	    }.bind(this));
+	},
+	inTransaction: function() {
+	    return this._transactionCount > 0;
 	}
 });
 gs.tracerize('Assembler', mod.Assembler);

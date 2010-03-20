@@ -1,7 +1,7 @@
 {% for obj in objects %}
 <div id="object-shaper-{{ obj.id }}" class="object-shaper outer-container {% if obj.type.has_state %}{{ obj.per_player|yesno:"player-owned,game-owned" }}{% endif %}" objectID="{{ obj.id }}" position="{{ obj.x }},{{ obj.y }}" size="{{ obj.width }},{{ obj.height }}">
     <div class="inner-container">
-        <span class="title">{{ obj.type.name }}</span>
+        <span class="title">{{ obj }}</span>
         {% if obj.type.has_state %}<p>Owned by {{ obj.per_player|yesno:"player,game" }}</p>{% endif %}
         <div class="resize" title="Drag this box to resize the object"></div>
     </div>

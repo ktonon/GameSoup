@@ -14,10 +14,7 @@ mod.Dialog = Class.create({
 		this._closeButton = this._node.down('.close-button');
 		// Event handlers
 		this._closeButton.observe('click', this.hide.bind(this));
-		this._node.observe('dialog:requestClose', this.hide.bind(this));
-		this._node.observe('dialog:systemChanged', function() {this._systemChanged = true}.bind(this));
-		this._node.observe('dialog:requestSuspend', this.suspend.bind(this));
-		this._node.observe('dialog:requestResume', this.resume.bind(this));
+		this._node.observe('handler:done', this.hide.bind(this));
 		// Dragdrop
 		this._headerDraggable = new Draggable(this._node, {
 			handle: this._header
@@ -42,18 +39,29 @@ mod.Dialog = Class.create({
 	clear: function() {
 		this._contentNode.innerHTML = '';
 	},
+	/*
+	 * Open and close the dialog, protecting it with a transaction.
+	 */
 	hide: function() {
-		if (this._systemChanged) {
-			this._node.fire('assembler:refreshRequired');			
-		}
 		this._node.hide();
 		$('curtain').hide();
+		$('content-main').stopObserving('selector:started', this._watchStarted);
+		$('content-main').stopObserving('selector:completed', this._watchCompleted);
+		this._node.fire('assembler:transactionCompleted');
 	},
 	show: function() {
-		this._systemChanged = false;
+		this._node.fire('assembler:transactionStarted');
+		this._watchStarted = $('content-main').observe('selector:started', this.suspend.bind(this));
+		this._watchCompleted = $('content-main').observe('selector:completed', this.resume.bind(this));
 		$('curtain').show();
 		this._node.show();
 	},
+	/*
+	 * Suspend and resume temporarilly hide the dialog, but not the curtain.
+	 * This is useful for using the curtain to keep the rest of the interface
+	 * disabled, while using the scratch space on top of the curtain to
+	 * present a custom interaction.
+	 */
 	suspend: function() {
 		this._node.hide();
 	},

@@ -55,6 +55,7 @@ class Object(models.Model):
     '''
     An instance of a type.
     '''
+    name = models.CharField(max_length=50, blank=True)
     game = models.ForeignKey(Game)
     type = models.ForeignKey(Type, related_name='instances')
     x = models.IntegerField(default=0)
@@ -68,7 +69,7 @@ class Object(models.Model):
     satisfied = models.BooleanField(blank=True)
     
     def __unicode__(self):
-        return u'%s' % (self.type)
+        return u'%s' % (self.name or self.type)
         
     def is_satisfied(self):
         '''
@@ -98,7 +99,7 @@ class Object(models.Model):
         # Do this for both directions.
         instance.parameter_bindings.all().delete()
         instance.bound_to.all().delete()
-
+        
     @staticmethod
     def update_cache(sender, instance, **kwargs):
         if sender.__name__ == 'Binding':

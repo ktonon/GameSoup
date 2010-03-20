@@ -22,6 +22,7 @@ mod.TabSet = Class.create({
 		var node = event.target;
 		this._tabs.invoke('demote');
 		node.setStyle({zIndex: 10});
+		node.addClassName('current');
 		this._currentTab = node;
 	},
 	/*
@@ -57,6 +58,7 @@ mod.Tab = Class.create({
 		var z = new Number(this._node.getStyle('z-index'));
 		z = z > 0 ? z - 1 : 0;
 		this._node.setStyle({zIndex: z});
+		this._node.removeClassName('current');
 	}
 });
 gs.tracerize('Tab', mod.Tab);

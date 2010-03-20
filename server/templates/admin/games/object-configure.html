@@ -1,6 +1,12 @@
 {% load games markup %}
 <div handler="ConfigureObject" title="{{ title }}" objectID="{{ obj.id }}">
     <p>{{ obj.type.description|textile }}</p>
+    <fieldset class="module aligned">
+        <div class="form-row name">
+            <label>Name</label><input class="object-name" type="text" value="{{ obj.name }}" />
+            <div class="help">For game assembly only.</div>
+        </div>
+    </fieldset>
     {% if nothing_to_configure %}
     <h2>There is nothing to configure.</h2>
     {% else %}

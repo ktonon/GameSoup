@@ -23,8 +23,8 @@ def game_flow(request, game_id, format):
     # g.rankdir = 'LR'
     nodes = {}
     for obj in game.object_set.all():
-        n = g.add_node(obj.id, label=obj.type.name)
-        n.width = len(obj.type.name) / 10
+        n = g.add_node(obj.id, label=str(obj))
+        n.width = len(str(obj)) / 10
         n.style = 'filled'
         if obj.type.visible:
             n.shape = 'box'
@@ -145,7 +145,7 @@ def search_required_by_parameter(request, parameter_id):
     
 
 ###############################################################################
-# DYNAMIC
+# ASSEMBLER
 
 
 @staff_member_required
@@ -166,7 +166,11 @@ def refresh_assembler(request, game_id):
     }
     return render_to_response('admin/games/assembler/refresh.html', context)
     
-    
+
+###############################################################################
+# INSTANTIATING AND CONFIGURING OBJECTS
+
+
 @staff_member_required
 @require_post
 def instantiate_type(request, game_id, type_id):
@@ -179,6 +183,15 @@ def instantiate_type(request, game_id, type_id):
     response = HttpResponse(mimetype='application/json')
     response.write(json.dumps({'objectID': obj.id, 'typeName': type.name}))
     return response
+
+
+@staff_member_required
+@require_post
+def update_object_name(request, game_id, object_id):
+    game, obj = get_pair_or_404(Game, 'object_set', game_id, object_id)
+    obj.name = request.POST['name']
+    obj.save()
+    return HttpResponse()
 
 
 @staff_member_required
