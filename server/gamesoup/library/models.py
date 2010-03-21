@@ -56,7 +56,7 @@ class Interface(models.Model):
 
 post_save.connect(Interface.post_save, sender=Interface)
 
-
+    
 class Type(models.Model):
     '''
     An instantiable type.

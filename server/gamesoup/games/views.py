@@ -43,22 +43,15 @@ def game_flow(request, game_id, format):
         e.fontsize = 14
         e.len = 3
     # Danglers
-    for param in Variable.objects.filter(parameter_of__instances__game=game, interface__is_built_in=False):
+    for param in Variable.objects.filter(parameter_of__instances__game=game, interface__is_built_in=False).distinct():
         if param.bindings.filter(instance__game=game).count() == 0:
-            for obj in Object.objects.filter(game=game, type__parameters=param):
+            for obj in Object.objects.filter(game=game, type__parameters=param).distinct():
                 n = g.add_node('missing_param_%d_%d' % (obj.id, param.id), label='')
                 n.color = 'white'
                 e = g.add_edge(nodes[obj.id], n)
                 e.color = 'red'
                 e.fontcolor = 'red'
                 e.label = param.name
-            # e = g.add_edge(nodes[ref.instance.id], nodes[ref.object_argument.id])
-            # e.label = ref.parameter.name
-            # e.color = 'gray'
-            # e.fontcolor = 'blue'
-            # e.labelfloat = True
-            # e.fontsize = 14
-            # e.len = 3
             
     g.layout(yapgvb.engines.dot)
     scratch_path = os.path.join(settings.MEDIA_ROOT, 'flow-scratch', 'game-%d.%s' % (game.id, format))
@@ -248,20 +241,21 @@ def delete_object(request, game_id, object_id):
 @require_post
 def save_parameter_binding(request, game_id, object_id, parameter_id):
     game, obj = get_pair_or_404(Game, 'object_set', game_id, object_id)
+    print 'game, obj = ', game, obj
     try:
         param = obj.type.parameters.get(pk=parameter_id)
+        print 'param = ', param
     except Variable.DoesNotExist:
         raise Http404()
     value = {}
     x = request.POST['value']
-    if param.interface.is_built_in:
-        value['built_in_argument'] = x
-    else:
-        value['object_argument'] = x
+    print 'x = ', x
     try:
         binding = obj.parameter_bindings.get(parameter=param)
+        print 'existing binding, id = ', binding, binding.id
     except Binding.DoesNotExist:
         binding = Binding(instance=obj, parameter=param)
+        print 'new binding'
     if param.interface.is_built_in:
         binding.built_in_argument = x
     else:

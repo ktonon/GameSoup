@@ -45,14 +45,18 @@ mod.Dialog = Class.create({
 	hide: function() {
 		this._node.hide();
 		$('curtain').hide();
+		console.log('watch', this._watchCompleted)
 		$('content-main').stopObserving('selector:started', this._watchStarted);
 		$('content-main').stopObserving('selector:completed', this._watchCompleted);
 		this._node.fire('assembler:transactionCompleted');
+		console.log('hiding dialog');
 	},
 	show: function() {
 		this._node.fire('assembler:transactionStarted');
-		this._watchStarted = $('content-main').observe('selector:started', this.suspend.bind(this));
-		this._watchCompleted = $('content-main').observe('selector:completed', this.resume.bind(this));
+		this._watchStarted = this.suspend.bind(this);
+		this._watchCompleted = this.resume.bind(this);
+		$('content-main').observe('selector:started', this._watchStarted);
+		$('content-main').observe('selector:completed', this._watchCompleted);
 		$('curtain').show();
 		this._node.show();
 	},

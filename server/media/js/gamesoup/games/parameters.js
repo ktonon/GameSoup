@@ -184,7 +184,8 @@ mod.UnsatisfiableReference = Class.create(mod.Parameter, {
 		this.createWidget();
 		// Event handlers
 		this._widget.observe('click', this.search.bind(this));
-		this._watchForNewObject = $('assembler').observe('assembler:objectAdded', this.bindNewObject.bind(this));
+		this._watchForNewObject = this.bindNewObject.bind(this);
+		$('assembler').observe('assembler:objectAdded', this._watchForNewObject);
 	},
 	release: function() {
 		this._widget.stopObserving('click');

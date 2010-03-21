@@ -125,7 +125,8 @@ mod.Assembler = Class.create({
 	refresh: function() {
 	    // Guard for transactions
 	    if (this.inTransaction()) {
-	        this._waitingForTransactionToEnd = $('content-main').observe('assembler:allTransactionsCompleted', this.refresh.bind(this));
+	        this._waitingForTransactionToEnd = this.refresh.bind(this);
+	        $('content-main').observe('assembler:allTransactionsCompleted', this._waitingForTransactionToEnd);
 	        return;
 	    }
 	    // Stop waiting for the allTransactionsCompleted event
@@ -163,9 +164,13 @@ mod.Assembler = Class.create({
 	_setupTransactionSupport: function() {
 	    var main = $('content-main');
 	    this._transactionCount = 0;
-	    main.observe('assembler:transactionStarted', function() {this._transactionCount++}.bind(this));
+	    main.observe('assembler:transactionStarted', function() {
+	        this._transactionCount++;
+	        console.log('tc++: ', this._transactionCount);
+	    }.bind(this));
 	    main.observe('assembler:transactionCompleted', function() {
 	        this._transactionCount--;
+	        console.log('tc--: ', this._transactionCount);
 	        if (this._transactionCount == 0) {
 	            this._node.fire('assembler:allTransactionsCompleted');
 	        }
