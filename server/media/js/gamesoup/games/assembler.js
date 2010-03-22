@@ -14,8 +14,8 @@ mod.Assembler = Class.create({
 		this._objects = new mod.ObjectList('object-list', this._options);
 		this._canvas = new mod.Canvas('canvas', this._options);
 		this._dialog = new gs.dialogs.Dialog('dialog', mod.dialogHandlers, this._options);
-		this._refresherNode = new Element('div', {style: 'display: block'});
-		this._node.insert({bottom: this._refresherNode});
+		this._refresherNode = new Element('div', {id: 'refresher', style: 'display: block'});
+		this._node.insert({after: this._refresherNode});
 		// Object creators
 		this._searchRequires = $('lookup_id_search_requires');
 		this._searchRequiredBy = $('lookup_id_search_required_by');
@@ -125,8 +125,10 @@ mod.Assembler = Class.create({
 	refresh: function() {
 	    // Guard for transactions
 	    if (this.inTransaction()) {
-	        this._waitingForTransactionToEnd = this.refresh.bind(this);
-	        $('content-main').observe('assembler:allTransactionsCompleted', this._waitingForTransactionToEnd);
+	        if (!this._waitingForTransactionToEnd) {
+    	        this._waitingForTransactionToEnd = this.refresh.bind(this);
+    	        $('content-main').observe('assembler:allTransactionsCompleted', this._waitingForTransactionToEnd);	            
+	        }
 	        return;
 	    }
 	    // Stop waiting for the allTransactionsCompleted event
@@ -166,11 +168,9 @@ mod.Assembler = Class.create({
 	    this._transactionCount = 0;
 	    main.observe('assembler:transactionStarted', function() {
 	        this._transactionCount++;
-	        console.log('tc++: ', this._transactionCount);
 	    }.bind(this));
 	    main.observe('assembler:transactionCompleted', function() {
 	        this._transactionCount--;
-	        console.log('tc--: ', this._transactionCount);
 	        if (this._transactionCount == 0) {
 	            this._node.fire('assembler:allTransactionsCompleted');
 	        }
