@@ -2,13 +2,18 @@ from django.contrib import admin
 from models import *
 
 
+class InterfaceTemplateParameterInline(admin.TabularInline):
+    model = InterfaceTemplateParameter
+    fk_name = 'of_interface'
+    extra = 1
 class InterfaceAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('name', 'description', 'is_built_in', 'signature')}),
         )
-    list_display = ('name', 'is_built_in', 'doc_link', 'implemented_by_short')
+    list_display = ('__unicode__', 'is_built_in', 'doc_link', 'implemented_by_short')
     list_filter = ('is_built_in',)
     search_fields = ('name', 'implemented_by__name', 'methods__name')
+    inlines = (InterfaceTemplateParameterInline,)
 admin.site.register(Interface, InterfaceAdmin)
 
 

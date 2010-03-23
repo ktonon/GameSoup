@@ -1,0 +1,66 @@
+[
+    {
+        "pk": 1, 
+        "model": "auth.user", 
+        "fields": {
+            "username": "admin", 
+            "first_name": "Kevin", 
+            "last_name": "Tonon", 
+            "is_active": true, 
+            "is_superuser": true, 
+            "is_staff": true, 
+            "last_login": "2010-03-12 11:21:49", 
+            "groups": [], 
+            "user_permissions": [], 
+            "password": "sha1$24bd6$a6bf30e7cf1b2b682e38597923519817b7f622fa", 
+            "email": "ktonon@cs.toronto.edu", 
+            "date_joined": "2010-03-12 11:21:49"
+        }
+    },
+    {
+        "pk": 2, 
+        "model": "auth.user", 
+        "fields": {
+            "username": "staff", 
+            "first_name": "", 
+            "last_name": "", 
+            "is_active": true, 
+            "is_superuser": false, 
+            "is_staff": true, 
+            "last_login": "2010-03-15 19:39:09", 
+            "groups": [], 
+            "user_permissions": [], 
+            "password": "sha1$0c600$e903389bb6d6326d73bc59655a6affc62ca58c37", 
+            "email": "", 
+            "date_joined": "2010-03-15 19:39:09"
+        }
+    },
+    {
+        "pk": 1, 
+        "model": "sites.site", 
+        "fields": {
+            "domain": "gamesoup.org", 
+            "name": "GameSoup"
+        }
+    },
+    {
+        "pk": 1, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "An empty interface. If you have an object of type any, then you don't know anything about it.", 
+            "signature": "", 
+            "is_built_in": false, 
+            "name": "Any"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.interface", 
+        "fields": {
+            "description": "Represents a value that doesn't contain anything.", 
+            "signature": "", 
+            "is_built_in": true, 
+            "name": "Nothing"
+        }
+    }
+]

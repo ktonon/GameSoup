@@ -52,8 +52,9 @@ class IdentifierField(models.CharField):
     description = ''
     
     def __init__(self, *args, **kwargs):
-        kwargs.update({'max_length': 200, 'unique': True})
-        super(IdentifierField, self).__init__(*args, **kwargs)
+        _kwargs = {'max_length': 200, 'unique': True}
+        _kwargs.update(kwargs)
+        super(IdentifierField, self).__init__(*args, **_kwargs)
 
     def formfield(self, **kwargs):
         defaults = {

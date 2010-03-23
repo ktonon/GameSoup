@@ -20,18 +20,22 @@ from gamesoup.library.parsers import *
 class Interface(models.Model):
     '''
     A set of public methods available on instances of an object.
+    Interfaces can be abstracted using template parameters.
     '''
     name = IdentifierField(help_text='A unique name. Should be specified using MixedCase with no spaces.')
     description = models.TextField(blank=True, help_text='This will serve as a human-readable, searchable account of this interface. Make this very detailed, because this will be the primary description of this interface for game designers.')
     methods = models.ManyToManyField('Method', related_name='used_in', blank=True, editable=False)
     signature = SignatureField(parse_interface_signature, verbose_name='Methods', multiline=True, blank=True, help_text='One method per line. Each is in the format "<span style="font-family: monospace">InterfaceName methodName(I1 param1, I2 param2)</span>", where the parameters are optional')
     is_built_in = models.BooleanField(default=False, help_text="Built-in interfaces are provided by the underlying language (JavaScript) or library (Prototype) and do not require a Type to be implemented.")
+    
+    objects = InterfaceManager()
 
     class Meta:
         ordering = ['name']
 
     def __unicode__(self):
-        return self.name
+        qs = self.template_parameters.all()
+        return self.name + (qs and u'<%s>' % ','.join([u'%s=%s' % (tp.name, tp.weakest) for tp in qs]) or u'')
 
     def implemented_by_short(self):
         return ', '.join([type.name for type in self.implemented_by.all()])
@@ -169,7 +173,8 @@ class Variable(models.Model):
     A variable declaration.
     '''
     name = models.CharField(max_length=100, blank=True, editable=False)
-    interface = models.ForeignKey('Interface', blank=True, editable=False)
+    interface_name = models.CharField(max_length=100, blank=True, editable=False)
+    interface = models.ForeignKey('Interface', blank=True, editable=False, null=True)
     signature = SignatureField(parse_variable_signature, unique=True)
 
     class Meta:
@@ -187,3 +192,34 @@ class Variable(models.Model):
         instance.interface = d['interface']
 
 pre_save.connect(Variable.pre_save, sender=Variable)
+
+
+###############################################################################
+# TEMPLATING
+
+
+class InterfaceTemplateParameter(models.Model):
+    of_interface = models.ForeignKey(Interface, related_name='template_parameters')
+    name = IdentifierField(unique=False)
+    weakest = models.CharField(max_length=200, default='Any', help_text='What is the weakest interface required?')
+
+    class Meta:
+        ordering = ['name']
+
+    def __unicode__(self):
+        return self.name
+
+
+# class InterfaceTemplateArgument(models.Model):
+
+
+# class TypeTemplateParameter(models.Model):
+#     of_type = models.ForeignKey(Type, related_name='template_parameters')
+#     name = IdentifierField(unique=False)
+#     weakest = models.CharField(max_length=200, default='Any', help_text='What is the weakest interface required?')
+# 
+#     class Meta:
+#         ordering = ['name']
+# 
+#     def __unicode__(self):
+#         return self.name

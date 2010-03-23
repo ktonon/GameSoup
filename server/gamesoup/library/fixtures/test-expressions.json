@@ -1,0 +1,344 @@
+[
+    {
+        "pk": 2, 
+        "model": "library.variable", 
+        "fields": {
+            "interface": null, 
+            "interface_name": "", 
+            "name": "item", 
+            "signature": "Item item"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.variable", 
+        "fields": {
+            "interface": 2, 
+            "interface_name": "", 
+            "name": "returned", 
+            "signature": "Nothing returned"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "library.variable", 
+        "fields": {
+            "interface": null, 
+            "interface_name": "", 
+            "name": "returned", 
+            "signature": "Item returned"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "library.variable", 
+        "fields": {
+            "interface": null, 
+            "interface_name": "", 
+            "name": "returned", 
+            "signature": "Over returned"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "library.variable", 
+        "fields": {
+            "interface": null, 
+            "interface_name": "", 
+            "name": "visitor", 
+            "signature": "Visitor<Item=Item> visitor"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.method", 
+        "fields": {
+            "parameters": [], 
+            "signature": "call()", 
+            "name": "call", 
+            "returned": 1, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "library.method", 
+        "fields": {
+            "parameters": [], 
+            "signature": "Over getRandomObject()", 
+            "name": "getRandomObject", 
+            "returned": 5, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "library.method", 
+        "fields": {
+            "parameters": [], 
+            "signature": "Item instantiate()", 
+            "name": "instantiate", 
+            "returned": 4, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "library.method", 
+        "fields": {
+            "parameters": [], 
+            "signature": "Item next()", 
+            "name": "next", 
+            "returned": 4, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "library.method", 
+        "fields": {
+            "parameters": [], 
+            "signature": "Item read()", 
+            "name": "read", 
+            "returned": 4, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "library.method", 
+        "fields": {
+            "parameters": [], 
+            "signature": "resetIterator()", 
+            "name": "resetIterator", 
+            "returned": 1, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "library.method", 
+        "fields": {
+            "parameters": [
+                2
+            ], 
+            "signature": "write(Item item)", 
+            "name": "write", 
+            "returned": 1, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [
+                2
+            ], 
+            "is_built_in": false, 
+            "signature": "call()", 
+            "name": "Action", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [], 
+            "is_built_in": false, 
+            "signature": "", 
+            "name": "Any", 
+            "description": "An empty interface. If you have an object of type any, then you don't know anything about it."
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [
+                6
+            ], 
+            "is_built_in": false, 
+            "signature": "Over getRandomObject()", 
+            "name": "Distribution", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [
+                7
+            ], 
+            "is_built_in": false, 
+            "signature": "Item instantiate()", 
+            "name": "Factory", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [], 
+            "is_built_in": true, 
+            "signature": "", 
+            "name": "I1", 
+            "description": "For testing"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [], 
+            "is_built_in": false, 
+            "signature": "", 
+            "name": "I2", 
+            "description": "For testing"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [], 
+            "is_built_in": false, 
+            "signature": "", 
+            "name": "I3", 
+            "description": "For testing"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [
+                10, 
+                9
+            ], 
+            "is_built_in": false, 
+            "signature": "resetIterator()\r\nItem next()", 
+            "name": "Iterable", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [], 
+            "is_built_in": true, 
+            "signature": "", 
+            "name": "Nothing", 
+            "description": "Represents a value that doesn't contain anything."
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [
+                4, 
+                5
+            ], 
+            "is_built_in": false, 
+            "signature": "Item read()\r\nwrite(Item item)", 
+            "name": "ReadWrite", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [
+                4
+            ], 
+            "is_built_in": false, 
+            "signature": "Item read()", 
+            "name": "Readable", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [], 
+            "is_built_in": true, 
+            "signature": "", 
+            "name": "String", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "library.interface", 
+        "fields": {
+            "methods": [
+                5
+            ], 
+            "is_built_in": false, 
+            "signature": "write(Item item)", 
+            "name": "Writable", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.interfacetemplateparameter", 
+        "fields": {
+            "weakest": "Any", 
+            "name": "Item", 
+            "of_interface": 9
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "library.interfacetemplateparameter", 
+        "fields": {
+            "weakest": "Any", 
+            "name": "Item", 
+            "of_interface": 10
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "library.interfacetemplateparameter", 
+        "fields": {
+            "weakest": "Any", 
+            "name": "Item", 
+            "of_interface": 12
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "library.interfacetemplateparameter", 
+        "fields": {
+            "weakest": "Any", 
+            "name": "Item", 
+            "of_interface": 13
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "library.interfacetemplateparameter", 
+        "fields": {
+            "weakest": "Any", 
+            "name": "Item", 
+            "of_interface": 14
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "library.interfacetemplateparameter", 
+        "fields": {
+            "weakest": "Any", 
+            "name": "Over", 
+            "of_interface": 11
+        }
+    }
+]

@@ -241,21 +241,16 @@ def delete_object(request, game_id, object_id):
 @require_post
 def save_parameter_binding(request, game_id, object_id, parameter_id):
     game, obj = get_pair_or_404(Game, 'object_set', game_id, object_id)
-    print 'game, obj = ', game, obj
     try:
         param = obj.type.parameters.get(pk=parameter_id)
-        print 'param = ', param
     except Variable.DoesNotExist:
         raise Http404()
     value = {}
     x = request.POST['value']
-    print 'x = ', x
     try:
         binding = obj.parameter_bindings.get(parameter=param)
-        print 'existing binding, id = ', binding, binding.id
     except Binding.DoesNotExist:
         binding = Binding(instance=obj, parameter=param)
-        print 'new binding'
     if param.interface.is_built_in:
         binding.built_in_argument = x
     else:
