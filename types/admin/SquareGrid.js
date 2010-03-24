@@ -1,6 +1,6 @@
 /*
  * Type: SquareGrid
- * A regular board with columns and rows. There are *colCount* columns and *rowCount* rows.
+ * A board arranged in rows and columns.
  */
 gamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType);
 
@@ -18,23 +18,26 @@ gamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType
 gamesoup.library.types.SquareGrid.addMethods({
     
     /*
-     * Iterable adjacentTo(Cell a)                  -- used in Board
-     */
-    adjacentTo: function(a) {
-        
-    },
-
-    /*
      * Boolean areAdjacent(Cell a, Cell b)          -- used in Board
+     * Are cell a and cell b adjacent?
      */
-    areAdjacent: function(a, b) {
+    areAdjacent: function() {
         
     },
 
     /*
-     * Nothing render()                             -- used in Renderable
+     * Item nextInIteration()                       -- used in Iterable
+     * Get the next object in the sequence. When the sequence is over, this should return null.
      */
-    render: function() {
+    nextInIteration: function() {
+        
+    },
+
+    /*
+     * resetIteration()                             -- used in Iterable
+     * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.
+     */
+    resetIteration: function() {
         
     }
 
@@ -68,7 +71,7 @@ gamesoup.library.types.SquareGrid.addMethods({
                 c.top += c.height + 2;
             }
             c.left += c.width + 2;
-        }
+        }        
     },
     
     stateSchema: function() {

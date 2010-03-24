@@ -1,3 +1,4 @@
+import json
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import *
 from django.shortcuts import *
@@ -81,3 +82,32 @@ def bulk_upload(request):
         'form': form,
     }
     return render_to_response('admin/library/local-editing/bulk-upload.html', context)
+
+
+###############################################################################
+# TEMPLATION
+
+
+def possible_template_parameters(request, klass, query):
+    ids = map(int, filter(bool, request.POST['ids'].split(',')))
+    qs = klass.objects.filter(**{query: ids})
+    x = {
+        'possibilities': [
+            {
+                'name': unicode(param),
+                'id': param.id,
+            }
+            for param in qs
+        ]
+    }
+    response = HttpResponse(mimetype='application/json')
+    response.write(json.dumps(x))
+    return response
+
+@staff_member_required
+def possible_method_template_parameters(request):
+    return possible_template_parameters(request, MethodTemplateParameter, 'of_method__id__in')
+
+@staff_member_required
+def possible_interface_template_parameters(request):
+    return possible_template_parameters(request, InterfaceTemplateParameter, 'of_interface__id__in')

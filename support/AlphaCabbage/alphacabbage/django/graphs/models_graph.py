@@ -34,6 +34,10 @@ class ModelsGraph(object):
     
     def add_model(self, model):
         name = model.__name__
+        # Ignore abstracts
+        if model._meta.abstract:
+            return None
+        # Only add once
         if name not in self.models:
             node = self.g.add_node(name, label=name)
             node.style = 'filled'

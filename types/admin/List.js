@@ -10,53 +10,50 @@ gamesoup.library.types.List = Class.create(gamesoup.library.types.BaseType);
 gamesoup.library.types.List.addMethods({
     
     /*
-     * Any dequeue()                                -- used in Queue
+     * Item nextInIteration()                       -- used in Iterable
+     * Get the next object in the sequence. When the sequence is over, this should return null.
      */
-    dequeue: function() {
+    nextInIteration: function() {
         
     },
 
     /*
-     * Nothing each(Function visitor)               -- used in Iterable
-     */
-    each: function(visitor) {
-        
-    },
-
-    /*
-     * Nothing enqueue(Any object)                  -- used in Queue
-     * Adds an item to the end of an ordered collection.
-     * Like standing in line.
-     */
-    enqueue: function(object) {
-        
-    },
-
-    /*
-     * Any pop()                                    -- used in Stack
+     * Item pop()                                   -- used in Stack
+     * Remove the object at the top of the stack and return it.
      */
     pop: function() {
         
     },
 
     /*
-     * Nothing push(Any object)                     -- used in Stack
+     * push(Item item)                              -- used in Stack
+     * Push an object on top of the stack.
      */
-    push: function(object) {
+    push: function(item) {
         
     },
 
     /*
-     * Nothing receive(Any object)                  -- used in Receiver
+     * Item read()                                  -- used in ReadWrite, Readable
+     * Read this content of this object.
      */
-    receive: function(object) {
+    read: function() {
         
     },
 
     /*
-     * Nothing render()                             -- used in Renderable
+     * resetIteration()                             -- used in Iterable
+     * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.
      */
-    render: function() {
+    resetIteration: function() {
+        
+    },
+
+    /*
+     * write(Item item)                             -- used in ReadWrite, Writable
+     * Write a value to the content of this object.
+     */
+    write: function(item) {
         
     }
 
@@ -75,7 +72,8 @@ gamesoup.library.types.List.addMethods({
     render: function() {
         // this._node has already been created by this point
         this._node.insert({bottom: '<ul class="box list inner-container"></ul>'});
-        this._listNode = this._node.down('.list');
+        this._listNode = this._node.down('.list');        
+
     },
     
     stateSchema: function() {

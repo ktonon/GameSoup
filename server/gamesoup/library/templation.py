@@ -6,7 +6,6 @@ which are the backbone of templated interfaces and types.
 
 import re
 import sys
-from gamesoup.library.models import *
 
 
 __all__ = (
@@ -29,6 +28,7 @@ class InterfaceExpression(object):
     '''
     
     def __init__(self, expr_text, load_interface=True):
+        from gamesoup.library.models import Interface
         self._expr_text = str(expr_text)
         self._ident, self._args_text = self._parse_a(expr_text)
         self._args = []
@@ -40,9 +40,11 @@ class InterfaceExpression(object):
                     ]
         self._argdict = dict(self._args)
         if load_interface:
-            self._interface = Interface.objects.get(name=self._ident)
-            # for template_param, arg in self._argdict.items():
-                
+            try:
+                self._interface = Interface.objects.get(name=self._ident)
+            except Interface.DoesNotExist:
+                # The interface must be a template parameter
+                pass # Just ignore this for now                
 
     def get_interface(self):
         return self._interface
@@ -57,6 +59,7 @@ class InterfaceExpression(object):
         return `self` == `other`
 
     def tighter_than(self, other):
+        from gamesoup.library.models import Interface
         print '%s < %s?' % (self._expr_text, other._expr_text)
         if self.interface.is_built_in or other.interface.is_built_in:
             if other.interface == Interface.objects.any():

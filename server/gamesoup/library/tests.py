@@ -107,14 +107,6 @@ class SimpleParsersTest(test.TestCase):
     def test_parse_method_signature_fails_for_invalid_format(self):
         self.assertRaises(SignatureParseError, parsers.parse_method_signature, 'I1 methodName')
 
-    def test_parse_interface_signature(self):
-        d = parsers.parse_interface_signature('''
-        I3 methodName(I1 a, I2 a)
-        I3 otherMethod()
-        ''')
-        self.assertEquals(len(d), 1)
-        self.assertEquals(len(d['methods']), 2)
-
 
 class ExpressionTest(test.TestCase):
     fixtures = ['test-data.json', 'test-expressions.json']

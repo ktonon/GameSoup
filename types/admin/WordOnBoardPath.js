@@ -17,9 +17,10 @@ gamesoup.library.types.WordOnBoardPath = Class.create(gamesoup.library.types.Bas
 gamesoup.library.types.WordOnBoardPath.addMethods({
     
     /*
-     * Boolean isValid(String w)                    -- used in StringValidator
+     * Boolean call()                               -- used in Predicate
+     * What is the truth value of this predicate object?
      */
-    isValid: function(w) {
+    call: function() {
         
     }
 

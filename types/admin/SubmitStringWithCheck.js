@@ -7,9 +7,9 @@ gamesoup.library.types.SubmitStringWithCheck = Class.create(gamesoup.library.typ
 /*****************************************************************************/
 /*                                 Parameters                                */
 /*****************************************************************************///                                 REFERENCES                                
-// this._destination                                -- Receiver
+// this._destination                                -- Writable
 // this._source                                     -- ReadWrite
-// this._validator                                  -- StringValidator
+// this._validator                                  -- Predicate
 
 
 /*****************************************************************************/
@@ -18,9 +18,10 @@ gamesoup.library.types.SubmitStringWithCheck = Class.create(gamesoup.library.typ
 gamesoup.library.types.SubmitStringWithCheck.addMethods({
     
     /*
-     * Nothing call()                               -- used in Action
+     * doAction()                                   -- used in Action
+     * Perform the default action of this object.
      */
-    call: function() {
+    doAction: function() {
         
     }
 

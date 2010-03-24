@@ -17,10 +17,10 @@ gamesoup.library.types.SayHello = Class.create(gamesoup.library.types.BaseType);
 gamesoup.library.types.SayHello.addMethods({
     
     /*
-     * Nothing call()                               -- used in Action
-     * Performs this default action of it's object.
+     * doAction()                                   -- used in Action
+     * Perform the default action of this object.
      */
-    call: function() {
+    doAction: function() {
         alert(this._message);
     }
 

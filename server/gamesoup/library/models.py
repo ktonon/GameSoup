@@ -17,6 +17,47 @@ from gamesoup.library.managers import *
 from gamesoup.library.parsers import *
 
 
+class Method(models.Model):
+    '''
+    Method signature.
+    '''
+    name = models.CharField(max_length=200, blank=True, editable=False)
+    description = models.TextField(blank=True)
+    parameters = models.ManyToManyField('Variable', related_name='parameter_of_method', blank=True, editable=False)
+    returned = models.ForeignKey('Variable', related_name='returned_from_method', blank=True, editable=False)
+    signature = SignatureField(parse_method_signature, unique=True)
+
+    objects = SignatureManager()
+
+    class Meta:
+        ordering = ['name']
+        
+    def __unicode__(self):
+        w = self.signature
+        qs = self.template_parameters.all()
+        if qs.count():
+            w += '<%s>' % ','.join(['%s=%s' % (p.name, p.weakest) for p in self.template_parameters.all()])
+        return w
+        
+    def used_in_short(self):
+        return ', '.join([interface.name for interface in self.used_in.all()])
+    used_in_short.short_description = 'Used in'
+    
+    @staticmethod
+    def pre_save(sender, instance, **kwargs):
+        d = parse_method_signature(instance.signature)
+        instance.name = d['name']
+        instance.returned = d['returned']
+
+    @staticmethod
+    def post_save(sender, instance, **kwargs):
+        d = parse_method_signature(instance.signature)
+        instance.parameters.add(*d['parameters'])
+
+pre_save.connect(Method.pre_save, sender=Method)
+post_save.connect(Method.post_save, sender=Method)
+
+
 class Interface(models.Model):
     '''
     A set of public methods available on instances of an object.
@@ -24,8 +65,7 @@ class Interface(models.Model):
     '''
     name = IdentifierField(help_text='A unique name. Should be specified using MixedCase with no spaces.')
     description = models.TextField(blank=True, help_text='This will serve as a human-readable, searchable account of this interface. Make this very detailed, because this will be the primary description of this interface for game designers.')
-    methods = models.ManyToManyField('Method', related_name='used_in', blank=True, editable=False)
-    signature = SignatureField(parse_interface_signature, verbose_name='Methods', multiline=True, blank=True, help_text='One method per line. Each is in the format "<span style="font-family: monospace">InterfaceName methodName(I1 param1, I2 param2)</span>", where the parameters are optional')
+    methods = models.ManyToManyField('Method', related_name='used_in', blank=True)
     is_built_in = models.BooleanField(default=False, help_text="Built-in interfaces are provided by the underlying language (JavaScript) or library (Prototype) and do not require a Type to be implemented.")
     
     objects = InterfaceManager()
@@ -44,21 +84,10 @@ class Interface(models.Model):
     def doc_link(self):
         return '<a href="%s">%s</a>' % (
             reverse('library:interface_documentation', args=[self.id]),
-            self.signature.replace('\n', '<br/>')
+            '<br/>'.join([m.name for m in self.methods.all()])
         )
     doc_link.allow_tags = True
     doc_link.short_description = 'Documentation'
-
-    @staticmethod
-    def post_save(sender, instance, **kwargs):
-        # Remove old methods
-        for method in instance.methods.all():
-            instance.methods.remove(method)
-        # Add new methods
-        d = parse_interface_signature(instance.signature)
-        instance.methods.add(*d['methods'])
-
-post_save.connect(Interface.post_save, sender=Interface)
 
     
 class Type(models.Model):
@@ -131,43 +160,6 @@ class Type(models.Model):
 post_save.connect(Type.post_save, sender=Type)
 
 
-class Method(models.Model):
-    '''
-    Method signature.
-    '''
-    name = models.CharField(max_length=200, blank=True, editable=False)
-    description = models.TextField(blank=True)
-    parameters = models.ManyToManyField('Variable', related_name='parameter_of_method', blank=True, editable=False)
-    returned = models.ForeignKey('Variable', related_name='returned_from_method', blank=True, editable=False)
-    signature = SignatureField(parse_method_signature, unique=True)
-
-    objects = SignatureManager()
-
-    class Meta:
-        ordering = ['name']
-        
-    def __unicode__(self):
-        return '%s used in %s' % (self.signature, self.used_in_short())
-        
-    def used_in_short(self):
-        return ', '.join([interface.name for interface in self.used_in.all()])
-    used_in_short.short_description = 'Used in'
-    
-    @staticmethod
-    def pre_save(sender, instance, **kwargs):
-        d = parse_method_signature(instance.signature)
-        instance.name = d['name']
-        instance.returned = d['returned']
-
-    @staticmethod
-    def post_save(sender, instance, **kwargs):
-        d = parse_method_signature(instance.signature)
-        instance.parameters.add(*d['parameters'])
-
-pre_save.connect(Method.pre_save, sender=Method)
-post_save.connect(Method.post_save, sender=Method)
-
-
 class Variable(models.Model):
     '''
     A variable declaration.
@@ -198,28 +190,50 @@ pre_save.connect(Variable.pre_save, sender=Variable)
 # TEMPLATING
 
 
-class InterfaceTemplateParameter(models.Model):
-    of_interface = models.ForeignKey(Interface, related_name='template_parameters')
+class TemplateParameter(models.Model):
     name = IdentifierField(unique=False)
-    weakest = models.CharField(max_length=200, default='Any', help_text='What is the weakest interface required?')
+    weakest = InterfaceExpressionField(help_text='What is the weakest interface required?')
 
     class Meta:
+        abstract=True
         ordering = ['name']
 
     def __unicode__(self):
-        return self.name
+        return '%s::%s' % (self.of.name, self.name)
 
 
-# class InterfaceTemplateArgument(models.Model):
+class TemplateParameterBinding(models.Model):
+    bound_to = InterfaceExpressionField()
+    
+    class Meta:
+        abstract=True
+            
+    def __unicode__(self):
+        return self.bound_to
 
+# PARAMETERS
 
-# class TypeTemplateParameter(models.Model):
-#     of_type = models.ForeignKey(Type, related_name='template_parameters')
-#     name = IdentifierField(unique=False)
-#     weakest = models.CharField(max_length=200, default='Any', help_text='What is the weakest interface required?')
-# 
-#     class Meta:
-#         ordering = ['name']
-# 
-#     def __unicode__(self):
-#         return self.name
+class MethodTemplateParameter(TemplateParameter):
+    of_method = models.ForeignKey(Method, related_name='template_parameters')
+    of = property(lambda self: self.of_method)
+    
+class InterfaceTemplateParameter(TemplateParameter):
+    of_interface = models.ForeignKey(Interface, related_name='template_parameters')
+    of = property(lambda self: self.of_interface)
+
+class TypeTemplateParameter(TemplateParameter):
+    of_type = models.ForeignKey(Type, related_name='template_parameters')
+    of = property(lambda self: self.of_type)
+
+# BINDINGS
+
+class MethodTemplateParameterBinding(TemplateParameterBinding):
+    interface = models.ForeignKey(Interface)
+    parameter = models.ForeignKey(MethodTemplateParameter)
+
+    class Media:
+        js = ('js/gamesoup/library/template-parameter-binding.js',)
+    
+class InterfaceTemplateParameterBinding(TemplateParameterBinding):
+    type = models.ForeignKey(Type)
+    parameter = models.ForeignKey(InterfaceTemplateParameter)

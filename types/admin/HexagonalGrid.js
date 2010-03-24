@@ -17,23 +17,26 @@ gamesoup.library.types.HexagonalGrid = Class.create(gamesoup.library.types.BaseT
 gamesoup.library.types.HexagonalGrid.addMethods({
     
     /*
-     * Iterable adjacentTo(Cell a)                  -- used in Board
-     */
-    adjacentTo: function(a) {
-        
-    },
-
-    /*
      * Boolean areAdjacent(Cell a, Cell b)          -- used in Board
+     * Are cell a and cell b adjacent?
      */
-    areAdjacent: function(a, b) {
+    areAdjacent: function() {
         
     },
 
     /*
-     * Nothing render()                             -- used in Renderable
+     * Item nextInIteration()                       -- used in Iterable
+     * Get the next object in the sequence. When the sequence is over, this should return null.
      */
-    render: function() {
+    nextInIteration: function() {
+        
+    },
+
+    /*
+     * resetIteration()                             -- used in Iterable
+     * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.
+     */
+    resetIteration: function() {
         
     }
 

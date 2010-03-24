@@ -4,7 +4,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "An empty interface. If you have an object of type any, then you don't know anything about it.", 
-            "signature": "", 
             "is_built_in": false, 
             "name": "Any"
         }
@@ -14,7 +13,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "Represents a value that doesn't contain anything.", 
-            "signature": "", 
             "is_built_in": true, 
             "name": "Nothing"
         }
@@ -24,7 +22,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "A true or false value", 
-            "signature": "", 
             "is_built_in": true, 
             "name": "Boolean"
         }
@@ -34,7 +31,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "A sequence of characters.", 
-            "signature": "", 
             "is_built_in": true, 
             "name": "String"
         }
@@ -44,7 +40,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "A floating point decimal number.", 
-            "signature": "", 
             "is_built_in": true, 
             "name": "Float"
         }
@@ -54,7 +49,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "A whole number either negative, zero, or positive.", 
-            "signature": "", 
             "is_built_in": true, 
             "name": "Integer"
         }
@@ -64,7 +58,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "A cell is a unit of a board.", 
-            "signature": "", 
             "is_built_in": false, 
             "name": "Cell"
         }
@@ -74,7 +67,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "Represents a bound executable piece of code that returns a value.", 
-            "signature": "Any call()\r\n", 
             "is_built_in": false, 
             "name": "Function"
         }
@@ -84,7 +76,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "For collections of objects, allows each object in the collection to be visited one at a time.", 
-            "signature": "Nothing each(Function visitor)", 
             "is_built_in": false, 
             "name": "Iterable"
         }
@@ -94,7 +85,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "Represents an procedure that can be called at specific points during game play. Actions can be hooked up to a target object, given a specific event name. When the target fires the event, the action is called.", 
-            "signature": "Nothing call()\r\n", 
             "is_built_in": false, 
             "name": "Action"
         }
@@ -104,7 +94,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "A collection of cells. For any two cells, you can ask the question \"Are these two cells adjacent?\" Note that if A and B are adjacent the B and A are adjacent.", 
-            "signature": "Boolean areAdjacent(Cell a, Cell b)\r\nIterable adjacentTo(Cell a)\r\n", 
             "is_built_in": false, 
             "name": "Board"
         }
@@ -114,7 +103,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "A object which can be asked a \"yes\" or \"no\" question.", 
-            "signature": "Boolean call()", 
             "is_built_in": false, 
             "name": "Predicate"
         }
@@ -124,7 +112,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "Like standing in a line. New things get enqueued to the end and the oldest things get dequeued from the front.", 
-            "signature": "Nothing enqueue(Any object)\r\nAny dequeue()", 
             "is_built_in": false, 
             "name": "Queue"
         }
@@ -134,7 +121,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "Both readable and writeable.", 
-            "signature": "String read()\r\nNothing write(String w)", 
             "is_built_in": false, 
             "name": "ReadWrite"
         }
@@ -144,7 +130,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "Can be converted to a string by reading it.", 
-            "signature": "String read()", 
             "is_built_in": false, 
             "name": "Readable"
         }
@@ -154,7 +139,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "An object which can receive a value and then do something with it.", 
-            "signature": "Nothing receive(Any object)", 
             "is_built_in": false, 
             "name": "Receiver"
         }
@@ -164,7 +148,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "Represents an object which must be registered before it can be used.", 
-            "signature": "Nothing register()\r\n", 
             "is_built_in": false, 
             "name": "Registerable"
         }
@@ -174,7 +157,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "Is visible during gameplay.", 
-            "signature": "Nothing render()", 
             "is_built_in": false, 
             "name": "Renderable"
         }
@@ -184,7 +166,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "Like a stack of plates. The last plate you pushed onto the stack is the first plate to be popped off.", 
-            "signature": "Nothing push(Any object)\r\nAny pop()\r\n", 
             "is_built_in": false, 
             "name": "Stack"
         }
@@ -194,7 +175,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "A object which can be used to validate strings, answering \"yes\" or \"no\".", 
-            "signature": "Boolean isValid(String w)", 
             "is_built_in": false, 
             "name": "StringValidator"
         }
@@ -204,7 +184,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "Can be updated by writing a string.", 
-            "signature": "Nothing write(String w)", 
             "is_built_in": false, 
             "name": "Writable"
         }

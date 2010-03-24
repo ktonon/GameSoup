@@ -7,11 +7,13 @@ import re
 from django.db import models
 from django import forms
 from gamesoup.library.errors import *
+from gamesoup.library.templation import InterfaceExpression
 
 
 __all__ = (
     'SignatureField',
     'IdentifierField',
+    'InterfaceExpressionField',
     )
 
 
@@ -65,3 +67,38 @@ class IdentifierField(models.CharField):
         defaults.update(kwargs)
         
         return super(IdentifierField, self).formfield(**defaults)
+
+
+###############################################################################
+# INTERFACE EXPRESSIONS
+# See gamesoup.library.templation
+
+
+class InterfaceExpressionFormField(forms.CharField):
+    
+    def __init__(self, *args, **kwargs):
+        super(InterfaceExpressionFormField, self).__init__(*args, **kwargs)
+    
+    def clean(self, value):
+        value = super(InterfaceExpressionFormField, self).clean(value)
+        try:
+            InterfaceExpression(value)
+        except Exception, e:
+            raise forms.ValidationError(e)
+        return value
+
+
+class InterfaceExpressionField(models.TextField):
+    
+    description = 'An interface expression.'
+    
+    def __init__(self, *args, **kwargs):
+        defaults = {'default': 'Any'}
+        defaults.update(**kwargs)
+        super(InterfaceExpressionField, self).__init__(*args, **defaults)
+    
+    def formfield(self, **kwargs):
+        defaults = {'form_class': InterfaceExpressionFormField}
+        defaults.update(**kwargs)
+        defaults['widget'] = forms.TextInput
+        return super(InterfaceExpressionField, self).formfield(**defaults)

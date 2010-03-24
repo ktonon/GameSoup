@@ -26,7 +26,7 @@ gamesoup.library.types.Label.addMethods({
         t = new Template('<div class="label" style="font-size: #{size}px">#{value}</div>');
         var s = (this._width / this._value.length * 1.5).round();
         s = s > this._height / 2 ? (this._height / 2).round() : s;
-        this._node.insert({bottom: t.evaluate({value: this._value, size: s})});
+        this._node.insert({bottom: t.evaluate({value: this._value, size: s})});        
     },
     
     /*

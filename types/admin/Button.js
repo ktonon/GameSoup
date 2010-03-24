@@ -36,7 +36,7 @@ gamesoup.library.types.Button.addMethods({
      * Perform custom initialization.
      */
     register: function() {
-         this._buttonNode.observe('click', this._action.call.bind(this._action));
+         this._buttonNode.observe('click', this._action.doAction.bind(this._action));
     }
     
 });

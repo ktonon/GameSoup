@@ -12,12 +12,12 @@ class InterfaceManager(models.Manager):
     
     def any(self):
         try:
-            return self.get_query_set().get(is_built_in=False, signature='', name='Any')
+            return self.get_query_set().get(is_built_in=False, methods__isnull=True, name='Any')
         except self.model.DoesNotExist:
             raise self.model.DoesNotExist('Please define the Any interface')
     
     def nothing(self):
         try:
-            return self.get_query_set().get(is_built_in=True, signature='', name='Nothing')
+            return self.get_query_set().get(is_built_in=True, methods__isnull=True, name='Nothing')
         except self.model.DoesNotExist:
             raise self.model.DoesNotExist('Please define the Nothing interface')

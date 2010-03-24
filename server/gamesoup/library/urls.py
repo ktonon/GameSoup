@@ -10,4 +10,8 @@ urlpatterns = patterns('gamesoup.library.views',
     url(r'^local-editing/$', 'local_editing', name='local_editing'),
     url(r'^local-editing/bulk-download.tar$', 'bulk_download', name='bulk_download'),
     url(r'^local-editing/bulk-upload/$', 'bulk_upload', name='bulk_upload'),
+    
+    # Templation
+    url(r'^interface/(?:\d+|add)/possible-template-parameters/$', 'possible_method_template_parameters', name='possible_method_template_parameters'),
+    url(r'^type/(?:\d+|add)/possible-template-parameters/$', 'possible_interface_template_parameters', name='possible_interface_template_parameters'),
 )

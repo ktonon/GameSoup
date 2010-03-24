@@ -21,7 +21,7 @@ gamesoup.library.types.GameStart.addMethods({
      * Perform custom initialization.
      */
     register: function() {
-        $('gamesoup-engine').observe('game:start', this._action.call.bind(this._action));
+         $('gamesoup-engine').observe('game:start', this._action.doAction.bind(this._action));
     }
     
 });

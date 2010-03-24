@@ -30,28 +30,6 @@ def parse_type_signature(signature):
     return d
 
 
-def parse_interface_signature(signature):
-    '''
-    Convert from encoded signature to dictionary object.
-
-    Example,
-        """
-        I3 methodName(I1 p1, I2 p2)
-        I3 otherMethod()
-        """
-    to
-        {
-            "methods": [m1, m2],
-        }
-    '''
-    from gamesoup.library.models import Method
-    sigs = [sig.strip() for sig in signature.split('\n') if sig.strip()]
-    d = {
-        'methods': map(Method.objects.for_signature, sigs),
-    }
-    return d
-
-
 def parse_method_signature(signature):
     '''
     Convert from encoded signature to dictionary object.

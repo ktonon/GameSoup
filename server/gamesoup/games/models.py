@@ -138,3 +138,11 @@ class Binding(models.Model):
 
 post_save.connect(Object.update_cache, sender=Binding)
 post_delete.connect(Object.update_cache, sender=Binding)
+
+
+###############################################################################
+# TEMPLATING
+
+class TypeTemplateParameterBinding(TemplateParameterBinding):
+    object = models.ForeignKey(Object)
+    parameter = models.ForeignKey(TypeTemplateParameter)

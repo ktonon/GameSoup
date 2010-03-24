@@ -4,7 +4,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "A built-in interface", 
-            "signature": "", 
             "methods": [], 
             "is_built_in": true, 
             "name": "BuiltIn"
@@ -15,7 +14,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "An empty interface", 
-            "signature": "", 
             "methods": [], 
             "is_built_in": false, 
             "name": "Empty"
@@ -26,7 +24,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "An interface with a single method", 
-            "signature": "BuiltIn method1()", 
             "methods": [
                 1
             ], 
@@ -39,7 +36,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "An interface with two methods", 
-            "signature": "BuiltIn method1()\nEmpty method2(BuiltIn param)\n", 
             "methods": [
                 1,
                 2

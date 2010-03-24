@@ -4,22 +4,25 @@
  */
 gamesoup.library.types.TextInput = Class.create(gamesoup.library.types.BaseType);
 
+
 /*****************************************************************************/
 /*                             Interface Methods                             */
 /*****************************************************************************/
 gamesoup.library.types.TextInput.addMethods({
     
     /*
-     * String read()                                -- used in ReadWrite, Readable
+     * Item read()                                  -- used in ReadWrite, Readable
+     * Read this content of this object.
      */
     read: function() {
         
     },
 
     /*
-     * Nothing write(String w)                      -- used in ReadWrite, Writable
+     * write(Item item)                             -- used in ReadWrite, Writable
+     * Write a value to the content of this object.
      */
-    write: function(w) {
+    write: function(item) {
         
     }
 
@@ -39,7 +42,7 @@ gamesoup.library.types.TextInput.addMethods({
         // this._node has already been created by this point
         t = new Template('<input type="text" style="width: 100%; height: 100%; font-size: #{size}px" />');
         var s = (this._height / 2).round();
-        this._node.insert({bottom: t.evaluate({size: s})});
+        this._node.insert({bottom: t.evaluate({size: s})});        
     },
     
     /*

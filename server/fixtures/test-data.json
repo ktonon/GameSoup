@@ -48,7 +48,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "An empty interface. If you have an object of type any, then you don't know anything about it.", 
-            "signature": "", 
             "is_built_in": false, 
             "name": "Any"
         }
@@ -58,7 +57,6 @@
         "model": "library.interface", 
         "fields": {
             "description": "Represents a value that doesn't contain anything.", 
-            "signature": "", 
             "is_built_in": true, 
             "name": "Nothing"
         }
