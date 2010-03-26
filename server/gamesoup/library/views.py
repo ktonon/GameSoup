@@ -2,9 +2,12 @@ import json
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import *
 from django.shortcuts import *
+from django.template import Context
+from django.template.loader import get_template
 from gamesoup.library.forms import *
 from gamesoup.library.local_editing import pack_types, unpack_types
 from gamesoup.library.models import *
+from gamesoup.library.code import TypeCode
 
 
 ###############################################################################
@@ -36,6 +39,41 @@ def interface_documentation(request, interface_id):
         'interface': interface,
     }
     return render_to_response('admin/library/interface/doc.html', context)
+
+
+@staff_member_required
+def generate_type_code(request, type_id):
+    type = get_object_or_404(Type, pk=type_id)
+    if request.method == 'POST':
+        form = GenerateCodeForm(request.POST)
+        if form.is_valid():
+            type.code = form.cleaned_data['new_code']
+            type.save()
+            return HttpResponseRedirect(reverse('admin:library_type_change', args=[type.id]))
+    else:
+        form = GenerateCodeForm({
+            'new_code': type.generated_code(),
+        })
+    context = {
+        'title': 'Generate %s code' % type,
+        'form': form,
+        'type': type,
+    }
+    return render_to_response('admin/library/type/generate-code.html', context)
+
+
+@staff_member_required
+def parsed_type_code(request, type_id):
+    type = get_object_or_404(Type, pk=type_id)
+    code = TypeCode(type)
+    im = Method.objects.filter(used_in__implemented_by=type)
+    context = {
+        'title': 'Parsed code for %s' % type,
+        'type': type,
+        'methods': im,
+        'im_code': [code.interface_method(m.name) for m in im],
+    }
+    return render_to_response('admin/library/type/parsed.html', context)
 
 
 ###############################################################################

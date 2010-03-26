@@ -34,6 +34,7 @@ mod.Engine = Class.create({
         this._visibleObjects.invoke('render');
     }
 });
+gs.tracerize('Engine', mod.Engine);
 
 
 document.observe('dom:loaded', function() {

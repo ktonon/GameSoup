@@ -19,14 +19,15 @@ gamesoup.library.types.SayHello.addMethods({
     /*
      * doAction()                                   -- used in Action
      * Perform the default action of this object.
-     */
+     */                                                               /* vVv */
     doAction: function() {
         alert(this._message);
-    }
+    }                                                                 /* ^A^ */
 
 });
 
 /*****************************************************************************/
+/*                                Engine Hooks                               */
 /*           These methods are called by the gamesoup match engine.          */
 /*                         Do not call them yourself!                        */
 /*                    They are called in the order shown.                    */
@@ -35,15 +36,15 @@ gamesoup.library.types.SayHello.addMethods({
     
     /*
      * Perform custom initialization.
-     */
+     */                                                               /* vVv */
     register: function() {
-         
-    }
+        
+    }                                                                 /* ^A^ */
     
 });
 
 /*****************************************************************************/
-/*                           Implementation methods                          */
+/*                           Implementation Methods                          */
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
 gamesoup.library.types.SayHello.addMethods({

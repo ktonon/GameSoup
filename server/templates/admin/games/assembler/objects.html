@@ -13,7 +13,7 @@
         </thead>
         {% if objects %}
         {% for obj in objects %}
-        <tr id="object-{{ obj.id }}" class="object {% cycle row1,row2 %} {{ obj.satisfied|yesno:",unsatisfied" }} {{ obj.is_satisfiable|yesno:",unsatisfiable" }}" objectID="{{ obj.id }}">
+        <tr id="object-{{ obj.id }}" class="object {% cycle row1,row2 %} {{ obj.satisfied|yesno:",unsatisfied" }} {{ obj.is_satisfiable|yesno:",unsatisfiable" }} {{ obj.type.visible|yesno:"visible," }} {{ obj.type.has_state|yesno:"stateful," }}" objectID="{{ obj.id }}">
             <td class="type"><input type="button" value="{{ obj }}" /></td>
             <td class="delete-link" title="Remove this object">x</td>
             <td class="satisfied"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.satisfied|yesno:"yes,no" }}.gif"></td>

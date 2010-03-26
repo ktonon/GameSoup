@@ -70,6 +70,9 @@ class Object(models.Model):
     
     def __unicode__(self):
         return u'%s' % (self.name or self.type)
+    
+    class Meta:
+        ordering = ('name',)
         
     def is_satisfied(self):
         '''
@@ -99,7 +102,13 @@ class Object(models.Model):
         # Do this for both directions.
         instance.parameter_bindings.all().delete()
         instance.bound_to.all().delete()
-        
+    
+    @staticmethod
+    def post_save(sender, instance, **kwargs):
+        if instance.name == '':
+            instance.name = instance.type.name
+            instance.save() # Since name is set, this should avoid infinite recursion
+
     @staticmethod
     def update_cache(sender, instance, **kwargs):
         if sender.__name__ == 'Binding':
@@ -113,6 +122,7 @@ class Object(models.Model):
                 obj.save()
 
 pre_save.connect(Object.update_cache, sender=Object)
+post_save.connect(Object.post_save, sender=Object)
 post_delete.connect(Object.post_delete, sender=Object)
 
 

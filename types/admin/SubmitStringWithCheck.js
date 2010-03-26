@@ -20,14 +20,18 @@ gamesoup.library.types.SubmitStringWithCheck.addMethods({
     /*
      * doAction()                                   -- used in Action
      * Perform the default action of this object.
-     */
+     */                                                               /* vVv */
     doAction: function() {
-        
-    }
+        if (this._validator.call()) {
+            var item = this._source.read();
+            this._destination.write(item);
+        }
+    }                                                                 /* ^A^ */
 
 });
 
 /*****************************************************************************/
+/*                                Engine Hooks                               */
 /*           These methods are called by the gamesoup match engine.          */
 /*                         Do not call them yourself!                        */
 /*                    They are called in the order shown.                    */
@@ -36,15 +40,15 @@ gamesoup.library.types.SubmitStringWithCheck.addMethods({
     
     /*
      * Perform custom initialization.
-     */
+     */                                                               /* vVv */
     register: function() {
-         
-    }
+        
+    }                                                                 /* ^A^ */
     
 });
 
 /*****************************************************************************/
-/*                           Implementation methods                          */
+/*                           Implementation Methods                          */
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
 gamesoup.library.types.SubmitStringWithCheck.addMethods({

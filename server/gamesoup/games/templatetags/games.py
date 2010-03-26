@@ -9,7 +9,7 @@ register = template.Library()
 def objects(game):
     return {
         'game': game,
-        'objects': game.object_set.all().order_by('type'),
+        'objects': game.object_set.all(),
     }
 
 

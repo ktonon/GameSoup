@@ -15,6 +15,7 @@ from gamesoup.library.errors import *
 from gamesoup.library.fields import *
 from gamesoup.library.managers import *
 from gamesoup.library.parsers import *
+from gamesoup.library.code import TypeCode
 
 
 class Method(models.Model):
@@ -128,11 +129,24 @@ class Type(models.Model):
             counts[method.name] = counts.get(method.name, 0) + 1
         names = [name for name, count in counts.items() if count > 1]
         return qs.filter(name__in=names).order_by('name')
+    
+    def generated_code(self):
+        t = get_template('library/type/boilerplate.js')
+        parsed = TypeCode(self)
+        c = Context({
+            'type': self,
+            'built_ins': self.parameters.filter(interface__is_built_in=True),
+            'references': self.parameters.filter(interface__is_built_in=False),
+            'has_parameters': self.parameters.count() != 0,
+            'methods': Method.objects.filter(used_in__implemented_by=self).distinct(),
+            'parsed': parsed,
+        })
+        return t.render(c)
         
     @classmethod
     def reset_code(cls):
         for type in cls.objects.all():
-            type.code = ''
+            type.code = type.generated_code()
             type.save()
     
     @staticmethod
@@ -143,19 +157,6 @@ class Type(models.Model):
         for param in old:
             instance.parameters.remove(param)
         instance.parameters.add(*d['parameters'])
-        # Provide boilerplate code
-        if not instance.code:
-            t = get_template('library/type/boilerplate.js')
-            type = instance
-            c = Context({
-                'type': type,
-                'built_ins': type.parameters.filter(interface__is_built_in=True),
-                'references': type.parameters.filter(interface__is_built_in=False),
-                'has_parameters': type.parameters.count() != 0,
-                'methods': Method.objects.filter(used_in__implemented_by=type).distinct(),
-            })
-            type.code = t.render(c)
-            type.save() # CAREFUL: This will cause post_save to be called again, but this time, code will be True and this block won't execute
 
 post_save.connect(Type.post_save, sender=Type)
 

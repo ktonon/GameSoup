@@ -6,11 +6,13 @@ gamesoup.library.types.GameStart = Class.create(gamesoup.library.types.BaseType)
 
 /*****************************************************************************/
 /*                                 Parameters                                */
-/*****************************************************************************///                                 REFERENCES                                
+/*****************************************************************************/
+//                                 REFERENCES                                
 // this._action                                     -- Action
 
 
 /*****************************************************************************/
+/*                                Engine Hooks                               */
 /*           These methods are called by the gamesoup match engine.          */
 /*                         Do not call them yourself!                        */
 /*                    They are called in the order shown.                    */
@@ -19,15 +21,15 @@ gamesoup.library.types.GameStart.addMethods({
     
     /*
      * Perform custom initialization.
-     */
+     */                                                               /* vVv */
     register: function() {
-         $('gamesoup-engine').observe('game:start', this._action.doAction.bind(this._action));
-    }
+        $('gamesoup-engine').observe('game:start', this._action.doAction.bind(this._action));
+    }                                                                 /* ^A^ */
     
 });
 
 /*****************************************************************************/
-/*                           Implementation methods                          */
+/*                           Implementation Methods                          */
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
 gamesoup.library.types.GameStart.addMethods({

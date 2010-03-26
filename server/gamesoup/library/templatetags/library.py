@@ -22,3 +22,13 @@ def built_in(param):
         'Boolean': '%s == "true"',
     }
     return x[param.interface.name] % t
+
+
+@register.filter
+def engine_hook(parsed, name):
+    return mark_safe(parsed.engine_hook(name))
+
+
+@register.simple_tag
+def interface_method(parsed, name):
+    return mark_safe(parsed.interface_method(name))

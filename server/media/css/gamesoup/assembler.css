@@ -10,7 +10,9 @@ body {background: #e8e8e8;}
 #object-list table {width: 100%;}
 #object-list tbody th, #object-list td {padding: 5px 5px;}
 #type {width: 178px;}
-.type input {font-weight: bold; width: 100%; text-align: left;}
+.type input {font-weight: normal; color: #333; width: 100%; text-align: left;}
+.visible .type input {font-weight: bold;}
+.stateful .type input {font-style: italic;}
 .unsatisfied .type input {color: red;}
 .unsatisfiable .type input {background: red; color: white;}
 .unsatisfiable .type input:active {background: #ff4040;}

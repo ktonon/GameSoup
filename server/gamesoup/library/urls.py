@@ -5,6 +5,8 @@ urlpatterns = patterns('gamesoup.library.views',
     # Documentation
     url(r'^interface/documentation/$', 'multiple_interface_documentation', name='multiple_interface_documentation'),
     url(r'^interface/(?P<interface_id>\d+)/documentation/$', 'interface_documentation', name='interface_documentation'),
+    url(r'^type/(?P<type_id>\d+)/parsed/$', 'parsed_type_code', name='parsed_type_code'),
+    url(r'^type/(?P<type_id>\d+)/generate-code/$', 'generate_type_code', name='generate_type_code'),
     
     # Local editing
     url(r'^local-editing/$', 'local_editing', name='local_editing'),

@@ -23,7 +23,7 @@ def game_flow(request, game_id, format):
     # g.rankdir = 'LR'
     nodes = {}
     for obj in game.object_set.all():
-        n = g.add_node(obj.id, label=str(obj))
+        n = g.add_node(obj.id, label=str(obj).replace('"', '\\"'))
         n.width = len(str(obj)) / 10
         n.style = 'filled'
         if obj.type.visible:

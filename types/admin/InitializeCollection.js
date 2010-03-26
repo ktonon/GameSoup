@@ -1,27 +1,33 @@
 /*
- * Type: WordOnBoardPath
- * Give a word, can a sequence of adjacent cells be found on a board where letters on those cells spell out the word?
+ * Type: InitializeCollection
+ * For each writable cell in a collection, provide a newly instantiated object.
  */
-gamesoup.library.types.WordOnBoardPath = Class.create(gamesoup.library.types.BaseType);
+gamesoup.library.types.InitializeCollection = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
 /*                                 Parameters                                */
 /*****************************************************************************///                                 REFERENCES                                
-// this._board                                      -- Board
-// this._word                                       -- Readable
+// this._collection                                 -- Iterable
+// this._factory                                    -- Factory
 
 
 /*****************************************************************************/
 /*                             Interface Methods                             */
 /*****************************************************************************/
-gamesoup.library.types.WordOnBoardPath.addMethods({
+gamesoup.library.types.InitializeCollection.addMethods({
     
     /*
-     * Boolean call()                               -- used in Predicate
-     * What is the truth value of this predicate object?
+     * doAction()                                   -- used in Action
+     * Perform the default action of this object.
      */                                                               /* vVv */
-    call: function() {
-        return true
+    doAction: function() {
+        this._collection.resetIteration();
+        var nextCell = this._collection.nextInIteration()
+        while (nextCell) {
+            var item = this._factory.instantiate();
+            nextCell.write(item);
+            nextCell = this._collection.nextInIteration();
+        }
     }                                                                 /* ^A^ */
 
 });
@@ -32,7 +38,7 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
 /*                         Do not call them yourself!                        */
 /*                    They are called in the order shown.                    */
 /*****************************************************************************/
-gamesoup.library.types.WordOnBoardPath.addMethods({ 
+gamesoup.library.types.InitializeCollection.addMethods({ 
     
     /*
      * Perform custom initialization.
@@ -47,6 +53,6 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
 /*                           Implementation Methods                          */
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
-gamesoup.library.types.WordOnBoardPath.addMethods({
+gamesoup.library.types.InitializeCollection.addMethods({
     // Helper methods go here...
 });

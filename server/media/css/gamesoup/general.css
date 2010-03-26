@@ -7,6 +7,7 @@
 a:link, a:visited {
     color: #963;
 }
+.row1 {background-color: #fff8f0;}
 
 /* General */
 .outer-container {position: absolute;}

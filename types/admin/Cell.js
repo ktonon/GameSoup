@@ -1,15 +1,32 @@
 /*
- * Type: Label
- * A simple way to place text on the screen. The value never changes throughout the game.
+ * Type: Cell
+ * A simple type used to contain another
  */
-gamesoup.library.types.Label = Class.create(gamesoup.library.types.BaseType);
+gamesoup.library.types.Cell = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
-/*                                 Parameters                                */
+/*                             Interface Methods                             */
 /*****************************************************************************/
-//                                 BUILT-INS                                 
-// this._value                                      -- String
+gamesoup.library.types.Cell.addMethods({
+    
+    /*
+     * Item read()                                  -- used in ReadWrite, Readable
+     * Read this content of this object.
+     */                                                               /* vVv */
+    read: function() {
+        return this._item;
+    },                                                                /* ^A^ */
 
+    /*
+     * write(Item item)                             -- used in ReadWrite, Writable
+     * Write a value to the content of this object.
+     */                                                               /* vVv */
+    write: function(item) {
+        this._item = item;
+        this._node.innerHTML = item;
+    }                                                                 /* ^A^ */
+
+});
 
 /*****************************************************************************/
 /*                                Engine Hooks                               */
@@ -17,23 +34,13 @@ gamesoup.library.types.Label = Class.create(gamesoup.library.types.BaseType);
 /*                         Do not call them yourself!                        */
 /*                    They are called in the order shown.                    */
 /*****************************************************************************/
-gamesoup.library.types.Label.addMethods({ 
-    
-    /*
-     * Extend the DOM and apply styling.
-     */                                                               /* vVv */
-    render: function() {
-        t = new Template('<div class="label" style="font-size: #{size}px">#{value}</div>');
-        var s = (this._width / this._value.length * 1.5).round();
-        s = s > this._height / 2 ? (this._height / 2).round() : s;
-        this._node.insert({bottom: t.evaluate({value: this._value, size: s})});
-    },                                                                /* ^A^ */
+gamesoup.library.types.Cell.addMethods({ 
     
     /*
      * Perform custom initialization.
      */                                                               /* vVv */
     register: function() {
-        
+        this._item = null;
     }                                                                 /* ^A^ */
     
 });
@@ -42,6 +49,6 @@ gamesoup.library.types.Label.addMethods({
 /*                           Implementation Methods                          */
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
-gamesoup.library.types.Label.addMethods({
+gamesoup.library.types.Cell.addMethods({
     // Helper methods go here...
 });
