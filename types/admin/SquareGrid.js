@@ -11,7 +11,6 @@ gamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType
 // this._colCount                                   -- Integer
 // this._rowCount                                   -- Integer
 
-
 /*****************************************************************************/
 /*                             Interface Methods                             */
 /*****************************************************************************/

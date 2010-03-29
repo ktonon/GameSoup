@@ -1,11 +1,13 @@
 import re
 from cStringIO import StringIO
 from gamesoup.library.errors import *
+from gamesoup.library.templation import InterfaceExpression
 
 
 patterns = {'id': '[A-Za-z_][A-Za-z_0-9]*'}
 patterns['ta'] = '%(id)s\s*=\s*%(id)s' % patterns
 patterns['tas'] = '\<\s*%(ta)s(?:\s*,\s*%(ta)s)*\s*\>' % patterns
+patterns['interface_expression_chars'] = r'[A-Za-z0-9_<>=, ]+'
 
 
 def parse_type_signature(signature):
@@ -103,13 +105,17 @@ def parse_variable_signature(signature):
         }
     '''        
     from gamesoup.library.models import Interface
-    p = re.compile(r'^\s*(?P<interface_name>%(id)s)(?P<template_arguments>%(tas)s)?\s+(?P<name>%(id)s)\s*$' % patterns)
+    p = re.compile(r'^\s*(?P<interface_expression>%(interface_expression_chars)s?)\s+(?P<name>%(id)s)\s*$' % patterns)
     m = p.match(signature)
     if not m:
         raise SignatureParseError('Invalid format for variable signature: %s' % signature)
     d = m.groupdict()
     try:
-        d['interface'] = Interface.objects.get(name=d['interface_name'])
-    except Interface.DoesNotExist:
-        d['interface'] = None
+        exp = InterfaceExpression(d['interface_expression'])
+    except Exception:
+        raise SignatureParseError('Invalid format for interface expression: %s' % d['interface_expression'])
+    del d['interface_expression']
+    d['interface'] = exp.interface
+    d['interface_name'] = exp.interface_name
+    d['template_arguments'] = exp.template_arguments
     return d

@@ -1,22 +1,21 @@
 /*
- * Type: SubmitStringWithCheck
- * Action that reads a string from a source and if it is ok, sends it to a receiver. The source is cleared.
+ * Type: ActionPair
+ * Do action a, then do action b.
  */
-gamesoup.library.types.SubmitStringWithCheck = Class.create(gamesoup.library.types.BaseType);
+gamesoup.library.types.ActionPair = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._destination                                                   Writable
-// this._source                                                       ReadWrite
-// this._validator                                                    Predicate
+// this._a                                                               Action
+// this._b                                                               Action
 
 
 /*****************************************************************************/
 /*                             Interface Methods                             */
 /*****************************************************************************/
-gamesoup.library.types.SubmitStringWithCheck.addMethods({
+gamesoup.library.types.ActionPair.addMethods({
     
     /*---------------------------------------->                          Action
      * Nothing doAction()
@@ -24,16 +23,8 @@ gamesoup.library.types.SubmitStringWithCheck.addMethods({
      * Perform the default action of this object.
      */                                                               /* vVv */
     doAction: function() {
-        if (this._validator.call()) {
-            // Success
-            var item = this._source.read();
-            this._destination.write(item);
-        } else {
-            // Failure
-            gamesoup.matches.messageBoard.postLocally(this._validator.reason());
-        }
-        // Need support for multiple interfaces on parameters.
-        // this._source.clear();
+        this._a.doAction();
+        this._b.doAction();
     }                                                                 /* ^A^ */
 
 });
@@ -44,7 +35,7 @@ gamesoup.library.types.SubmitStringWithCheck.addMethods({
 /*                         Do not call them yourself!                        */
 /*                    They are called in the order shown.                    */
 /*****************************************************************************/
-gamesoup.library.types.SubmitStringWithCheck.addMethods({ 
+gamesoup.library.types.ActionPair.addMethods({ 
     
     /*
      * Perform custom initialization.
@@ -59,6 +50,6 @@ gamesoup.library.types.SubmitStringWithCheck.addMethods({
 /*                           Implementation Methods                          */
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
-gamesoup.library.types.SubmitStringWithCheck.addMethods({
+gamesoup.library.types.ActionPair.addMethods({
     // Helper methods go here...
 });

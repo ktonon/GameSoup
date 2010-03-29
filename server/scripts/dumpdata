@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
-gamesoup/manager.py dumpdata --indent=4 library > gamesoup/library/fixtures/dev-library.json
-gamesoup/manager.py dumpdata --indent=4 games > gamesoup/games/fixtures/dev-games.json
-gamesoup/manager.py dumpdata --indent=4 matches > gamesoup/matches/fixtures/dev-matches.json
+cd gamesoup
+./manage.py dumpdata --indent=4 library > library/fixtures/dev-library.json
+./manage.py dumpdata --indent=4 games > games/fixtures/dev-games.json
+./manage.py dumpdata --indent=4 matches > matches/fixtures/dev-matches.json

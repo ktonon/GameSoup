@@ -9,16 +9,27 @@ gamesoup.library.types.TextInput = Class.create(gamesoup.library.types.BaseType)
 /*****************************************************************************/
 gamesoup.library.types.TextInput.addMethods({
     
-    /*
-     * Item read()                                  -- used in ReadWrite, Readable
+    /*---------------------------------------->                       Focusable
+     * Nothing focus()
+     * 
+     * Give focus to the object. Input messages from the keyboard and mouse will go directly to this object after focus is called.
+     */                                                               /* vVv */
+    focus: function() {
+        this._inputNode.focus();
+    },                                                                /* ^A^ */
+
+    /*---------------------------------------->             ReadWrite, Readable
+     * Foo read()
+     * 
      * Read this content of this object.
      */                                                               /* vVv */
     read: function() {
         return this._inputNode.getValue();
     },                                                                /* ^A^ */
 
-    /*
-     * write(Item item)                             -- used in ReadWrite, Writable
+    /*---------------------------------------->             ReadWrite, Writable
+     * Nothing write(Foo item)
+     * 
      * Write a value to the content of this object.
      */                                                               /* vVv */
     write: function(item) {

@@ -1,3 +1,4 @@
+#gamesoup-engine {position: relative;}
 #gamesoup-canvas {
     position: relative;
     margin: 20px 0;
@@ -15,3 +16,7 @@ input[type=text] {margin: 0; padding: 0; background: #e8e8e8; border-color: #999
 .box {border: solid 1px #999;}
 ul.list {margin: 0; padding: 0; overflow: auto;}
 ul.list li {list-style: none; padding: 0; margin: 10px; font-size: 12pt;}
+
+/* Message board */
+#message-board ul {position: absolute; left: 100px; top: 50px; right: 100px; padding: 0; text-align: center; z-index: 10000; opacity: 0.6;}
+#message-board li {list-style: none; margin: 0; padding: 1em; font-size: 18pt; background: #330; color: white; border: solid 1px white;}

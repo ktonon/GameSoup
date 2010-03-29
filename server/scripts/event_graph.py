@@ -1,5 +1,6 @@
 import re
 import sys
+from common import color
 
 
 common = {
@@ -47,20 +48,6 @@ for line in sys.stdin.xreadlines():
 
 
 namespaces = dict([(n, i) for i, n in enumerate(namespaces)])
-color = [
-    '#6699cc',
-    '#66cc99',
-    '#9966cc',
-    '#99cc66',
-    '#cc6699',
-    '#cc9966',
-    '#99ccff',
-    '#99ffcc',
-    '#ccff99',
-    '#cc99ff',
-    '#ff99cc',
-    '#ffcc99',
-]
 
 print '''digraph {
 node [style=filled];

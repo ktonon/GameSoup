@@ -1,5 +1,7 @@
 from django import template
 from django.utils.safestring import mark_safe
+from gamesoup.library.parsers import parse_method_signature
+from gamesoup.library.templation import InterfaceExpression
 
 
 register = template.Library()
@@ -10,6 +12,29 @@ def code_doc(component, count=0):
     if not component.description: return ''
     prefix = '\n%s * ' % ('    ' * count)
     return prefix + component.description.replace('\n', prefix)
+
+
+@register.simple_tag
+def method_signature_doc(method):
+    context = {
+        'Item': 'Foo'
+        }
+    
+    def resolve(w):
+        exp = InterfaceExpression(w)
+        return `exp` % context
+    
+    d = parse_method_signature(method.signature)
+    w = ''
+    if d['returned']:
+        w += resolve(d['returned'].interface_name) + ' '
+    w += '%s(' % d['name']
+    x = []
+    for param in d['parameters']:
+        x.append('%s %s' % (resolve(param.interface_name), param.name))
+    w += ', '.join(x)
+    w += ')'
+    return w
 
 
 @register.simple_tag

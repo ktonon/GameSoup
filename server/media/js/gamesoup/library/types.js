@@ -17,6 +17,9 @@ mod.BaseType = Class.create({
     },
     isStateful: function() {
         return false;
+    },
+    observe: function(eventName, action) {
+        this._node.observe(eventName, action);
     }
 });
 

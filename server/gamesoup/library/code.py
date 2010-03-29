@@ -34,7 +34,6 @@ class TypeCode(object):
         def collect(c, x):
             m = self.pattern['method'].search(x)
             while m:
-                print m.groupdict()['method_name']
                 d = m.groupdict()
                 c[d['method_name']] = d['method_body']
                 x = x[m.end(0):]

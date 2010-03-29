@@ -6,9 +6,10 @@ gamesoup.library.types.InitializeCollection = Class.create(gamesoup.library.type
 
 /*****************************************************************************/
 /*                                 Parameters                                */
-/*****************************************************************************///                                 REFERENCES                                
-// this._collection                                 -- Iterable
-// this._factory                                    -- Factory
+/*****************************************************************************/
+//                                 REFERENCES                                
+// this._collection --                         Iterable&lt;Item=Any&gt;
+// this._factory --                          Factory&lt;Item=Any&gt;
 
 
 /*****************************************************************************/

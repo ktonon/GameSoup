@@ -10,7 +10,7 @@ gamesoup.library.types.Button = Class.create(gamesoup.library.types.BaseType);
 //                                 BUILT-INS                                 
 // this._label                                      -- String
 //                                 REFERENCES                                
-// this._action                                     -- Action
+// this._action --                                     Action
 
 
 /*****************************************************************************/

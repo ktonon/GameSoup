@@ -1,15 +1,31 @@
 /*
- * Type: GameStart
- * Connect an action to this object to have it execute at the start of the game.
+ * Type: GiveFocus
+ * Give focus to a target object. After receiving focus, that object will accept input from the keyboard and mouse.
  */
-gamesoup.library.types.GameStart = Class.create(gamesoup.library.types.BaseType);
+gamesoup.library.types.GiveFocus = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._action                                     -- Action
+// this._target                                                       Focusable
 
+
+/*****************************************************************************/
+/*                             Interface Methods                             */
+/*****************************************************************************/
+gamesoup.library.types.GiveFocus.addMethods({
+    
+    /*---------------------------------------->                          Action
+     * Nothing doAction()
+     * 
+     * Perform the default action of this object.
+     */                                                               /* vVv */
+    doAction: function() {
+        this._target.focus();
+    }                                                                 /* ^A^ */
+
+});
 
 /*****************************************************************************/
 /*                                Engine Hooks                               */
@@ -17,13 +33,13 @@ gamesoup.library.types.GameStart = Class.create(gamesoup.library.types.BaseType)
 /*                         Do not call them yourself!                        */
 /*                    They are called in the order shown.                    */
 /*****************************************************************************/
-gamesoup.library.types.GameStart.addMethods({ 
+gamesoup.library.types.GiveFocus.addMethods({ 
     
     /*
      * Perform custom initialization.
      */                                                               /* vVv */
     register: function() {
-        $('gamesoup-engine').observe('game:start', this._action.doAction.bind(this._action));
+        
     }                                                                 /* ^A^ */
     
 });
@@ -32,6 +48,6 @@ gamesoup.library.types.GameStart.addMethods({
 /*                           Implementation Methods                          */
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
-gamesoup.library.types.GameStart.addMethods({
+gamesoup.library.types.GiveFocus.addMethods({
     // Helper methods go here...
 });

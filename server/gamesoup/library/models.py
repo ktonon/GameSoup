@@ -168,6 +168,7 @@ class Variable(models.Model):
     name = models.CharField(max_length=100, blank=True, editable=False)
     interface_name = models.CharField(max_length=100, blank=True, editable=False)
     interface = models.ForeignKey('Interface', blank=True, editable=False, null=True)
+    interface_expression = InterfaceExpressionField(editable=False)
     signature = SignatureField(parse_variable_signature, unique=True)
 
     class Meta:
@@ -177,12 +178,14 @@ class Variable(models.Model):
     
     def __unicode__(self):
         return self.signature
-    
+        
     @staticmethod
     def pre_save(sender, instance, **kwargs):
         d = parse_variable_signature(instance.signature)
         instance.name = d['name']
         instance.interface = d['interface']
+        instance.interface_name = d['interface_name']
+        instance.interface_expression = instance.interface_name + (d['template_arguments'] or '')
 
 pre_save.connect(Variable.pre_save, sender=Variable)
 

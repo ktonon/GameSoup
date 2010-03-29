@@ -43,6 +43,7 @@ class SimpleParsersTest(test.TestCase):
         self.I2 = models.Interface.objects.get(name='I2')
         self.I3 = models.Interface.objects.get(name='I3')
         self.Visitor = models.Interface.objects.get(name='Visitor')
+        self.Nothing = models.Interface.objects.nothing()
     
     def test_parse_variable_signature(self):
         # Robust against whitespace don't hurt
@@ -56,6 +57,7 @@ class SimpleParsersTest(test.TestCase):
     def test_parse_variable_signature_nonexistant_interface(self):
         d = parsers.parse_variable_signature('IDoesNotExist param')
         self.assertEquals(d['interface'], None)
+        self.assertEquals(d['interface_name'], 'IDoesNotExist')
 
     def test_parse_variable_signature_fails_for_invalid_formats(self):
         self.assertRaises(SignatureParseError, parsers.parse_variable_signature, 'I1 param extra')
@@ -95,6 +97,14 @@ class SimpleParsersTest(test.TestCase):
         self.assertEquals(d['parameters'][1].interface, self.I2)
         self.assertEquals(d['parameters'][0].name, 'a')
         self.assertEquals(d['parameters'][1].name, 'b')
+
+    def test_parse_method_signature_that_returns_nothing(self):
+        d = parsers.parse_method_signature('methodName()')
+        self.assertEquals(len(d), 3)
+        self.assertEquals(d['name'], 'methodName')
+        self.assertEquals(d['returned'].interface, self.Nothing)
+        self.assertEquals(d['returned'].interface.name, 'Nothing')
+        self.assertEquals(len(d['parameters']), 0)
 
     def test_parse_method_signature_no_parameters(self):
         d = parsers.parse_method_signature('I1 methodName()')

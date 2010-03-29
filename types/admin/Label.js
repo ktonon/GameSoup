@@ -10,7 +10,6 @@ gamesoup.library.types.Label = Class.create(gamesoup.library.types.BaseType);
 //                                 BUILT-INS                                 
 // this._value                                      -- String
 
-
 /*****************************************************************************/
 /*                                Engine Hooks                               */
 /*           These methods are called by the gamesoup match engine.          */

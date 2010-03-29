@@ -9,6 +9,7 @@ mod.Engine = Class.create({
         this._node = $(node);
         this.createObjectLists();
         this.createDOM();
+        this.createMessageBoard();
         this._objects.invoke('register');
         // Start the game
         this._node.fire('game:start');
@@ -32,6 +33,10 @@ mod.Engine = Class.create({
         // Scale and render visible objects
         this._visibleObjects.invoke('scale');
         this._visibleObjects.invoke('render');
+    },
+    createMessageBoard: function() {
+        this._node.insert({top: '<div id="message-board"></div>'});
+        gamesoup.matches.messageBoard = new gamesoup.matches.MessageBoard('message-board');
     }
 });
 gs.tracerize('Engine', mod.Engine);

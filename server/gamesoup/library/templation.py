@@ -32,6 +32,7 @@ class InterfaceExpression(object):
         self._expr_text = str(expr_text)
         self._ident, self._args_text = self._parse_a(expr_text)
         self._args = []
+        self.is_fake = False
         if self._args_text:
             self._args = [
                     (k,InterfaceExpression(v, load_interface=load_interface)) 
@@ -44,11 +45,23 @@ class InterfaceExpression(object):
                 self._interface = Interface.objects.get(name=self._ident)
             except Interface.DoesNotExist:
                 # The interface must be a template parameter
-                pass # Just ignore this for now                
+                self._interface = None
+                self.is_fake = True
 
     def get_interface(self):
         return self._interface
     interface = property(get_interface)
+
+    def get_interface_name(self):
+        return self._ident
+    interface_name = property(get_interface_name)
+
+    def get_template_arguments(self):
+        if not self._args:
+            return None
+        else:
+            return '<%s>' % ','.join(['%s=%s' % (k, v) for k,v in self._args])
+    template_arguments = property(get_template_arguments)
 
     def compare(self, template_param):
         arg = self[template_param]
@@ -60,18 +73,14 @@ class InterfaceExpression(object):
 
     def tighter_than(self, other):
         from gamesoup.library.models import Interface
-        print '%s < %s?' % (self._expr_text, other._expr_text)
         if self.interface.is_built_in or other.interface.is_built_in:
             if other.interface == Interface.objects.any():
-                print '   True'
                 return True
             else:
-                print '   False'
                 return False            
         a = self.interface
         b = other.interface
         for method in other.interface.methods.all():
-            print '   %s in %s?' % (method.name, self.interface)
             if self.interface.methods.filter(pk=method.id).count() == 0:
                 return False
         for template_param, other_expr in other._argdict.items():
@@ -80,10 +89,8 @@ class InterfaceExpression(object):
             except KeyError:
                 tp = self.interface.template_parameters.get(name=template_param)
                 expr = InterfaceExpression(tp.weakest)
-            print '   %s < %s?' % (other_expr._expr_text, expr._expr_text)
             if other_expr.tighter_than(expr) or not (expr.tighter_than(other_expr) or expr.same_as(other_expr)):
                 return False
-            print '   no'
         return True
         
     def __eq__(self, other): return self.same_as(other)
@@ -94,7 +101,10 @@ class InterfaceExpression(object):
         return self._argdict[template_param]
 
     def __repr__(self):
-        w = self._ident
+        if self.is_fake:
+            w = '%%(%s)s' % self._ident
+        else:
+            w = self._ident
         if self._args:
             w += '<'
             w += ','.join([
@@ -103,14 +113,16 @@ class InterfaceExpression(object):
                 in self._args
                 ])
             w += '>'
-        return w
+        return w        
 
     @staticmethod
     def _parse_a(w):
         global patterns
+        if not w.strip():
+            return 'Nothing', ''
         m = patterns['interface_expression'].match(w)
         if not m:
-            return None
+            raise ValueError('Cannot parse interface expression')
         d = m.groupdict()
         args = d['arguments']
         return d['identifier'], args and args.replace(' ', '') or None

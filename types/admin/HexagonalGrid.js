@@ -10,7 +10,6 @@ gamesoup.library.types.HexagonalGrid = Class.create(gamesoup.library.types.BaseT
 //                                 BUILT-INS                                 
 // this._radius                                     -- Integer
 
-
 /*****************************************************************************/
 /*                             Interface Methods                             */
 /*****************************************************************************/

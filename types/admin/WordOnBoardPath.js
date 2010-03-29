@@ -6,9 +6,10 @@ gamesoup.library.types.WordOnBoardPath = Class.create(gamesoup.library.types.Bas
 
 /*****************************************************************************/
 /*                                 Parameters                                */
-/*****************************************************************************///                                 REFERENCES                                
-// this._board                                      -- Board
-// this._word                                       -- Readable
+/*****************************************************************************/
+//                                 REFERENCES                                
+// this._board                                Board<Cell=Readable<Item=String>>
+// this._word                                             Readable<Item=String>
 
 
 /*****************************************************************************/
@@ -16,12 +17,29 @@ gamesoup.library.types.WordOnBoardPath = Class.create(gamesoup.library.types.Bas
 /*****************************************************************************/
 gamesoup.library.types.WordOnBoardPath.addMethods({
     
-    /*
-     * Boolean call()                               -- used in Predicate
+    /*---------------------------------------->                       Predicate
+     * Boolean call()
+     * 
      * What is the truth value of this predicate object?
      */                                                               /* vVv */
     call: function() {
-        return true
+        var c = {};
+        c.word = this._word.read();
+        if (c.word.length == 0) {
+            this._lastReason = "Please type your word in.";
+        } else {
+            this._lastReason = this._failReason.evaluate(c);            
+        }
+        return false;
+    },                                                                /* ^A^ */
+
+    /*---------------------------------------->                       Predicate
+     * String reason()
+     * 
+     * What was the reason for the last answer this predicate gave?
+     */                                                               /* vVv */
+    reason: function() {
+        return this._lastReason;
     }                                                                 /* ^A^ */
 
 });
@@ -38,7 +56,9 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
      * Perform custom initialization.
      */                                                               /* vVv */
     register: function() {
-        
+        this._failReason = new Template("The word #{word} was not on the board");
+        this._successReason = new Template("The word #{word} was found!");
+        this._lastReason = "";
     }                                                                 /* ^A^ */
     
 });
