@@ -2,36 +2,32 @@ from django.contrib import admin
 from models import *
 
 
-class MethodTemplateParameterInline(admin.TabularInline):
-    model = MethodTemplateParameter
-    fk_name = 'of_method'
-    extra = 1
 class MethodAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('signature', 'description',)}),
+        (None, {'fields': ('interface', 'signature', 'description',)}),
         )
-    list_display = ('name', 'used_in_short', 'signature')
-    search_fields = ('name', 'returned__interface__name', 'parameters__interface__name', 'used_in__name')
-    inlines = (MethodTemplateParameterInline,)
+    list_display = ('name', 'signature', 'interface')
+    list_filter = ('interface',)
+    search_fields = ('name', 'returned__interface__name', 'parameters__interface__name', 'interface__name')
 admin.site.register(Method, MethodAdmin)
 
 
-class MethodTemplateParameterBindingInline(admin.TabularInline):
-    model = MethodTemplateParameterBinding
-    extra = 3
+class MethodInline(admin.StackedInline):
+    model = Method
+    fields = ('signature', 'description')
+    extra = 1
 class InterfaceTemplateParameterInline(admin.TabularInline):
     model = InterfaceTemplateParameter
     fk_name = 'of_interface'
     extra = 1
 class InterfaceAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('name', 'description', 'is_built_in', 'methods')}),
+        (None, {'fields': ('name', 'description', 'is_built_in')}),
         )
     list_display = ('__unicode__', 'is_built_in', 'doc_link', 'implemented_by_short')
     list_filter = ('is_built_in',)
     search_fields = ('name', 'implemented_by__name', 'methods__name')
-    filter_horizontal = ('methods',)
-    inlines = (InterfaceTemplateParameterInline, MethodTemplateParameterBindingInline)
+    inlines = (InterfaceTemplateParameterInline, MethodInline)
     class Media:
         js = (
             'js/lib/prototype.js',

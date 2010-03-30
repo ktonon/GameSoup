@@ -73,11 +73,6 @@ class InterfaceExpression(object):
             return '<%s>' % ','.join(['%s=%s' % (k, v) for k,v in self._args])
     template_arguments = property(get_template_arguments)
 
-    def compare(self, template_param):
-        arg = self[template_param]
-        weakest = self._interface.template_parameters.get(name=template_param).weakest
-        return '%r < %s' % (arg, weakest)
-
     def same_as(self, other):
         return `self` == `other`
 

@@ -8,24 +8,26 @@ gamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 BUILT-INS                                 
-// this._colCount                                   -- Integer
-// this._rowCount                                   -- Integer
+// this._colCount                                                       Integer
+// this._rowCount                                                       Integer
 
 /*****************************************************************************/
 /*                             Interface Methods                             */
 /*****************************************************************************/
 gamesoup.library.types.SquareGrid.addMethods({
     
-    /*
-     * Boolean areAdjacent(Cell a, Cell b)          -- used in Board
-     * Are cell a and cell b adjacent?
+    /*---------------------------------------->                           Board
+     * Boolean areAdjacent(Foo a, Foo b)
+     * 
+     * Are a and b adjacent?
      */                                                               /* vVv */
-    areAdjacent: function() {
+    areAdjacent: function(a, a, b, b) {
         
     },                                                                /* ^A^ */
 
-    /*
-     * Item nextInIteration()                       -- used in Iterable
+    /*---------------------------------------->                        Iterable
+     * Foo nextInIteration()
+     * 
      * Get the next object in the sequence. When the sequence is over, this should return null.
      */                                                               /* vVv */
     nextInIteration: function() {
@@ -34,8 +36,9 @@ gamesoup.library.types.SquareGrid.addMethods({
         return cell;
     },                                                                /* ^A^ */
 
-    /*
-     * resetIteration()                             -- used in Iterable
+    /*---------------------------------------->                        Iterable
+     * Nothing resetIteration()
+     * 
      * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.
      */                                                               /* vVv */
     resetIteration: function() {

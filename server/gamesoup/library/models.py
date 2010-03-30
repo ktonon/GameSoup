@@ -22,6 +22,7 @@ class Method(models.Model):
     '''
     Method signature.
     '''
+    interface = models.ForeignKey('Interface', related_name='methods')
     name = models.CharField(max_length=200, blank=True, editable=False)
     description = models.TextField(blank=True)
     parameters = models.ManyToManyField('Variable', related_name='parameter_of_method', blank=True, editable=False)
@@ -35,15 +36,7 @@ class Method(models.Model):
         ordering = ['name']
         
     def __unicode__(self):
-        w = self.signature
-        qs = self.template_parameters.all()
-        if qs.count():
-            w += '<%s>' % ','.join(['%s=%s' % (p.name, p.weakest) for p in self.template_parameters.all()])
-        return w
-        
-    def used_in_short(self):
-        return ', '.join([interface.name for interface in self.used_in.all()])
-    used_in_short.short_description = 'Used in'
+        return self.signature
     
     @staticmethod
     def pre_save(sender, instance, **kwargs):
@@ -67,7 +60,6 @@ class Interface(models.Model):
     '''
     name = IdentifierField(help_text='A unique name. Should be specified using MixedCase with no spaces.')
     description = models.TextField(blank=True, help_text='This will serve as a human-readable, searchable account of this interface. Make this very detailed, because this will be the primary description of this interface for game designers.')
-    methods = models.ManyToManyField('Method', related_name='used_in', blank=True)
     is_built_in = models.BooleanField(default=False, help_text="Built-in interfaces are provided by the underlying language (JavaScript) or library (Prototype) and do not require a Type to be implemented.")
     
     objects = InterfaceManager()
@@ -122,7 +114,7 @@ class Type(models.Model):
     is_conflicted.boolean = True
 
     def conflicting_methods(self):
-        qs = Method.objects.filter(used_in__implemented_by=self).distinct()
+        qs = Method.objects.filter(interface__implemented_by=self).distinct()
         counts = {}
         for method in qs:
             counts[method.name] = counts.get(method.name, 0) + 1
@@ -134,10 +126,10 @@ class Type(models.Model):
         parsed = TypeCode(self)
         c = Context({
             'type': self,
-            'built_ins': self.parameters.filter(interface__is_built_in=True),
-            'references': self.parameters.filter(interface__is_built_in=False),
+            'built_ins': self.parameters.filter(is_built_in=True),
+            'references': self.parameters.filter(is_built_in=False),
             'has_parameters': self.parameters.count() != 0,
-            'methods': Method.objects.filter(used_in__implemented_by=self).distinct(),
+            'methods': Method.objects.filter(interface__implemented_by=self).distinct(),
             'parsed': parsed,
         })
         return t.render(c)
@@ -157,7 +149,6 @@ class Parameter(models.Model):
     name = IdentifierField(unique=False)
     expression = InterfaceExpressionField()
     is_built_in = models.BooleanField(editable=False)
-    interface = models.ForeignKey(Interface, editable=False)
     interfaces = models.ManyToManyField(Interface, related_name='used_in_parameter', editable=False)
     
     class Meta:
@@ -166,12 +157,17 @@ class Parameter(models.Model):
     
     def __unicode__(self):
         return self.name
+
+    def get_interface(self):
+        if self.interfaces.count() > 1:
+            raise Exception('There are more than one interface for the parameter %s' % self.name)
+        return self.interfaces.all()[0]
+    interface = property(get_interface)
     
     @staticmethod
     def pre_save(sender, instance, **kwargs):
         exp = InterfaceExpression(instance.expression)
         instance.is_built_in = exp.is_built_in
-        instance.interface = exp.interface
         instance.interfaces.clear()
         for interface in exp.interfaces:
             instance.interfaces.add(interface)
@@ -245,10 +241,6 @@ class TemplateParameterBinding(models.Model):
 
 # PARAMETERS
 
-class MethodTemplateParameter(TemplateParameter):
-    of_method = models.ForeignKey(Method, related_name='template_parameters')
-    of = property(lambda self: self.of_method)
-    
 class InterfaceTemplateParameter(TemplateParameter):
     of_interface = models.ForeignKey(Interface, related_name='template_parameters')
     of = property(lambda self: self.of_interface)
@@ -258,13 +250,6 @@ class TypeTemplateParameter(TemplateParameter):
     of = property(lambda self: self.of_type)
 
 # BINDINGS
-
-class MethodTemplateParameterBinding(TemplateParameterBinding):
-    interface = models.ForeignKey(Interface)
-    parameter = models.ForeignKey(MethodTemplateParameter)
-
-    class Media:
-        js = ('js/gamesoup/library/template-parameter-binding.js',)
     
 class InterfaceTemplateParameterBinding(TemplateParameterBinding):
     type = models.ForeignKey(Type)

@@ -49,7 +49,7 @@ def set_object_parameters(object):
     result = ''
     for binding in object.parameter_bindings.all():
         w = 'gamesoup.matches.objects[%d]._%s = ' % (object.id, binding.parameter.name)
-        if binding.parameter.interface.is_built_in:
+        if binding.parameter.is_built_in:
             w += json.dumps(_built_in[binding.parameter.interface.name](binding.built_in_argument))
         else:
             w += 'gamesoup.matches.objects[%d]' % binding.object_argument.id

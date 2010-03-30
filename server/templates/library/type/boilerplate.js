@@ -4,7 +4,7 @@
  * YOUR TYPE IS CONFLICTED!!!
  *
  * THESE METHOD CONFLICT:
-{% for method in type.conflicting_methods %} *     {{ method.signature|ljust:"44" }} -- used in {{ method.used_in_short }}
+{% for method in type.conflicting_methods %} *     {{ method.signature|ljust:"44" }} -- used in {{ method.interface.name }}
 {% endfor %} */
 {% else %}/*
  * Type: {{ type.name}}{% code_doc type %}
@@ -15,9 +15,9 @@ gamesoup.library.types.{{ type.name }} = Class.create(gamesoup.library.types.Bas
 /*{{ "Parameters"|center:"75" }}*/
 /*****************************************************************************/{% if built_ins %}
 //{{ "BUILT-INS"|center:"75" }}{% for param in built_ins %}
-// this._{{ param.name|ljust:"25" }} {{ param.interface_expression|rjust:"44" }}{% endfor %}{% endif %}{% if references %}
+// this._{{ param.name|ljust:"25" }} {{ param.expression|rjust:"44" }}{% endfor %}{% endif %}{% if references %}
 //{{ "REFERENCES"|center:"75" }}
-{% for param in references %}// this._{{ param.name|ljust:"25" }} {{ param.interface_expression|rjust:"44" }}
+{% for param in references %}// this._{{ param.name|ljust:"25" }} {{ param.expression|rjust:"44" }}
 {% endfor %}{% endif %}{% endif %}{% if methods %}
 
 /*****************************************************************************/
@@ -25,7 +25,7 @@ gamesoup.library.types.{{ type.name }} = Class.create(gamesoup.library.types.Bas
 /*****************************************************************************/
 gamesoup.library.types.{{ type.name }}.addMethods({
     {% for method in methods %}
-    /*---------------------------------------->{{ method.used_in_short|rjust:"32" }}
+    /*---------------------------------------->{{ method.interface.name|rjust:"32" }}
      * {% method_signature_doc method %}
      * {% code_doc method 1 %}
      */{{ "/* vVv */"|rjust:"72" }}

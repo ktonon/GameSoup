@@ -66,7 +66,7 @@ def generate_type_code(request, type_id):
 def parsed_type_code(request, type_id):
     type = get_object_or_404(Type, pk=type_id)
     code = TypeCode(type)
-    im = Method.objects.filter(used_in__implemented_by=type)
+    im = Method.objects.filter(interface__implemented_by=type)
     context = {
         'title': 'Parsed code for %s' % type,
         'type': type,

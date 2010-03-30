@@ -22,8 +22,8 @@
             <td class="parameters">
                 {% for param in obj.type.parameters.all %}
                 {% parameter_binding obj param as binding %}
-                <span class="parameter {{ binding|yesno:"bound,unbound" }} {{ param.interface.is_built_in|yesno:"built-in,reference" }}" {% if binding and not param.interface.is_built_in %}boundTo="{{ binding.object_argument.id }}" title="The referenced object is highlighted."{% endif %}>
-                    {{ param.name }}{% if binding %}:<span class="note">{% if param.interface.is_built_in %}{{ binding.built_in_argument }}{% else %}{{ binding.object_argument }}{% endif %}</span>{% endif %}
+                <span class="parameter {{ binding|yesno:"bound,unbound" }} {{ param.is_built_in|yesno:"built-in,reference" }}" {% if binding and not param.is_built_in %}boundTo="{{ binding.object_argument.id }}" title="The referenced object is highlighted."{% endif %}>
+                    {{ param.name }}{% if binding %}:<span class="note">{% if param.is_built_in %}{{ binding.built_in_argument }}{% else %}{{ binding.object_argument }}{% endif %}</span>{% endif %}
                 </span> {% if not forloop.last %}&bull;{% endif %}
                 {% endfor %}
             </td>

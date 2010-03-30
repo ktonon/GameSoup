@@ -28,8 +28,11 @@ class Game(models.Model):
         return self.object_set.filter(satisfied=False).count() == 0
     is_satisfied.boolean = True
 
-    def possible_settings_for(self, variable):
-        return self.object_set.filter(type__implements=variable.interface)
+    def possible_settings_for(self, parameter):
+        qs = self.object_set.all()
+        for interface in parameter.interfaces.all():
+            qs = qs.filter(type__implements=interface)
+        return qs
 
     def get_assembler_link(self):
         return '<a href="%s" title="Assemble this game">Objects: %d</a>' % (reverse('games:assemble_game', args=[self.id]), self.object_set.count())

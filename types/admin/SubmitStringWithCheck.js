@@ -8,8 +8,8 @@ gamesoup.library.types.SubmitStringWithCheck = Class.create(gamesoup.library.typ
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._destination                                                   Writable
-// this._source                                                       ReadWrite
+// this._destination                                      Writable<Item=String>
+// this._source                                           Readable<Item=String>
 // this._validator                                                    Predicate
 
 

@@ -12,7 +12,7 @@
     {% else %}
     {% if built_ins %}
     <h2>Simple parameters</h2>
-    <fieldset class="module aligned">        
+    <fieldset class="module aligned">
         {% for param in built_ins %}
         <div class="form-row built-in" interface="{{ param.interface.name }}" name="{{ param.name }}" parameterID="{{ param.id }}" value="{% binding obj param %}"></div>
         {% endfor %}

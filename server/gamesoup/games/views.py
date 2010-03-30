@@ -35,7 +35,7 @@ def game_flow(request, game_id, format):
             else:
                 n.fillcolor = '#99ccff'
         nodes[obj.id] = n
-    for ref in TypeParameterBinding.objects.filter(instance__game=game, parameter__interface__is_built_in=False):
+    for ref in TypeParameterBinding.objects.filter(instance__game=game, parameter__is_built_in=False):
         e = g.add_edge(nodes[ref.instance.id], nodes[ref.object_argument.id])
         e.label = ref.parameter.name
         e.color = 'gray'
@@ -44,7 +44,7 @@ def game_flow(request, game_id, format):
         e.fontsize = 14
         e.len = 3
     # Danglers
-    for param in TypeParameter.objects.filter(of_type__instances__game=game, interface__is_built_in=False).distinct():
+    for param in TypeParameter.objects.filter(of_type__instances__game=game, is_built_in=False).distinct():
         if param.bindings.filter(instance__game=game).count() == 0:
             for obj in Object.objects.filter(game=game, type__parameters=param).distinct():
                 n = g.add_node('missing_param_%d_%d' % (obj.id, param.id), label='')
@@ -99,7 +99,7 @@ def search_requires(request):
         qs = Type.objects.all()
         for obj_id in obj_ids:
             obj = Object.objects.get(pk=obj_id)
-            qs = qs.filter(parameters__interface__implemented_by=obj.type)
+            qs = qs.filter(parameters__interfaces__implemented_by=obj.type)
         type_ids = [t.id for t in qs]
     else:
         type_ids = []
@@ -226,8 +226,8 @@ def object_configure(request, game_id, object_id):
     context = {
         'title': 'Configure %s' % obj.type.name,
         'obj': obj,
-        'built_ins': obj.type.parameters.filter(interface__is_built_in=True).order_by('name'),
-        'refs': obj.type.parameters.filter(interface__is_built_in=False).order_by('name'),
+        'built_ins': obj.type.parameters.filter(is_built_in=True).order_by('name'),
+        'refs': obj.type.parameters.filter(is_built_in=False).order_by('name'),
         'nothing_to_configure': obj.type.parameters.count() == 0,
     }
     return render_to_response('admin/games/object-configure.html', context)
