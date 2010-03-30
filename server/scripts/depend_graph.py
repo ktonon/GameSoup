@@ -71,6 +71,8 @@ class Module(Manager):
     def __init__(self, package, app_name, module, **kwargs):
         self._app = App.create(package, app_name)
         self._module = path2name(module)
+        # if self._app.id == 'gamesoup__dot__library' and self._module in ['templation', 'parsers', 'models', 'fields']:
+        #     self._module = 'models_cluster'
         self._kwargs = kwargs
     
     def get_id(self):

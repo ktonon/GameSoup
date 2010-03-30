@@ -27,6 +27,7 @@ class Method(models.Model):
     parameters = models.ManyToManyField('Variable', related_name='parameter_of_method', blank=True, editable=False)
     returned = models.ForeignKey('Variable', related_name='returned_from_method', blank=True, editable=False)
     signature = SignatureField(parse_method_signature, unique=True)
+    # parameters -- See MethodParameter#of_method
 
     objects = SignatureManager()
 
@@ -99,8 +100,6 @@ class Type(models.Model):
     name = IdentifierField()
     description = models.TextField(blank=True)
     implements = models.ManyToManyField('Interface', limit_choices_to={'is_built_in': False}, blank=True, related_name='implemented_by', help_text='Interfaces implemented by this type.')
-    parameters = models.ManyToManyField('Variable', related_name='parameter_of', blank=True, editable=False)
-    signature = SignatureField(parse_type_signature, verbose_name='Parameters', multiline=True, blank=True)
     visible = models.BooleanField(default=True)
     has_state = models.BooleanField(default=False)
     code = models.TextField(blank=True)
@@ -148,19 +147,48 @@ class Type(models.Model):
         for type in cls.objects.all():
             type.code = type.generated_code()
             type.save()
+
+
+###############################################################################
+# PARAMETERS
+
+
+class Parameter(models.Model):
+    name = IdentifierField(unique=False)
+    expression = InterfaceExpressionField()
+    is_built_in = models.BooleanField(editable=False)
+    interface = models.ForeignKey(Interface, editable=False)
+    interfaces = models.ManyToManyField(Interface, related_name='used_in_parameter', editable=False)
+    
+    class Meta:
+        ordering = ['name']
+        abstract = True
+    
+    def __unicode__(self):
+        return self.name
     
     @staticmethod
-    def post_save(sender, instance, **kwargs):
-        # Parse signature and set parameters
-        d = parse_type_signature(instance.signature)
-        old = set(instance.parameters.all()) - set(d['parameters'])
-        for param in old:
-            instance.parameters.remove(param)
-        instance.parameters.add(*d['parameters'])
-
-post_save.connect(Type.post_save, sender=Type)
+    def pre_save(sender, instance, **kwargs):
+        exp = InterfaceExpression(instance.expression)
+        instance.is_built_in = exp.is_built_in
+        instance.interface = exp.interface
+        instance.interfaces.clear()
+        for interface in exp.interfaces:
+            instance.interfaces.add(interface)
 
 
+class TypeParameter(Parameter):
+    of_type = models.ForeignKey(Type, related_name='parameters')
+    of = property(lambda self: self.of_type)
+pre_save.connect(Parameter.pre_save, sender=TypeParameter)
+
+
+# class MethodParameter(Parameter):
+#     of_method = models.ForeignKey(Method)#, related_name='parameters')
+#     of = property(lambda self: self.of_method)
+# pre_save.connect(Parameter.pre_save, sender=MethodParameter)
+
+    
 class Variable(models.Model):
     '''
     A variable declaration.

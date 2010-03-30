@@ -30,10 +30,10 @@ def flow(game):
 
 @register.simple_tag
 def binding(object, parameter):
-    from gamesoup.games.models import Binding
+    from gamesoup.games.models import TypeParameterBinding
     try:
-        return Binding.objects.get(instance=object, parameter=parameter)
-    except Binding.DoesNotExist:
+        return TypeParameterBinding.objects.get(instance=object, parameter=parameter)
+    except TypeParameterBinding.DoesNotExist:
         return ''
 
 
@@ -70,12 +70,12 @@ class ParameterBindingNode(template.Node):
         self.param_var = template.Variable(param_varname)
         self.binding_varname = binding_varname
     def render(self, context):
-        from gamesoup.games.models import Binding
+        from gamesoup.games.models import TypeParameterBinding
         obj = self.obj_var.resolve(context)
         param = self.param_var.resolve(context)
         try:
-            binding = Binding.objects.get(instance=obj, parameter=param)
-        except Binding.DoesNotExist:
+            binding = TypeParameterBinding.objects.get(instance=obj, parameter=param)
+        except TypeParameterBinding.DoesNotExist:
             binding = None
         context[self.binding_varname] = binding
         return u''

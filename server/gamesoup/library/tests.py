@@ -69,23 +69,6 @@ class SimpleParsersTest(test.TestCase):
         self.assertEquals(d['interface'], self.Visitor)
         self.assertEquals(d['template_arguments'], '<Item=I3>')
 
-    def test_parse_type_signature(self):
-        d = parsers.parse_type_signature('''
-        I1 param1
-        I2 param2
-        ''')
-        self.assertEquals(len(d), 1)
-        self.assertEquals(len(d['parameters']), 2)
-        self.assertEquals(d['parameters'][0].interface, self.I1)
-        self.assertEquals(d['parameters'][1].interface, self.I2)
-        self.assertEquals(d['parameters'][0].name, 'param1')
-        self.assertEquals(d['parameters'][1].name, 'param2')
-
-    def test_parsing_type_twice_returns_same_variable(self):
-        d1 = parsers.parse_type_signature('I1 param1')
-        d2 = parsers.parse_type_signature('I1 param1')
-        self.assertEquals(d1['parameters'][0], d2['parameters'][0])
-
     def test_parse_method_signature(self):
         d = parsers.parse_method_signature('I3 methodName(I1 a, I2 b)')
         self.assertEquals(len(d), 3)

@@ -63,7 +63,7 @@ class Object(models.Model):
     width = models.IntegerField(default=5)
     height = models.IntegerField(default=5)
     per_player = models.BooleanField(default=False)
-    # parameter_bindings (See Binding.instance field)
+    # parameter_bindings (See TypeParameterBinding.instance field)
     
     # Cached values
     satisfied = models.BooleanField(blank=True)
@@ -90,7 +90,16 @@ class Object(models.Model):
         '''
         def satisfiable(param):
             # Is there a type in the game for the required interface?
-            return param.interface.is_built_in or Type.objects.filter(instances__game=self.game, implements=param.interface).count() > 0
+            if param.is_built_in:
+                # Built-in parameters are always satisfiable.
+                return True
+            else:                
+                # For non-built-in parameters, the type must satisfy all
+                # of the required interfaces.
+                qs = Type.objects.filter(instances__game=self.game)
+                for interface in param.interfaces.all():
+                    qs = qs.filter(implements=interface)
+                return qs.count() > 0
         return all(map(satisfiable, self.type.parameters.all()))
 
     def parameters_short(self):
@@ -111,7 +120,7 @@ class Object(models.Model):
 
     @staticmethod
     def update_cache(sender, instance, **kwargs):
-        if sender.__name__ == 'Binding':
+        if sender.__name__ == 'TypeParameterBinding':
             obj = instance.instance
         else:
             obj = instance
@@ -126,12 +135,12 @@ post_save.connect(Object.post_save, sender=Object)
 post_delete.connect(Object.post_delete, sender=Object)
 
 
-class Binding(models.Model):
+class TypeParameterBinding(models.Model):
     '''
     A parameter setting on an object.
     '''
     instance = models.ForeignKey(Object, related_name='parameter_bindings')
-    parameter = models.ForeignKey(Variable, related_name='bindings')
+    parameter = models.ForeignKey(TypeParameter, related_name='bindings')
 
     # Only one of the following 2 fields will be set depending on the nature of parameter.
     object_argument = models.ForeignKey('Object', blank=True, null=True, related_name='bound_to')
@@ -146,8 +155,8 @@ class Binding(models.Model):
         else:
             return '%d' % self.object_argument.id
 
-post_save.connect(Object.update_cache, sender=Binding)
-post_delete.connect(Object.update_cache, sender=Binding)
+post_save.connect(Object.update_cache, sender=TypeParameterBinding)
+post_delete.connect(Object.update_cache, sender=TypeParameterBinding)
 
 
 ###############################################################################

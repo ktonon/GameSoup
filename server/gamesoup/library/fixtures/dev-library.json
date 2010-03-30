@@ -378,12 +378,7 @@
             ], 
             "code": "/*\r\n * Type: ActionPair\r\n * Do action a, then do action b.\r\n */\r\ngamesoup.library.types.ActionPair = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 REFERENCES                                \r\n// this._a                                                               Action\r\n// this._b                                                               Action\r\n\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.ActionPair.addMethods({\r\n    \r\n    /*---------------------------------------->                          Action\r\n     * Nothing doAction()\r\n     * \r\n     * Perform the default action of this object.\r\n     */                                                               /* vVv */\r\n    doAction: function() {\r\n        this._a.doAction();\r\n        this._b.doAction();\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.ActionPair.addMethods({ \r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        \r\n    }                                                                 /* ^A^ */\r\n    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.ActionPair.addMethods({\r\n    // Helper methods go here...\r\n});", 
             "name": "ActionPair", 
-            "parameters": [
-                36, 
-                37
-            ], 
             "visible": false, 
-            "signature": "Action a\r\nAction b", 
             "has_state": false, 
             "description": "Do action a, then do action b."
         }
@@ -397,12 +392,7 @@
             ], 
             "code": "/*\n * Type: Button\n * A simple push button. Connect actions to its \"click\" event to make it useful.\n */\ngamesoup.library.types.Button = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                                 Parameters                                */\n/*****************************************************************************/\n//                                 BUILT-INS                                 \n// this._label                                      -- String\n//                                 REFERENCES                                \n// this._action --                                     Action\n\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.Button.addMethods({ \n    \n    /*\n     * Extend the DOM and apply styling.\n     */                                                               /* vVv */\n    render: function() {\n        t = new Template('<input type=\"button\" value=\"#{label}\" style=\"width: 100%; height: 100%; font-size: #{size}px\" />');\r\n        var s = (this._width / this._label.length * 1.5).round();\r\n        s = s > this._height / 2 ? (this._height / 2).round() : s;\r\n        this._node.insert({bottom: t.evaluate({label: this._label, size: s})});\r\n        this._buttonNode = this._node.down('input[type=button]');\n    },                                                                /* ^A^ */\n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        this._buttonNode.observe('click', this._action.doAction.bind(this._action));\n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.Button.addMethods({\n    // Helper methods go here...\n});", 
             "name": "Button", 
-            "parameters": [
-                10, 
-                23
-            ], 
             "visible": true, 
-            "signature": "String label\r\nAction action", 
             "has_state": false, 
             "description": "A simple push button. Connect actions to its \"click\" event to make it useful."
         }
@@ -419,9 +409,7 @@
             ], 
             "code": "/*\n * Type: Cell\n * A simple type used to contain another\n */\ngamesoup.library.types.Cell = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.Cell.addMethods({\n    \n    /*\n     * Item read()                                  -- used in ReadWrite, Readable\n     * Read this content of this object.\n     */                                                               /* vVv */\n    read: function() {\n        return this._item;\n    },                                                                /* ^A^ */\n\n    /*\n     * write(Item item)                             -- used in ReadWrite, Writable\n     * Write a value to the content of this object.\n     */                                                               /* vVv */\n    write: function(item) {\n        this._item = item;\r\n        this._node.innerHTML = item;\n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.Cell.addMethods({ \n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        this._item = null;\n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.Cell.addMethods({\n    // Helper methods go here...\n});", 
             "name": "Cell", 
-            "parameters": [], 
             "visible": false, 
-            "signature": "", 
             "has_state": false, 
             "description": "A simple type used to contain another"
         }
@@ -436,9 +424,7 @@
             ], 
             "code": "/*\n * Type: CellFactory\n * A factory for creating cells.\n */\ngamesoup.library.types.CellFactory = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.CellFactory.addMethods({\n    \n    /*\n     * Item instantiate()                           -- used in Factory\n     * Create an instance of a given type.\n     */                                                               /* vVv */\n    instantiate: function() {\n        var cell = new gamesoup.library.types.Cell();\r\n        cell.createDOM();\r\n        cell.register();\r\n        return cell;\n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.CellFactory.addMethods({ \n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        \n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.CellFactory.addMethods({\n    // Helper methods go here...\n});", 
             "name": "CellFactory", 
-            "parameters": [], 
             "visible": false, 
-            "signature": "", 
             "has_state": false, 
             "description": "A factory for creating cells."
         }
@@ -452,12 +438,7 @@
             ], 
             "code": "/*\r\n * Type: EnterKeyPressed\r\n * Do something when the enter key is pressed and when a given object has focus.\r\n */\r\ngamesoup.library.types.EnterKeyPressed = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 REFERENCES                                \r\n// this._action                                                          Action\r\n// this._focus                                                              Any\r\n\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.EnterKeyPressed.addMethods({ \r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        this._focus.observe('keydown', function(event) {\r\n            if (event.keyCode == Event.KEY_RETURN) {\r\n                this._action.doAction();\r\n            }\r\n        }.bind(this));\r\n    }                                                                 /* ^A^ */\r\n    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.EnterKeyPressed.addMethods({\r\n    // Helper methods go here...\r\n});", 
             "name": "EnterKeyPressed", 
-            "parameters": [
-                10, 
-                34
-            ], 
             "visible": false, 
-            "signature": "Any focus\r\nAction action", 
             "has_state": false, 
             "description": "Do something when the enter key is pressed and when a given object has focus."
         }
@@ -471,11 +452,7 @@
             ], 
             "code": "/*\r\n * Type: GameStarted\r\n * Connect an action to this object to have it execute at the start of the game.\r\n */\r\ngamesoup.library.types.GameStarted = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 REFERENCES                                \r\n// this._action                                                          Action\r\n\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.GameStarted.addMethods({ \r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        $('gamesoup-engine').observe('game:start', this._action.doAction.bind(this._action));\r\n    }                                                                 /* ^A^ */\r\n    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.GameStarted.addMethods({\r\n    // Helper methods go here...\r\n});", 
             "name": "GameStarted", 
-            "parameters": [
-                10
-            ], 
             "visible": false, 
-            "signature": "Action action", 
             "has_state": false, 
             "description": "Connect an action to this object to have it execute at the start of the game."
         }
@@ -490,11 +467,7 @@
             ], 
             "code": "/*\r\n * Type: GiveFocus\r\n * Give focus to a target object. After receiving focus, that object will accept input from the keyboard and mouse.\r\n */\r\ngamesoup.library.types.GiveFocus = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 REFERENCES                                \r\n// this._target                                                       Focusable\r\n\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.GiveFocus.addMethods({\r\n    \r\n    /*---------------------------------------->                          Action\r\n     * Nothing doAction()\r\n     * \r\n     * Perform the default action of this object.\r\n     */                                                               /* vVv */\r\n    doAction: function() {\r\n        this._target.focus();\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.GiveFocus.addMethods({ \r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        \r\n    }                                                                 /* ^A^ */\r\n    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.GiveFocus.addMethods({\r\n    // Helper methods go here...\r\n});", 
             "name": "GiveFocus", 
-            "parameters": [
-                35
-            ], 
             "visible": false, 
-            "signature": "Focusable target", 
             "has_state": false, 
             "description": "Give focus to a target object. After receiving focus, that object will accept input from the keyboard and mouse."
         }
@@ -510,11 +483,7 @@
             ], 
             "code": "/*\n * Type: HexagonalGrid\n * A board in which each cell is shaped like a hexagon.\n */\ngamesoup.library.types.HexagonalGrid = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                                 Parameters                                */\n/*****************************************************************************/\n//                                 BUILT-INS                                 \n// this._radius                                     -- Integer\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.HexagonalGrid.addMethods({\n    \n    /*\n     * Boolean areAdjacent(Cell a, Cell b)          -- used in Board\n     * Are cell a and cell b adjacent?\n     */                                                               /* vVv */\n    areAdjacent: function() {\n        \n    },                                                                /* ^A^ */\n\n    /*\n     * Item nextInIteration()                       -- used in Iterable\n     * Get the next object in the sequence. When the sequence is over, this should return null.\n     */                                                               /* vVv */\n    nextInIteration: function() {\n        \n    },                                                                /* ^A^ */\n\n    /*\n     * resetIteration()                             -- used in Iterable\n     * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.\n     */                                                               /* vVv */\n    resetIteration: function() {\n        \n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.HexagonalGrid.addMethods({ \n    \n    /*\n     * Extend the DOM and apply styling.\n     */                                                               /* vVv */\n    render: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     *\n     */                                                               /* vVv */\n    stateSchema: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     *\n     */                                                               /* vVv */\n    initialState: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        \n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.HexagonalGrid.addMethods({\n    // Helper methods go here...\n});", 
             "name": "HexagonalGrid", 
-            "parameters": [
-                6
-            ], 
             "visible": true, 
-            "signature": "Integer radius", 
             "has_state": true, 
             "description": "A board in which each cell is shaped like a hexagon."
         }
@@ -529,12 +498,7 @@
             ], 
             "code": "/*\n * Type: InitializeCollection\n * For each writable cell in a collection, provide a newly instantiated object.\n */\ngamesoup.library.types.InitializeCollection = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                                 Parameters                                */\n/*****************************************************************************/\n//                                 REFERENCES                                \n// this._collection --                         Iterable&lt;Item=Any&gt;\n// this._factory --                          Factory&lt;Item=Any&gt;\n\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.InitializeCollection.addMethods({\n    \n    /*\n     * doAction()                                   -- used in Action\n     * Perform the default action of this object.\n     */                                                               /* vVv */\n    doAction: function() {\n        this._collection.resetIteration();\r\n        var nextCell = this._collection.nextInIteration()\r\n        while (nextCell) {\r\n            var item = this._factory.instantiate();\r\n            nextCell.write(item);\r\n            nextCell = this._collection.nextInIteration();\r\n        }\n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.InitializeCollection.addMethods({ \n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        \n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.InitializeCollection.addMethods({\n    // Helper methods go here...\n});", 
             "name": "InitializeCollection", 
-            "parameters": [
-                29, 
-                28
-            ], 
             "visible": false, 
-            "signature": "Factory factory\r\nIterable collection\r\n", 
             "has_state": false, 
             "description": "For each writable cell in a collection, provide a newly instantiated object."
         }
@@ -548,11 +512,7 @@
             ], 
             "code": "/*\n * Type: Label\n * A simple way to place text on the screen. The value never changes throughout the game.\n */\ngamesoup.library.types.Label = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                                 Parameters                                */\n/*****************************************************************************/\n//                                 BUILT-INS                                 \n// this._value                                      -- String\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.Label.addMethods({ \n    \n    /*\n     * Extend the DOM and apply styling.\n     */                                                               /* vVv */\n    render: function() {\n        t = new Template('<div class=\"label\" style=\"font-size: #{size}px\">#{value}</div>');\r\n        var s = (this._width / this._value.length * 1.5).round();\r\n        s = s > this._height / 2 ? (this._height / 2).round() : s;\r\n        this._node.insert({bottom: t.evaluate({value: this._value, size: s})});\n    },                                                                /* ^A^ */\n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        \n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.Label.addMethods({\n    // Helper methods go here...\n});", 
             "name": "Label", 
-            "parameters": [
-                3
-            ], 
             "visible": true, 
-            "signature": "String value", 
             "has_state": false, 
             "description": "A simple way to place text on the screen. The value never changes throughout the game."
         }
@@ -571,9 +531,7 @@
             ], 
             "code": "/*\n * Type: List\n * A vertical sequence of items that can be updated during the game.\n */\ngamesoup.library.types.List = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.List.addMethods({\n    \n    /*\n     * Item nextInIteration()                       -- used in Iterable\n     * Get the next object in the sequence. When the sequence is over, this should return null.\n     */                                                               /* vVv */\n    nextInIteration: function() {\n        var item = this._items[this._iteratorIndex];\r\n        this._iteratorIndex++;\r\n        return item;\n    },                                                                /* ^A^ */\n\n    /*\n     * Item pop()                                   -- used in Stack\n     * Remove the object at the top of the stack and return it.\n     */                                                               /* vVv */\n    pop: function() {\n        this._listNode.select('li').first().remove();\r\n        return this._items.pop();\n    },                                                                /* ^A^ */\n\n    /*\n     * push(Item item)                              -- used in Stack\n     * Push an object on top of the stack.\n     */                                                               /* vVv */\n    push: function(item) {\n        this._listNode.insert(this._listItemTemplate.evaluate({item: item}));\r\n        this._items.push(item);\n    },                                                                /* ^A^ */\n\n    /*\n     * Item read()                                  -- used in ReadWrite, Readable\n     * Read this content of this object.\n     */                                                               /* vVv */\n    read: function() {\n        return this._items.first();\n    },                                                                /* ^A^ */\n\n    /*\n     * resetIteration()                             -- used in Iterable\n     * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.\n     */                                                               /* vVv */\n    resetIteration: function() {\n        this._iteratorIndex = 0;\n    },                                                                /* ^A^ */\n\n    /*\n     * write(Item item)                             -- used in ReadWrite, Writable\n     * Write a value to the content of this object.\n     */                                                               /* vVv */\n    write: function(item) {\n        this.push(item);\n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.List.addMethods({ \n    \n    /*\n     * Extend the DOM and apply styling.\n     */                                                               /* vVv */\n    render: function() {\n        this._node.insert({bottom: '<ul class=\"box list inner-container\"></ul>'});\r\n        this._listNode = this._node.down('.list');\n    },                                                                /* ^A^ */\n    \n    /*\n     *\n     */                                                               /* vVv */\n    stateSchema: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     *\n     */                                                               /* vVv */\n    initialState: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        this._listItemTemplate = new Template('<li>#{item}</li>');\r\n        this._items = $A();\r\n        this.resetIteration();\n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.List.addMethods({\n    // Helper methods go here...\n});", 
             "name": "List", 
-            "parameters": [], 
             "visible": true, 
-            "signature": "", 
             "has_state": true, 
             "description": "A vertical sequence of items that can be updated during the game."
         }
@@ -588,9 +546,7 @@
             ], 
             "code": "/*\n * Type: RandomEnglishLetters\n * Distribution over the Latin alphabet. Generates letters in the frequency in which they occur in the English language.\n */\ngamesoup.library.types.RandomEnglishLetters = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.RandomEnglishLetters.addMethods({\n    \n    /*\n     * Over getRandomObject()                       -- used in Distribution\n     * Return a random object from a distribution\n     */                                                               /* vVv */\n    getRandomObject: function() {\n        return this._letters[(Math.random() * this._letters.length).floor()];\n    },                                                                /* ^A^ */\n\n    /*\n     * Item instantiate()                           -- used in Factory\n     * Create an instance of a given type.\n     */                                                               /* vVv */\n    instantiate: function() {\n        return this.getRandomObject();\n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.RandomEnglishLetters.addMethods({ \n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        this._letters = \"\";\r\n        var freqs = [82,15,28,43,127,22,20,61,70,2,8,40,24,67,75,19,1,60,63,91,28,10,24,2,20,1];\r\n        freqs.zip(\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\".toArray()).each(function(item) {\r\n            var freq = item[0];\r\n            var letter = item[1];\r\n            this._letters += letter.times(freq);\r\n        }.bind(this));\n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.RandomEnglishLetters.addMethods({\n    // Helper methods go here...\n});", 
             "name": "RandomEnglishLetters", 
-            "parameters": [], 
             "visible": false, 
-            "signature": "", 
             "has_state": false, 
             "description": "Distribution over the Latin alphabet. Generates letters in the frequency in which they occur in the English language."
         }
@@ -605,11 +561,7 @@
             ], 
             "code": "/*\n * Type: SayHello\n * A simple object that just opens an alert box with a message. This object is useful during game design as a simple test that an action is getting triggered.\n */\ngamesoup.library.types.SayHello = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                                 Parameters                                */\n/*****************************************************************************/\n//                                 BUILT-INS                                 \n// this._message                                    -- String\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.SayHello.addMethods({\n    \n    /*\n     * doAction()                                   -- used in Action\n     * Perform the default action of this object.\n     */                                                               /* vVv */\n    doAction: function() {\n        alert(this._message);\n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.SayHello.addMethods({ \n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        \n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.SayHello.addMethods({\n    // Helper methods go here...\n});", 
             "name": "SayHello", 
-            "parameters": [
-                24
-            ], 
             "visible": false, 
-            "signature": "String message", 
             "has_state": false, 
             "description": "A simple object that just opens an alert box with a message. This object is useful during game design as a simple test that an action is getting triggered."
         }
@@ -625,12 +577,7 @@
             ], 
             "code": "/*\r\n * Type: SquareGrid\r\n * A board arranged in rows and columns.\r\n */\r\ngamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 BUILT-INS                                 \r\n// this._colCount                                   -- Integer\r\n// this._rowCount                                   -- Integer\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SquareGrid.addMethods({\r\n    \r\n    /*\r\n     * Boolean areAdjacent(Cell a, Cell b)          -- used in Board\r\n     * Are cell a and cell b adjacent?\r\n     */                                                               /* vVv */\r\n    areAdjacent: function() {\r\n        \r\n    },                                                                /* ^A^ */\r\n\r\n    /*\r\n     * Item nextInIteration()                       -- used in Iterable\r\n     * Get the next object in the sequence. When the sequence is over, this should return null.\r\n     */                                                               /* vVv */\r\n    nextInIteration: function() {\r\n        var cell = this._cells[this._iteratorIndex];\r\n        this._iteratorIndex++;\r\n        return cell;\r\n    },                                                                /* ^A^ */\r\n\r\n    /*\r\n     * resetIteration()                             -- used in Iterable\r\n     * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.\r\n     */                                                               /* vVv */\r\n    resetIteration: function() {\r\n        this._iteratorIndex = 0;\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SquareGrid.addMethods({ \r\n    \r\n    /*\r\n     * Extend the DOM and apply styling.\r\n     */                                                               /* vVv */\r\n    render: function() {\r\n        this._node.insert({bottom: '<div class=\"inner-container\"></div>'});\r\n        var container = this._node.down('.inner-container');\r\n        var t = new Template('<div class=\"col-#{i} row-#{j} cell\" style=\"position: absolute; left: #{left}px; top: #{top}px; width: #{width}px; height: #{height}px;\"></div>')\r\n        var c = {\r\n            left: 0,\r\n            top: 0,\r\n            width: (this._width / this._colCount).round() - 2,\r\n            height: (this._height / this._rowCount).round() - 2\r\n        };\r\n        for (c.i=0; c.i<this._colCount; c.i++) {\r\n            c.top = 0;\r\n            for (c.j=0; c.j<this._rowCount; c.j++) {\r\n                container.insert({bottom: t.evaluate(c)});\r\n                c.top += c.height + 2;\r\n            }\r\n            c.left += c.width + 2;\r\n        }\r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     *\r\n     */                                                               /* vVv */\r\n    stateSchema: function() {\r\n        \r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     *\r\n     */                                                               /* vVv */\r\n    initialState: function() {\r\n        \r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        this._cells = $A();\r\n        this._factory = new gamesoup.library.types.CellFactory();\r\n        var t = new Template('.col-#{i}.row-#{j}');\r\n        var c = {};\r\n        for (c.i=0; c.i<this._colCount; c.i++) {\r\n            for (c.j=0; c.j<this._rowCount; c.j++) {\r\n                var cell = this._factory.instantiate();\r\n                var cellContainerNode = this._node.down(t.evaluate(c));\r\n                cellContainerNode.insert({bottom: cell._node});\r\n                this._cells.push(cell);\r\n            }\r\n        }\r\n        this.resetIteration();\r\n    }                                                                 /* ^A^ */\r\n    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SquareGrid.addMethods({\r\n    // Helper methods go here...\r\n});", 
             "name": "SquareGrid", 
-            "parameters": [
-                8, 
-                7
-            ], 
             "visible": true, 
-            "signature": "Integer rowCount\r\nInteger colCount", 
             "has_state": true, 
             "description": "A board arranged in rows and columns."
         }
@@ -645,13 +592,7 @@
             ], 
             "code": "/*\r\n * Type: SubmitStringWithCheck\r\n * Action that reads a string from a source and if it is ok, sends it to a receiver. The source is cleared.\r\n */\r\ngamesoup.library.types.SubmitStringWithCheck = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 REFERENCES                                \r\n// this._destination                                                   Writable\r\n// this._source                                                       ReadWrite\r\n// this._validator                                                    Predicate\r\n\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SubmitStringWithCheck.addMethods({\r\n    \r\n    /*---------------------------------------->                          Action\r\n     * Nothing doAction()\r\n     * \r\n     * Perform the default action of this object.\r\n     */                                                               /* vVv */\r\n    doAction: function() {\r\n        if (this._validator.call()) {\r\n            // Success\r\n            var item = this._source.read();\r\n            this._destination.write(item);\r\n        } else {\r\n            // Failure\r\n            gamesoup.matches.messageBoard.postLocally(this._validator.reason());\r\n        }\r\n        // Need support for multiple interfaces on parameters.\r\n        // this._source.clear();\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SubmitStringWithCheck.addMethods({ \r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        \r\n    }                                                                 /* ^A^ */\r\n    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SubmitStringWithCheck.addMethods({\r\n    // Helper methods go here...\r\n});", 
             "name": "SubmitStringWithCheck", 
-            "parameters": [
-                25, 
-                12, 
-                22
-            ], 
             "visible": false, 
-            "signature": "ReadWrite source\r\nWritable destination\r\nPredicate validator\r\n", 
             "has_state": false, 
             "description": "Action that reads a string from a source and if it is ok, sends it to a receiver. The source is cleared."
         }
@@ -668,9 +609,7 @@
             ], 
             "code": "/*\n * Type: TextField\n * A text output field that can be updated during the game.\n */\ngamesoup.library.types.TextField = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.TextField.addMethods({\n    \n    /*\n     * Item read()                                  -- used in ReadWrite, Readable\n     * Read this content of this object.\n     */                                                               /* vVv */\n    read: function() {\n        return this._value;\n    },                                                                /* ^A^ */\n\n    /*\n     * write(Item item)                             -- used in ReadWrite, Writable\n     * Write a value to the content of this object.\n     */                                                               /* vVv */\n    write: function(item) {\n        this._value = item;\r\n        this._node.innerHTML = item;\n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.TextField.addMethods({ \n    \n    /*\n     * Extend the DOM and apply styling.\n     */                                                               /* vVv */\n    render: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     *\n     */                                                               /* vVv */\n    stateSchema: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     *\n     */                                                               /* vVv */\n    initialState: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        this._value = \"\";\n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.TextField.addMethods({\n    // Helper methods go here...\n});", 
             "name": "TextField", 
-            "parameters": [], 
             "visible": true, 
-            "signature": "", 
             "has_state": true, 
             "description": "A text output field that can be updated during the game."
         }
@@ -688,9 +627,7 @@
             ], 
             "code": "/*\r\n * Type: TextInput\r\n * For entering text.\r\n */\r\ngamesoup.library.types.TextInput = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.TextInput.addMethods({\r\n    \r\n    /*---------------------------------------->                       Focusable\r\n     * Nothing focus()\r\n     * \r\n     * Give focus to the object. Input messages from the keyboard and mouse will go directly to this object after focus is called.\r\n     */                                                               /* vVv */\r\n    focus: function() {\r\n        this._inputNode.focus();\r\n    },                                                                /* ^A^ */\r\n\r\n    /*---------------------------------------->             ReadWrite, Readable\r\n     * Foo read()\r\n     * \r\n     * Read this content of this object.\r\n     */                                                               /* vVv */\r\n    read: function() {\r\n        return this._inputNode.getValue();\r\n    },                                                                /* ^A^ */\r\n\r\n    /*---------------------------------------->             ReadWrite, Writable\r\n     * Nothing write(Foo item)\r\n     * \r\n     * Write a value to the content of this object.\r\n     */                                                               /* vVv */\r\n    write: function(item) {\r\n        this._inputNode.setValue();\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.TextInput.addMethods({ \r\n    \r\n    /*\r\n     * Extend the DOM and apply styling.\r\n     */                                                               /* vVv */\r\n    render: function() {\r\n        t = new Template('<input type=\"text\" style=\"width: 100%; height: 100%; font-size: #{size}px\" />');\r\n        var s = (this._height / 2).round();\r\n        this._node.insert({bottom: t.evaluate({size: s})});\r\n        this._inputNode = this._node.down('input[type=text]');\r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        \r\n    }                                                                 /* ^A^ */\r\n    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.TextInput.addMethods({\r\n    // Helper methods go here...\r\n});", 
             "name": "TextInput", 
-            "parameters": [], 
             "visible": true, 
-            "signature": "", 
             "has_state": false, 
             "description": "For entering text."
         }
@@ -705,14 +642,289 @@
             ], 
             "code": "/*\r\n * Type: WordOnBoardPath\r\n * Give a word, can a sequence of adjacent cells be found on a board where letters on those cells spell out the word?\r\n */\r\ngamesoup.library.types.WordOnBoardPath = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 REFERENCES                                \r\n// this._board                                Board<Cell=Readable<Item=String>>\r\n// this._word                                             Readable<Item=String>\r\n\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.WordOnBoardPath.addMethods({\r\n    \r\n    /*---------------------------------------->                       Predicate\r\n     * Boolean call()\r\n     * \r\n     * What is the truth value of this predicate object?\r\n     */                                                               /* vVv */\r\n    call: function() {\r\n        var c = {};\r\n        c.word = this._word.read();\r\n        if (c.word.length == 0) {\r\n            this._lastReason = \"Please type your word in.\";\r\n        } else {\r\n            this._lastReason = this._failReason.evaluate(c);            \r\n        }\r\n        return false;\r\n    },                                                                /* ^A^ */\r\n\r\n    /*---------------------------------------->                       Predicate\r\n     * String reason()\r\n     * \r\n     * What was the reason for the last answer this predicate gave?\r\n     */                                                               /* vVv */\r\n    reason: function() {\r\n        return this._lastReason;\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.WordOnBoardPath.addMethods({ \r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        this._failReason = new Template(\"The word #{word} was not on the board\");\r\n        this._successReason = new Template(\"The word #{word} was found!\");\r\n        this._lastReason = \"\";\r\n    }                                                                 /* ^A^ */\r\n    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.WordOnBoardPath.addMethods({\r\n    // Helper methods go here...\r\n});", 
             "name": "WordOnBoardPath", 
-            "parameters": [
-                41, 
-                40
-            ], 
             "visible": false, 
-            "signature": "Readable<Item=String> word\r\nBoard<Cell=Readable<Item=String>> board\r\n", 
             "has_state": false, 
             "description": "Give a word, can a sequence of adjacent cells be found on a board where letters on those cells spell out the word?"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "a", 
+            "interfaces": [
+                16
+            ], 
+            "is_built_in": false, 
+            "interface": 16, 
+            "of_type": 18, 
+            "expression": "Action"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "action", 
+            "interfaces": [
+                16
+            ], 
+            "is_built_in": false, 
+            "interface": 16, 
+            "of_type": 5, 
+            "expression": "Action"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "action", 
+            "interfaces": [
+                16
+            ], 
+            "is_built_in": false, 
+            "interface": 16, 
+            "of_type": 16, 
+            "expression": "Action"
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "action", 
+            "interfaces": [
+                16
+            ], 
+            "is_built_in": false, 
+            "interface": 16, 
+            "of_type": 11, 
+            "expression": "Action"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "b", 
+            "interfaces": [
+                16
+            ], 
+            "is_built_in": false, 
+            "interface": 16, 
+            "of_type": 18, 
+            "expression": "Action"
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "board", 
+            "interfaces": [
+                7
+            ], 
+            "is_built_in": false, 
+            "interface": 7, 
+            "of_type": 9, 
+            "expression": "Board<Cell=Readable<Item=String>>"
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "colCount", 
+            "interfaces": [
+                9
+            ], 
+            "is_built_in": true, 
+            "interface": 9, 
+            "of_type": 7, 
+            "expression": "Integer"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "collection", 
+            "interfaces": [
+                15
+            ], 
+            "is_built_in": false, 
+            "interface": 15, 
+            "of_type": 12, 
+            "expression": "Iterable"
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "destination", 
+            "interfaces": [
+                12
+            ], 
+            "is_built_in": false, 
+            "interface": 12, 
+            "of_type": 6, 
+            "expression": "Writable"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "factory", 
+            "interfaces": [
+                22
+            ], 
+            "is_built_in": false, 
+            "interface": 22, 
+            "of_type": 12, 
+            "expression": "Factory"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "focus", 
+            "interfaces": [
+                1
+            ], 
+            "is_built_in": false, 
+            "interface": 1, 
+            "of_type": 16, 
+            "expression": "Any"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "label", 
+            "interfaces": [
+                8
+            ], 
+            "is_built_in": true, 
+            "interface": 8, 
+            "of_type": 5, 
+            "expression": "String"
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "message", 
+            "interfaces": [
+                8
+            ], 
+            "is_built_in": true, 
+            "interface": 8, 
+            "of_type": 10, 
+            "expression": "String"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "radius", 
+            "interfaces": [
+                9
+            ], 
+            "is_built_in": true, 
+            "interface": 9, 
+            "of_type": 8, 
+            "expression": "Integer"
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "rowCount", 
+            "interfaces": [
+                9
+            ], 
+            "is_built_in": true, 
+            "interface": 9, 
+            "of_type": 7, 
+            "expression": "Integer"
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "source", 
+            "interfaces": [
+                20
+            ], 
+            "is_built_in": false, 
+            "interface": 20, 
+            "of_type": 6, 
+            "expression": "ReadWrite"
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "target", 
+            "interfaces": [
+                23
+            ], 
+            "is_built_in": false, 
+            "interface": 23, 
+            "of_type": 17, 
+            "expression": "Focusable"
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "validator", 
+            "interfaces": [
+                17
+            ], 
+            "is_built_in": false, 
+            "interface": 17, 
+            "of_type": 6, 
+            "expression": "Predicate"
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "value", 
+            "interfaces": [
+                8
+            ], 
+            "is_built_in": true, 
+            "interface": 8, 
+            "of_type": 2, 
+            "expression": "String"
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "word", 
+            "interfaces": [
+                11
+            ], 
+            "is_built_in": false, 
+            "interface": 11, 
+            "of_type": 9, 
+            "expression": "Readable<Item=String>"
         }
     }, 
     {
@@ -730,7 +942,7 @@
         "pk": 36, 
         "model": "library.variable", 
         "fields": {
-            "interface": 16, 
+            "interface": null, 
             "interface_name": "Action", 
             "name": "a", 
             "interface_expression": "Action", 
@@ -741,7 +953,7 @@
         "pk": 10, 
         "model": "library.variable", 
         "fields": {
-            "interface": 16, 
+            "interface": null, 
             "interface_name": "Action", 
             "name": "action", 
             "interface_expression": "Action", 
@@ -763,7 +975,7 @@
         "pk": 37, 
         "model": "library.variable", 
         "fields": {
-            "interface": 16, 
+            "interface": null, 
             "interface_name": "Action", 
             "name": "b", 
             "interface_expression": "Action", 
@@ -774,7 +986,7 @@
         "pk": 5, 
         "model": "library.variable", 
         "fields": {
-            "interface": 7, 
+            "interface": null, 
             "interface_name": "Board", 
             "name": "board", 
             "interface_expression": "Board", 
@@ -785,10 +997,10 @@
         "pk": 41, 
         "model": "library.variable", 
         "fields": {
-            "interface": 7, 
+            "interface": null, 
             "interface_name": "Board", 
             "name": "board", 
-            "interface_expression": "Board<Cell=Readable<Item=String>>", 
+            "interface_expression": "Board<Cell=%(Readable)s<Item=%(String)s>>", 
             "signature": "Board<Cell=Readable<Item=String>> board"
         }
     }, 
@@ -796,7 +1008,7 @@
         "pk": 8, 
         "model": "library.variable", 
         "fields": {
-            "interface": 9, 
+            "interface": null, 
             "interface_name": "Integer", 
             "name": "colCount", 
             "interface_expression": "Integer", 
@@ -807,7 +1019,7 @@
         "pk": 29, 
         "model": "library.variable", 
         "fields": {
-            "interface": 15, 
+            "interface": null, 
             "interface_name": "Iterable", 
             "name": "collection", 
             "interface_expression": "Iterable", 
@@ -829,7 +1041,7 @@
         "pk": 25, 
         "model": "library.variable", 
         "fields": {
-            "interface": 12, 
+            "interface": null, 
             "interface_name": "Writable", 
             "name": "destination", 
             "interface_expression": "Writable", 
@@ -840,7 +1052,7 @@
         "pk": 11, 
         "model": "library.variable", 
         "fields": {
-            "interface": 8, 
+            "interface": null, 
             "interface_name": "String", 
             "name": "event", 
             "interface_expression": "String", 
@@ -851,7 +1063,7 @@
         "pk": 27, 
         "model": "library.variable", 
         "fields": {
-            "interface": 22, 
+            "interface": null, 
             "interface_name": "Factory", 
             "name": "factory", 
             "interface_expression": "Factory<Item=%(Item)s>", 
@@ -862,7 +1074,7 @@
         "pk": 28, 
         "model": "library.variable", 
         "fields": {
-            "interface": 22, 
+            "interface": null, 
             "interface_name": "Factory", 
             "name": "factory", 
             "interface_expression": "Factory", 
@@ -873,7 +1085,7 @@
         "pk": 34, 
         "model": "library.variable", 
         "fields": {
-            "interface": 1, 
+            "interface": null, 
             "interface_name": "Any", 
             "name": "focus", 
             "interface_expression": "Any", 
@@ -884,7 +1096,7 @@
         "pk": 38, 
         "model": "library.variable", 
         "fields": {
-            "interface": 8, 
+            "interface": null, 
             "interface_name": "String", 
             "name": "invalidMessage", 
             "interface_expression": "String", 
@@ -906,7 +1118,7 @@
         "pk": 23, 
         "model": "library.variable", 
         "fields": {
-            "interface": 8, 
+            "interface": null, 
             "interface_name": "String", 
             "name": "label", 
             "interface_expression": "String", 
@@ -917,7 +1129,7 @@
         "pk": 24, 
         "model": "library.variable", 
         "fields": {
-            "interface": 8, 
+            "interface": null, 
             "interface_name": "String", 
             "name": "message", 
             "interface_expression": "String", 
@@ -928,7 +1140,7 @@
         "pk": 9, 
         "model": "library.variable", 
         "fields": {
-            "interface": 1, 
+            "interface": null, 
             "interface_name": "Any", 
             "name": "observed", 
             "interface_expression": "Any", 
@@ -939,7 +1151,7 @@
         "pk": 30, 
         "model": "library.variable", 
         "fields": {
-            "interface": 8, 
+            "interface": null, 
             "interface_name": "String", 
             "name": "param1", 
             "interface_expression": "String", 
@@ -950,7 +1162,7 @@
         "pk": 31, 
         "model": "library.variable", 
         "fields": {
-            "interface": 11, 
+            "interface": null, 
             "interface_name": "Readable", 
             "name": "param2", 
             "interface_expression": "Readable", 
@@ -961,7 +1173,7 @@
         "pk": 6, 
         "model": "library.variable", 
         "fields": {
-            "interface": 9, 
+            "interface": null, 
             "interface_name": "Integer", 
             "name": "radius", 
             "interface_expression": "Integer", 
@@ -983,7 +1195,7 @@
         "pk": 16, 
         "model": "library.variable", 
         "fields": {
-            "interface": 2, 
+            "interface": null, 
             "interface_name": "Nothing", 
             "name": "returned", 
             "interface_expression": "Nothing", 
@@ -994,7 +1206,7 @@
         "pk": 17, 
         "model": "library.variable", 
         "fields": {
-            "interface": 5, 
+            "interface": null, 
             "interface_name": "Boolean", 
             "name": "returned", 
             "interface_expression": "Boolean", 
@@ -1016,7 +1228,7 @@
         "pk": 39, 
         "model": "library.variable", 
         "fields": {
-            "interface": 8, 
+            "interface": null, 
             "interface_name": "String", 
             "name": "returned", 
             "interface_expression": "String", 
@@ -1027,7 +1239,7 @@
         "pk": 7, 
         "model": "library.variable", 
         "fields": {
-            "interface": 9, 
+            "interface": null, 
             "interface_name": "Integer", 
             "name": "rowCount", 
             "interface_expression": "Integer", 
@@ -1038,7 +1250,7 @@
         "pk": 2, 
         "model": "library.variable", 
         "fields": {
-            "interface": 13, 
+            "interface": null, 
             "interface_name": "Float", 
             "name": "scale", 
             "interface_expression": "Float", 
@@ -1049,7 +1261,7 @@
         "pk": 12, 
         "model": "library.variable", 
         "fields": {
-            "interface": 20, 
+            "interface": null, 
             "interface_name": "ReadWrite", 
             "name": "source", 
             "interface_expression": "ReadWrite", 
@@ -1060,7 +1272,7 @@
         "pk": 35, 
         "model": "library.variable", 
         "fields": {
-            "interface": 23, 
+            "interface": null, 
             "interface_name": "Focusable", 
             "name": "target", 
             "interface_expression": "Focusable", 
@@ -1071,7 +1283,7 @@
         "pk": 22, 
         "model": "library.variable", 
         "fields": {
-            "interface": 17, 
+            "interface": null, 
             "interface_name": "Predicate", 
             "name": "validator", 
             "interface_expression": "Predicate", 
@@ -1082,7 +1294,7 @@
         "pk": 3, 
         "model": "library.variable", 
         "fields": {
-            "interface": 8, 
+            "interface": null, 
             "interface_name": "String", 
             "name": "value", 
             "interface_expression": "String", 
@@ -1093,7 +1305,7 @@
         "pk": 1, 
         "model": "library.variable", 
         "fields": {
-            "interface": 9, 
+            "interface": null, 
             "interface_name": "Integer", 
             "name": "width", 
             "interface_expression": "Integer", 
@@ -1104,7 +1316,7 @@
         "pk": 4, 
         "model": "library.variable", 
         "fields": {
-            "interface": 11, 
+            "interface": null, 
             "interface_name": "Readable", 
             "name": "word", 
             "interface_expression": "Readable", 
@@ -1115,10 +1327,10 @@
         "pk": 40, 
         "model": "library.variable", 
         "fields": {
-            "interface": 11, 
+            "interface": null, 
             "interface_name": "Readable", 
             "name": "word", 
-            "interface_expression": "Readable<Item=String>", 
+            "interface_expression": "Readable<Item=%(String)s>", 
             "signature": "Readable<Item=String> word"
         }
     }, 

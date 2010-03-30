@@ -41,8 +41,12 @@ class InterfaceAdmin(admin.ModelAdmin):
 admin.site.register(Interface, InterfaceAdmin)
 
 
+class TypeParameterInline(admin.TabularInline):
+    model = TypeParameter
+    extra = 3
 class InterfaceTemplateParameterBindingInline(admin.TabularInline):
     model = InterfaceTemplateParameterBinding
+    fields = ('parameter', 'bound_to')
     extra = 3
 class TypeTemplateParameterInline(admin.TabularInline):
     model = TypeTemplateParameter
@@ -50,14 +54,14 @@ class TypeTemplateParameterInline(admin.TabularInline):
     extra = 1
 class TypeAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('name', 'description', 'visible', 'has_state', 'implements', 'signature', 'code')}),
+        (None, {'fields': ('name', 'description', ('visible', 'has_state'), 'implements')}),
         )
     list_display = ('name', 'description', 'visible')
     list_filter = ('visible',)
     filter_horizontal = ('implements',)
     search_fields = ('name', 'description', 'implements__name')
     actions = None
-    inlines = (TypeTemplateParameterInline, InterfaceTemplateParameterBindingInline)
+    inlines = (TypeTemplateParameterInline, TypeParameterInline, InterfaceTemplateParameterBindingInline)
     class Media:
         js = (
             'js/lib/prototype.js',

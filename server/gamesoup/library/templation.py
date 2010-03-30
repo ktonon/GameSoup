@@ -43,15 +43,25 @@ class InterfaceExpression(object):
         if load_interface:
             try:
                 self._interface = Interface.objects.get(name=self._ident)
+                self._interfaces = [self._interface]
             except Interface.DoesNotExist:
                 # The interface must be a template parameter
                 self._interface = None
+                self._interfaces = []
                 self.is_fake = True
+
+    def get_is_built_in(self):
+        return len(self._interfaces) == 1 and self._interfaces[0].is_built_in
+    is_built_in = property(get_is_built_in)
 
     def get_interface(self):
         return self._interface
     interface = property(get_interface)
 
+    def get_interfaces(self):
+        return self._interfaces
+    interfaces = property(get_interfaces)
+    
     def get_interface_name(self):
         return self._ident
     interface_name = property(get_interface_name)

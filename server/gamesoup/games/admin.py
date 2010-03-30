@@ -11,8 +11,8 @@ class GameAdmin(admin.ModelAdmin):
 admin.site.register(Game, GameAdmin)
 
 
-class BindingInline(admin.TabularInline):
-    model = Binding
+class TypeParameterBindingInline(admin.TabularInline):
+    model = TypeParameterBinding
     fk_name = 'instance'
     extra = 1
 class ObjectAdmin(admin.ModelAdmin):
@@ -21,5 +21,5 @@ class ObjectAdmin(admin.ModelAdmin):
         )
     list_display = ('id', 'name', 'game', 'type', 'x', 'y', 'width', 'height', 'satisfied', 'per_player')
     raw_id_fields = ('game', 'type')
-    inlines = [BindingInline]
+    inlines = [TypeParameterBindingInline]
 admin.site.register(Object, ObjectAdmin)

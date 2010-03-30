@@ -7,6 +7,7 @@ from django.template.loader import get_template
 from alphacabbage.django.helpers import get_pair_or_404
 from alphacabbage.django.decorators import require_post
 from gamesoup.games.models import *
+from gamesoup.library.templation import InterfaceExpression
 
 
 ###############################################################################
@@ -34,7 +35,7 @@ def game_flow(request, game_id, format):
             else:
                 n.fillcolor = '#99ccff'
         nodes[obj.id] = n
-    for ref in Binding.objects.filter(instance__game=game, parameter__interface__is_built_in=False):
+    for ref in TypeParameterBinding.objects.filter(instance__game=game, parameter__interface__is_built_in=False):
         e = g.add_edge(nodes[ref.instance.id], nodes[ref.object_argument.id])
         e.label = ref.parameter.name
         e.color = 'gray'
@@ -43,7 +44,7 @@ def game_flow(request, game_id, format):
         e.fontsize = 14
         e.len = 3
     # Danglers
-    for param in Variable.objects.filter(parameter_of__instances__game=game, interface__is_built_in=False).distinct():
+    for param in TypeParameter.objects.filter(of_type__instances__game=game, interface__is_built_in=False).distinct():
         if param.bindings.filter(instance__game=game).count() == 0:
             for obj in Object.objects.filter(game=game, type__parameters=param).distinct():
                 n = g.add_node('missing_param_%d_%d' % (obj.id, param.id), label='')
@@ -130,8 +131,11 @@ def search_required_by(request):
 
 @staff_member_required
 def search_required_by_parameter(request, parameter_id):
-    param = get_object_or_404(Variable, pk=parameter_id)
-    type_ids = [t.id for t in Type.objects.filter(implements=param.interface)]
+    param = get_object_or_404(TypeParameter, pk=parameter_id)
+    qs = Type.objects.all()
+    for interface in param.interfaces.all():
+        qs = qs.filter(implements=interface)
+    type_ids = [t.id for t in qs]
     response = HttpResponse(mimetype='application/json')
     response.write(json.dumps(type_ids or [0])) # See comment above
     return response
@@ -243,14 +247,14 @@ def save_parameter_binding(request, game_id, object_id, parameter_id):
     game, obj = get_pair_or_404(Game, 'object_set', game_id, object_id)
     try:
         param = obj.type.parameters.get(pk=parameter_id)
-    except Variable.DoesNotExist:
+    except TypeParameter.DoesNotExist:
         raise Http404()
     value = {}
     x = request.POST['value']
     try:
         binding = obj.parameter_bindings.get(parameter=param)
-    except Binding.DoesNotExist:
-        binding = Binding(instance=obj, parameter=param)
+    except TypeParameterBinding.DoesNotExist:
+        binding = TypeParameterBinding(instance=obj, parameter=param)
     if param.interface.is_built_in:
         binding.built_in_argument = x
     else:
@@ -264,7 +268,7 @@ def candidate_refs(request, game_id, object_id, parameter_id):
     game, obj = get_pair_or_404(Game, 'object_set', game_id, object_id)
     try:
         param = obj.type.parameters.get(pk=parameter_id)
-    except Variable.DoesNotExist:
+    except TypeParameter.DoesNotExist:
         raise Http404()
     qs = game.object_set.filter(type__implements=param.interface)
     response = HttpResponse(mimetype='application/json')

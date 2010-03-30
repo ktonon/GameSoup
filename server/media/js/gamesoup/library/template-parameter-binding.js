@@ -51,7 +51,7 @@ mod.getIDs = function() {
 }
 
 document.observe('dom:loaded', function() {
-    mod.templateParameterBindings = $$('.bound_to + .parameter').collect(function(node) {
+    mod.templateParameterBindings = $$('.inline-group .parameter').collect(function(node) {
         return new mod.TemplateParameterBinding(node);
     });
     mod.possibleParameters = new mod.PossibleParameters();

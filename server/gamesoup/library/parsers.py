@@ -10,28 +10,6 @@ patterns['tas'] = '\<\s*%(ta)s(?:\s*,\s*%(ta)s)*\s*\>' % patterns
 patterns['interface_expression_chars'] = r'[A-Za-z0-9_<>=, ]+'
 
 
-def parse_type_signature(signature):
-    '''
-    Convert from encoded signature to dictionary object.
-
-    Example,
-        """
-        I1 param1
-        I2 param2
-        """
-    to
-        {
-            "parameters": [p1, p2],
-        }
-    '''
-    from gamesoup.library.models import Variable
-    sigs = [sig.strip() for sig in signature.split('\n') if sig.strip()]
-    d = {
-        'parameters': map(Variable.objects.for_signature, sigs),
-    }
-    return d
-
-
 def parse_method_signature(signature):
     '''
     Convert from encoded signature to dictionary object.
