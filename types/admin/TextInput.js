@@ -10,7 +10,7 @@ gamesoup.library.types.TextInput = Class.create(gamesoup.library.types.BaseType)
 gamesoup.library.types.TextInput.addMethods({
     
     /*---------------------------------------->                       Focusable
-     * Nothing focus()
+     * focus()
      * 
      * Give focus to the object. Input messages from the keyboard and mouse will go directly to this object after focus is called.
      */                                                               /* vVv */
@@ -18,8 +18,8 @@ gamesoup.library.types.TextInput.addMethods({
         this._inputNode.focus();
     },                                                                /* ^A^ */
 
-    /*---------------------------------------->             ReadWrite, Readable
-     * Foo read()
+    /*---------------------------------------->                        Readable
+     * read() : Item
      * 
      * Read this content of this object.
      */                                                               /* vVv */
@@ -27,8 +27,8 @@ gamesoup.library.types.TextInput.addMethods({
         return this._inputNode.getValue();
     },                                                                /* ^A^ */
 
-    /*---------------------------------------->             ReadWrite, Writable
-     * Nothing write(Foo item)
+    /*---------------------------------------->                        Writable
+     * write(item : Item)
      * 
      * Write a value to the content of this object.
      */                                                               /* vVv */

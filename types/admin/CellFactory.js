@@ -9,8 +9,9 @@ gamesoup.library.types.CellFactory = Class.create(gamesoup.library.types.BaseTyp
 /*****************************************************************************/
 gamesoup.library.types.CellFactory.addMethods({
     
-    /*
-     * Item instantiate()                           -- used in Factory
+    /*---------------------------------------->                         Factory
+     * instantiate() : Item
+     * 
      * Create an instance of a given type.
      */                                                               /* vVv */
     instantiate: function() {

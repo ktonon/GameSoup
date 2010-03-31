@@ -17,16 +17,16 @@ gamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType
 gamesoup.library.types.SquareGrid.addMethods({
     
     /*---------------------------------------->                           Board
-     * Boolean areAdjacent(Foo a, Foo b)
+     * areAdjacent(a : Item ; b : Item) : Boolean
      * 
      * Are a and b adjacent?
      */                                                               /* vVv */
-    areAdjacent: function(a, a, b, b) {
+    areAdjacent: function(a, b) {
         
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Iterable
-     * Foo nextInIteration()
+     * nextInIteration() : Item
      * 
      * Get the next object in the sequence. When the sequence is over, this should return null.
      */                                                               /* vVv */
@@ -37,7 +37,7 @@ gamesoup.library.types.SquareGrid.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Iterable
-     * Nothing resetIteration()
+     * resetIteration()
      * 
      * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.
      */                                                               /* vVv */

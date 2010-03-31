@@ -7,7 +7,7 @@ from django.template.loader import get_template
 from alphacabbage.django.helpers import get_pair_or_404
 from alphacabbage.django.decorators import require_post
 from gamesoup.games.models import *
-from gamesoup.library.templation import InterfaceExpression
+from gamesoup.library.expressions.semantics import InterfaceExpression
 
 
 ###############################################################################
@@ -133,7 +133,8 @@ def search_required_by(request):
 def search_required_by_parameter(request, parameter_id):
     param = get_object_or_404(TypeParameter, pk=parameter_id)
     qs = Type.objects.all()
-    for interface in param.interfaces.all():
+    expr = InterfaceExpression.parse(param.expression)
+    for interface in expr.interfaces:
         qs = qs.filter(implements=interface)
     type_ids = [t.id for t in qs]
     response = HttpResponse(mimetype='application/json')

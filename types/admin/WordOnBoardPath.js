@@ -18,7 +18,7 @@ gamesoup.library.types.WordOnBoardPath = Class.create(gamesoup.library.types.Bas
 gamesoup.library.types.WordOnBoardPath.addMethods({
     
     /*---------------------------------------->                       Predicate
-     * Boolean call()
+     * call() : Boolean
      * 
      * What is the truth value of this predicate object?
      */                                                               /* vVv */
@@ -34,7 +34,7 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                       Predicate
-     * String reason()
+     * reason() : String
      * 
      * What was the reason for the last answer this predicate gave?
      */                                                               /* vVv */

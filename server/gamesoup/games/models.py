@@ -9,6 +9,7 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.signals import *
 from gamesoup.library.models import *
+from gamesoup.library.expressions.semantics import InterfaceExpression
 
 
 class Game(models.Model):
@@ -27,12 +28,6 @@ class Game(models.Model):
     def is_satisfied(self):
         return self.object_set.filter(satisfied=False).count() == 0
     is_satisfied.boolean = True
-
-    def possible_settings_for(self, parameter):
-        qs = self.object_set.all()
-        for interface in parameter.interfaces.all():
-            qs = qs.filter(type__implements=interface)
-        return qs
 
     def get_assembler_link(self):
         return '<a href="%s" title="Assemble this game">Objects: %d</a>' % (reverse('games:assemble_game', args=[self.id]), self.object_set.count())
@@ -100,7 +95,8 @@ class Object(models.Model):
                 # For non-built-in parameters, the type must satisfy all
                 # of the required interfaces.
                 qs = Type.objects.filter(instances__game=self.game)
-                for interface in param.interfaces.all():
+                expr = InterfaceExpression.parse(param.expression)
+                for interface in expr.interfaces:
                     qs = qs.filter(implements=interface)
                 return qs.count() > 0
         return all(map(satisfiable, self.type.parameters.all()))

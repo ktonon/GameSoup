@@ -8,7 +8,7 @@ class MethodParameterInline(admin.TabularInline):
     extra = 3
 class MethodAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('interface', 'name', 'return_expression', 'description')}),
+        (None, {'fields': ('name', 'return_expression', 'description')}),
         )
     list_display = ('get_signature', 'interface')
     search_fields = ('name', 'returned__interface__name', 'parameters__interface__name', 'interface__name')

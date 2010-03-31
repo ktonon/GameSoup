@@ -9,8 +9,9 @@ gamesoup.library.types.List = Class.create(gamesoup.library.types.BaseType);
 /*****************************************************************************/
 gamesoup.library.types.List.addMethods({
     
-    /*
-     * Item nextInIteration()                       -- used in Iterable
+    /*---------------------------------------->                        Iterable
+     * nextInIteration() : Item
+     * 
      * Get the next object in the sequence. When the sequence is over, this should return null.
      */                                                               /* vVv */
     nextInIteration: function() {
@@ -19,8 +20,9 @@ gamesoup.library.types.List.addMethods({
         return item;
     },                                                                /* ^A^ */
 
-    /*
-     * Item pop()                                   -- used in Stack
+    /*---------------------------------------->                           Stack
+     * pop() : Item
+     * 
      * Remove the object at the top of the stack and return it.
      */                                                               /* vVv */
     pop: function() {
@@ -28,8 +30,9 @@ gamesoup.library.types.List.addMethods({
         return this._items.pop();
     },                                                                /* ^A^ */
 
-    /*
-     * push(Item item)                              -- used in Stack
+    /*---------------------------------------->                           Stack
+     * push(item : Item)
+     * 
      * Push an object on top of the stack.
      */                                                               /* vVv */
     push: function(item) {
@@ -37,24 +40,27 @@ gamesoup.library.types.List.addMethods({
         this._items.push(item);
     },                                                                /* ^A^ */
 
-    /*
-     * Item read()                                  -- used in ReadWrite, Readable
+    /*---------------------------------------->                        Readable
+     * read() : Item
+     * 
      * Read this content of this object.
      */                                                               /* vVv */
     read: function() {
         return this._items.first();
     },                                                                /* ^A^ */
 
-    /*
-     * resetIteration()                             -- used in Iterable
+    /*---------------------------------------->                        Iterable
+     * resetIteration()
+     * 
      * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.
      */                                                               /* vVv */
     resetIteration: function() {
         this._iteratorIndex = 0;
     },                                                                /* ^A^ */
 
-    /*
-     * write(Item item)                             -- used in ReadWrite, Writable
+    /*---------------------------------------->                        Writable
+     * write(item : Item)
+     * 
      * Write a value to the content of this object.
      */                                                               /* vVv */
     write: function(item) {

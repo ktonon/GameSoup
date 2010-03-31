@@ -8,31 +8,34 @@ gamesoup.library.types.HexagonalGrid = Class.create(gamesoup.library.types.BaseT
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 BUILT-INS                                 
-// this._radius                                     -- Integer
+// this._radius                                                         Integer
 
 /*****************************************************************************/
 /*                             Interface Methods                             */
 /*****************************************************************************/
 gamesoup.library.types.HexagonalGrid.addMethods({
     
-    /*
-     * Boolean areAdjacent(Cell a, Cell b)          -- used in Board
-     * Are cell a and cell b adjacent?
+    /*---------------------------------------->                           Board
+     * areAdjacent(a : Item ; b : Item) : Boolean
+     * 
+     * Are a and b adjacent?
      */                                                               /* vVv */
-    areAdjacent: function() {
+    areAdjacent: function(a, b) {
         
     },                                                                /* ^A^ */
 
-    /*
-     * Item nextInIteration()                       -- used in Iterable
+    /*---------------------------------------->                        Iterable
+     * nextInIteration() : Item
+     * 
      * Get the next object in the sequence. When the sequence is over, this should return null.
      */                                                               /* vVv */
     nextInIteration: function() {
         
     },                                                                /* ^A^ */
 
-    /*
-     * resetIteration()                             -- used in Iterable
+    /*---------------------------------------->                        Iterable
+     * resetIteration()
+     * 
      * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.
      */                                                               /* vVv */
     resetIteration: function() {

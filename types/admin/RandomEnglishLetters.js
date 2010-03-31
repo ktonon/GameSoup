@@ -9,16 +9,18 @@ gamesoup.library.types.RandomEnglishLetters = Class.create(gamesoup.library.type
 /*****************************************************************************/
 gamesoup.library.types.RandomEnglishLetters.addMethods({
     
-    /*
-     * Over getRandomObject()                       -- used in Distribution
+    /*---------------------------------------->                    Distribution
+     * getRandomObject() : Over
+     * 
      * Return a random object from a distribution
      */                                                               /* vVv */
     getRandomObject: function() {
         return this._letters[(Math.random() * this._letters.length).floor()];
     },                                                                /* ^A^ */
 
-    /*
-     * Item instantiate()                           -- used in Factory
+    /*---------------------------------------->                         Factory
+     * instantiate() : Item
+     * 
      * Create an instance of a given type.
      */                                                               /* vVv */
     instantiate: function() {

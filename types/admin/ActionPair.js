@@ -18,7 +18,7 @@ gamesoup.library.types.ActionPair = Class.create(gamesoup.library.types.BaseType
 gamesoup.library.types.ActionPair.addMethods({
     
     /*---------------------------------------->                          Action
-     * Nothing doAction()
+     * doAction()
      * 
      * Perform the default action of this object.
      */                                                               /* vVv */

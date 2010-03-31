@@ -7,7 +7,7 @@ import re
 from django.db import models
 from django import forms
 from gamesoup.library.errors import *
-from gamesoup.library.templation import InterfaceExpression
+from gamesoup.library.expressions.syntax import parse_interface_expression
 
 
 __all__ = (
@@ -82,7 +82,7 @@ class InterfaceExpressionFormField(forms.CharField):
     def clean(self, value):
         value = super(InterfaceExpressionFormField, self).clean(value)
         try:
-            InterfaceExpression(value)
+            parse_interface_expression(value)
         except Exception, e:
             raise forms.ValidationError(e)
         return value

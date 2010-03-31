@@ -9,16 +9,18 @@ gamesoup.library.types.TextField = Class.create(gamesoup.library.types.BaseType)
 /*****************************************************************************/
 gamesoup.library.types.TextField.addMethods({
     
-    /*
-     * Item read()                                  -- used in ReadWrite, Readable
+    /*---------------------------------------->                        Readable
+     * read() : Item
+     * 
      * Read this content of this object.
      */                                                               /* vVv */
     read: function() {
         return this._value;
     },                                                                /* ^A^ */
 
-    /*
-     * write(Item item)                             -- used in ReadWrite, Writable
+    /*---------------------------------------->                        Writable
+     * write(item : Item)
+     * 
      * Write a value to the content of this object.
      */                                                               /* vVv */
     write: function(item) {

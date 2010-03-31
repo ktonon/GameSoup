@@ -19,7 +19,7 @@ gamesoup.library.types.SubmitStringWithCheck = Class.create(gamesoup.library.typ
 gamesoup.library.types.SubmitStringWithCheck.addMethods({
     
     /*---------------------------------------->                          Action
-     * Nothing doAction()
+     * doAction()
      * 
      * Perform the default action of this object.
      */                                                               /* vVv */

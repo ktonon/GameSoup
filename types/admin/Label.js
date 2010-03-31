@@ -8,7 +8,7 @@ gamesoup.library.types.Label = Class.create(gamesoup.library.types.BaseType);
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 BUILT-INS                                 
-// this._value                                      -- String
+// this._value                                                           String
 
 /*****************************************************************************/
 /*                                Engine Hooks                               */

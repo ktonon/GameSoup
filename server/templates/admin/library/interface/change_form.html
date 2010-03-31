@@ -13,8 +13,8 @@
     <h2>Edit method details</h2>
     <ul>
         {% for method in interface.methods.all %}
-        <li><a href="{% url admin:library_method_change method.id %}">{{ method.name }}</a></li>
-        {% endfor %}    
+        <li><a href="{% url admin:library_method_change method.id %}">{{ method.signature }}</a></li>
+        {% endfor %}
     </ul>    
 </div>
 {% endblock after_field_sets %}

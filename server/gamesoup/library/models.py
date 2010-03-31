@@ -25,7 +25,6 @@ class Method(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     return_expression = InterfaceExpressionField('Return', default='Nothing')
-    return_expression_is_built_in = models.BooleanField()
     # parameters -- See MethodParameter#of_method
 
     class Meta:
@@ -46,14 +45,6 @@ class Method(models.Model):
     def reset(cls):
         for method in cls.objects.all():
             method.save()
-        
-    @staticmethod
-    def pre_save(sender, instance, **kwargs):
-        from gamesoup.library.templation import InterfaceExpression
-        exp = InterfaceExpression(instance.return_expression)
-        instance.return_expression_is_built_in = exp.is_built_in
-
-pre_save.connect(Method.pre_save, sender=Method)
 
 
 class Interface(models.Model):
@@ -84,7 +75,7 @@ class Interface(models.Model):
     def doc_link(self):
         return '<a href="%s">%s</a>' % (
             reverse('library:interface_documentation', args=[self.id]),
-            '<br/>'.join([m.name for m in self.methods.all()])
+            '<br/>'.join([m.signature for m in self.methods.all()])
         )
     doc_link.allow_tags = True
     doc_link.short_description = 'Documentation'
@@ -171,17 +162,16 @@ class Parameter(models.Model):
     
     @staticmethod
     def pre_save(sender, instance, **kwargs):
-        from gamesoup.library.templation import InterfaceExpression
-        exp = InterfaceExpression(instance.expression)
-        instance.is_built_in = exp.is_built_in
+        from gamesoup.library.expressions.semantics import InterfaceExpression
+        expr = InterfaceExpression.parse(instance.expression)
+        instance.is_built_in = expr.is_atomic and not expr[0].is_variable and expr[0].interface.is_built_in
 
     @staticmethod
     def post_save(sender, instance, **kwargs):
-        from gamesoup.library.templation import InterfaceExpression
-        exp = InterfaceExpression(instance.expression)
-        instance.is_built_in = exp.is_built_in
+        from gamesoup.library.expressions.semantics import InterfaceExpression
+        expr = InterfaceExpression.parse(instance.expression)
         instance.interfaces.clear()
-        for interface in exp.interfaces:
+        for interface in expr.interfaces:
             instance.interfaces.add(interface)
 
 
@@ -228,15 +218,20 @@ class TemplateParameterBinding(models.Model):
 
 # PARAMETERS
 
+
+
 class InterfaceTemplateParameter(TemplateParameter):
     of_interface = models.ForeignKey(Interface, related_name='template_parameters')
     of = property(lambda self: self.of_interface)
+
 
 class TypeTemplateParameter(TemplateParameter):
     of_type = models.ForeignKey(Type, related_name='template_parameters')
     of = property(lambda self: self.of_type)
 
+
 # BINDINGS
+
     
 class InterfaceTemplateParameterBinding(TemplateParameterBinding):
     type = models.ForeignKey(Type)

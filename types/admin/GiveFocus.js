@@ -17,7 +17,7 @@ gamesoup.library.types.GiveFocus = Class.create(gamesoup.library.types.BaseType)
 gamesoup.library.types.GiveFocus.addMethods({
     
     /*---------------------------------------->                          Action
-     * Nothing doAction()
+     * doAction()
      * 
      * Perform the default action of this object.
      */                                                               /* vVv */

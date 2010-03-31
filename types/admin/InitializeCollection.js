@@ -8,8 +8,8 @@ gamesoup.library.types.InitializeCollection = Class.create(gamesoup.library.type
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._collection --                         Iterable&lt;Item=Any&gt;
-// this._factory --                          Factory&lt;Item=Any&gt;
+// this._collection                                                    Iterable
+// this._factory                                                        Factory
 
 
 /*****************************************************************************/
@@ -17,8 +17,9 @@ gamesoup.library.types.InitializeCollection = Class.create(gamesoup.library.type
 /*****************************************************************************/
 gamesoup.library.types.InitializeCollection.addMethods({
     
-    /*
-     * doAction()                                   -- used in Action
+    /*---------------------------------------->                          Action
+     * doAction()
+     * 
      * Perform the default action of this object.
      */                                                               /* vVv */
     doAction: function() {

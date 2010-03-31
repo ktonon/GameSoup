@@ -1,6 +1,5 @@
 from django import template
 from django.utils.safestring import mark_safe
-from gamesoup.library.templation import InterfaceExpression
 
 
 register = template.Library()

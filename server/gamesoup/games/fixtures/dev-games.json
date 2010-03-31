@@ -8,6 +8,14 @@
         }
     }, 
     {
+        "pk": 2, 
+        "model": "games.game", 
+        "fields": {
+            "name": "Foo", 
+            "description": ""
+        }
+    }, 
+    {
         "pk": 12, 
         "model": "games.object", 
         "fields": {
@@ -16,6 +24,21 @@
             "height": 5, 
             "width": 5, 
             "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 18, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "games.object", 
+        "fields": {
+            "name": "ActionPair", 
+            "satisfied": true, 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
             "y": 0, 
             "x": 0, 
             "type": 18, 
@@ -38,6 +61,21 @@
         }
     }, 
     {
+        "pk": 30, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Button", 
+            "satisfied": true, 
+            "height": 3, 
+            "width": 6, 
+            "game": 2, 
+            "y": 21, 
+            "x": 21, 
+            "type": 5, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 14, 
         "model": "games.object", 
         "fields": {
@@ -46,6 +84,21 @@
             "height": 5, 
             "width": 5, 
             "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 14, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 24, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Cell", 
+            "satisfied": true, 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
             "y": 0, 
             "x": 0, 
             "type": 14, 
@@ -68,6 +121,21 @@
         }
     }, 
     {
+        "pk": 25, 
+        "model": "games.object", 
+        "fields": {
+            "name": "CellFactory", 
+            "satisfied": true, 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
+            "y": 0, 
+            "x": 0, 
+            "type": 15, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 8, 
         "model": "games.object", 
         "fields": {
@@ -76,6 +144,21 @@
             "height": 5, 
             "width": 5, 
             "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 16, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 26, 
+        "model": "games.object", 
+        "fields": {
+            "name": "EnterKeyPressed", 
+            "satisfied": true, 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
             "y": 0, 
             "x": 0, 
             "type": 16, 
@@ -98,6 +181,21 @@
         }
     }, 
     {
+        "pk": 18, 
+        "model": "games.object", 
+        "fields": {
+            "name": "GameStarted", 
+            "satisfied": true, 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
+            "y": 0, 
+            "x": 0, 
+            "type": 11, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 13, 
         "model": "games.object", 
         "fields": {
@@ -106,6 +204,21 @@
             "height": 5, 
             "width": 5, 
             "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 17, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 22, 
+        "model": "games.object", 
+        "fields": {
+            "name": "GiveFocus", 
+            "satisfied": true, 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
             "y": 0, 
             "x": 0, 
             "type": 17, 
@@ -128,6 +241,36 @@
         }
     }, 
     {
+        "pk": 20, 
+        "model": "games.object", 
+        "fields": {
+            "name": "InitializeCollection", 
+            "satisfied": true, 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
+            "y": 0, 
+            "x": 0, 
+            "type": 12, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 29, 
+        "model": "games.object", 
+        "fields": {
+            "name": "List", 
+            "satisfied": true, 
+            "height": 18, 
+            "width": 6, 
+            "game": 2, 
+            "y": 2, 
+            "x": 21, 
+            "type": 4, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 10, 
         "model": "games.object", 
         "fields": {
@@ -136,6 +279,21 @@
             "height": 5, 
             "width": 5, 
             "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 13, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 21, 
+        "model": "games.object", 
+        "fields": {
+            "name": "RandomEnglishLetters", 
+            "satisfied": true, 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
             "y": 0, 
             "x": 0, 
             "type": 13, 
@@ -188,6 +346,21 @@
         }
     }, 
     {
+        "pk": 17, 
+        "model": "games.object", 
+        "fields": {
+            "name": "SquareGrid", 
+            "satisfied": true, 
+            "height": 20, 
+            "width": 20, 
+            "game": 2, 
+            "y": 0, 
+            "x": 0, 
+            "type": 7, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 6, 
         "model": "games.object", 
         "fields": {
@@ -199,6 +372,36 @@
             "y": 0, 
             "x": 0, 
             "type": 6, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 27, 
+        "model": "games.object", 
+        "fields": {
+            "name": "SubmitStringWithCheck", 
+            "satisfied": true, 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
+            "y": 0, 
+            "x": 0, 
+            "type": 6, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 23, 
+        "model": "games.object", 
+        "fields": {
+            "name": "TextInput", 
+            "satisfied": true, 
+            "height": 3, 
+            "width": 20, 
+            "game": 2, 
+            "y": 21, 
+            "x": 0, 
+            "type": 1, 
             "per_player": false
         }
     }, 
@@ -241,6 +444,21 @@
             "height": 5, 
             "width": 5, 
             "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 9, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 28, 
+        "model": "games.object", 
+        "fields": {
+            "name": "WordOnBoardPath", 
+            "satisfied": true, 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
             "y": 0, 
             "x": 0, 
             "type": 9, 
@@ -422,6 +640,176 @@
         "model": "games.typeparameterbinding", 
         "fields": {
             "instance": 16, 
+            "object_argument": null, 
+            "parameter": 4, 
+            "built_in_argument": "Reset"
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 17, 
+            "object_argument": null, 
+            "parameter": 14, 
+            "built_in_argument": "5"
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 17, 
+            "object_argument": null, 
+            "parameter": 15, 
+            "built_in_argument": "5"
+        }
+    }, 
+    {
+        "pk": 21, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 18, 
+            "object_argument": 19, 
+            "parameter": 7, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 22, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 20, 
+            "object_argument": 17, 
+            "parameter": 10, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 23, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 20, 
+            "object_argument": 21, 
+            "parameter": 11, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 24, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 19, 
+            "object_argument": 20, 
+            "parameter": 1, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 25, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 19, 
+            "object_argument": 22, 
+            "parameter": 2, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 26, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 22, 
+            "object_argument": 23, 
+            "parameter": 8, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 27, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 26, 
+            "object_argument": 23, 
+            "parameter": 6, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 28, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 26, 
+            "object_argument": 27, 
+            "parameter": 5, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 29, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 27, 
+            "object_argument": 29, 
+            "parameter": 16, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 30, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 27, 
+            "object_argument": 23, 
+            "parameter": 17, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 31, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 27, 
+            "object_argument": 28, 
+            "parameter": 18, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 32, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 28, 
+            "object_argument": 17, 
+            "parameter": 19, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 33, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 28, 
+            "object_argument": 23, 
+            "parameter": 20, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 34, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 30, 
+            "object_argument": 20, 
+            "parameter": 3, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 35, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 30, 
             "object_argument": null, 
             "parameter": 4, 
             "built_in_argument": "Reset"
