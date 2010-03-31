@@ -1,5 +1,5 @@
 from django import test
-from gamesoup.library import views, models, parsers
+from gamesoup.library import views, models
 from gamesoup.library.errors import SignatureParseError
 from gamesoup.library import templation
 
@@ -28,77 +28,6 @@ class ViewsTest(test.TestCase):
     def test_bulk_download(self):
         r = self.client.get('/admin/library/local-editing/bulk-download.tar')
         self.assertEquals(r['Content-Type'], 'application/x-tar')
-
-
-class SimpleParsersTest(test.TestCase):
-    '''
-    Test the signature parsers with data that does not take
-    advantage of Interface template parameters.
-    '''
-    
-    fixtures = ['test-data.json', 'test-parsers.json']
-    
-    def setUp(self):
-        self.I1 = models.Interface.objects.get(name='I1')
-        self.I2 = models.Interface.objects.get(name='I2')
-        self.I3 = models.Interface.objects.get(name='I3')
-        self.Visitor = models.Interface.objects.get(name='Visitor')
-        self.Nothing = models.Interface.objects.nothing()
-    
-    def test_parse_variable_signature(self):
-        # Robust against whitespace don't hurt
-        d = parsers.parse_variable_signature('  I1  \t param  ')
-        self.assertEquals(len(d), 4)
-        self.assertEquals(d['name'], 'param')
-        self.assertEquals(d['interface_name'], 'I1')
-        self.assertEquals(d['interface'], self.I1)
-        self.assertEquals(d['template_arguments'], None)
-    
-    def test_parse_variable_signature_nonexistant_interface(self):
-        d = parsers.parse_variable_signature('IDoesNotExist param')
-        self.assertEquals(d['interface'], None)
-        self.assertEquals(d['interface_name'], 'IDoesNotExist')
-
-    def test_parse_variable_signature_fails_for_invalid_formats(self):
-        self.assertRaises(SignatureParseError, parsers.parse_variable_signature, 'I1 param extra')
-        self.assertRaises(SignatureParseError, parsers.parse_variable_signature, '*I1 param')
-
-    def test_parse_variable_signature_field_template_arguments(self):
-        d = parsers.parse_variable_signature('Visitor<Item=I3> visitor')
-        self.assertEquals(d['interface_name'], 'Visitor')
-        self.assertEquals(d['interface'], self.Visitor)
-        self.assertEquals(d['template_arguments'], '<Item=I3>')
-
-    def test_parse_method_signature(self):
-        d = parsers.parse_method_signature('I3 methodName(I1 a, I2 b)')
-        self.assertEquals(len(d), 3)
-        self.assertEquals(d['name'], 'methodName')
-        self.assertEquals(d['returned'].__class__.__name__, 'Variable')
-        self.assertEquals(d['returned'].interface, self.I3)
-        self.assertEquals(len(d['parameters']), 2)
-        self.assertEquals(d['parameters'][0].interface, self.I1)
-        self.assertEquals(d['parameters'][1].interface, self.I2)
-        self.assertEquals(d['parameters'][0].name, 'a')
-        self.assertEquals(d['parameters'][1].name, 'b')
-
-    def test_parse_method_signature_that_returns_nothing(self):
-        d = parsers.parse_method_signature('methodName()')
-        self.assertEquals(len(d), 3)
-        self.assertEquals(d['name'], 'methodName')
-        self.assertEquals(d['returned'].interface, self.Nothing)
-        self.assertEquals(d['returned'].interface.name, 'Nothing')
-        self.assertEquals(len(d['parameters']), 0)
-
-    def test_parse_method_signature_no_parameters(self):
-        d = parsers.parse_method_signature('I1 methodName()')
-        self.assertEquals(len(d['parameters']), 0)
-
-    def test_parse_method_signature_nothing_returned(self):
-        d = parsers.parse_method_signature('methodName()')
-        self.assertEquals(d['returned'].interface, models.Interface.objects.nothing())
-
-    def test_parse_method_signature_fails_for_invalid_format(self):
-        self.assertRaises(SignatureParseError, parsers.parse_method_signature, 'I1 methodName')
 
 
 class ExpressionTest(test.TestCase):

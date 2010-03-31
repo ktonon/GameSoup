@@ -6,7 +6,14 @@ register = template.Library()
 
 
 @register.inclusion_tag('admin/games/assembler/objects.html')
-def objects(game):
+def assembler_objects(game):
+    '''
+    Render to *admin/games/assembler/objects.html*
+    
+    Usage::
+
+        {% assembler_objects game %}
+    '''
     return {
         'game': game,
         'objects': game.object_set.all(),
@@ -14,7 +21,14 @@ def objects(game):
 
 
 @register.inclusion_tag('admin/games/assembler/canvas.html')
-def canvas(game):
+def assembler_canvas(game):
+    '''
+    Render to *admin/games/assembler/canvas.html*
+    
+    Usage::
+
+        {% assembler_canvas game %}
+    '''
     return {
         'game': game,
         'objects': game.object_set.filter(type__visible=True),
@@ -22,23 +36,30 @@ def canvas(game):
 
 
 @register.inclusion_tag('admin/games/assembler/flow.html')
-def flow(game):
+def assembler_flow(game):
+    '''
+    Render to *admin/games/assembler/flow.html*
+    
+    Usage::
+
+        {% assembler_flow game %}
+    '''
     return {
         'game': game,
     }
 
 
 @register.simple_tag
-def binding(object, parameter):
-    from gamesoup.games.models import TypeParameterBinding
-    try:
-        return TypeParameterBinding.objects.get(instance=object, parameter=parameter)
-    except TypeParameterBinding.DoesNotExist:
-        return ''
-
-
-@register.simple_tag
 def satisfiable_parameter(object, parameter):
+    '''
+    If a parameter is unsatisfiable, returns the word "unsatisfiable".
+    
+    Usage::
+        
+        {% satisfiable_parameter object parameter %}
+    
+    This is meant to be used to produce a CSS class name.
+    '''
     from gamesoup.games.models import Object
     sat = Object.objects.filter(game=object.game, type__implements=parameter.interface).count() > 0
     return not sat and 'unsatisfiable' or ''
@@ -46,6 +67,13 @@ def satisfiable_parameter(object, parameter):
 
 @register.simple_tag
 def set_object_parameters(object):
+    '''
+    Produce JavaScript to initialize an object parameter with an argument.
+    
+    Usage::
+    
+        {% set_object_parameter object %}
+    '''
     result = ''
     for binding in object.parameter_bindings.all():
         w = 'gamesoup.matches.objects[%d]._%s = ' % (object.id, binding.parameter.name)
@@ -83,8 +111,13 @@ class ParameterBindingNode(template.Node):
 @register.tag
 def parameter_binding(parser, token):
     '''
-    Get the parameter binding for the given object.
-        {%% parameter_binding obj param as binding %%}
+    For a given object and parameter load the binding into the context.
+    
+    Usage::
+    
+        {% parameter_binding obj param as binding %}
+    
+    After this call, the variable *binding* with contain the TypeParameterBinding object.
     '''
     try:
         tag_name, obj_varname, param_varname, _as, binding_varname = token.split_contents()

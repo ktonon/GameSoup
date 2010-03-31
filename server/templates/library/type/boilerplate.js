@@ -26,7 +26,7 @@ gamesoup.library.types.{{ type.name }} = Class.create(gamesoup.library.types.Bas
 gamesoup.library.types.{{ type.name }}.addMethods({
     {% for method in methods %}
     /*---------------------------------------->{{ method.interface.name|rjust:"32" }}
-     * {% method_signature_doc method %}
+     * {{ method.signature }}
      * {% code_doc method 1 %}
      */{{ "/* vVv */"|rjust:"72" }}
     {{ method.name }}: function({% for param in method.parameters.all %}{{ param.name }}{% if not forloop.last %}, {% endif %}{% endfor %}) {
@@ -47,28 +47,28 @@ gamesoup.library.types.{{ type.name }}.addMethods({ {% if type.visible %}
      * Extend the DOM and apply styling.
      */{{ "/* vVv */"|rjust:"72" }}
     render: function() {
-        {{ parsed|engine_hook:"render" }}
+        {% engine_hook parsed "render" %}
     },{{ "/* ^A^ */"|rjust:"73" }}{% endif %}{% if type.has_state %}
     
     /*
      *
      */{{ "/* vVv */"|rjust:"72" }}
     stateSchema: function() {
-        {{ parsed|engine_hook:"stateSchema" }}
+        {% engine_hook parsed "stateSchema" %}
     },{{ "/* ^A^ */"|rjust:"73" }}
     
     /*
      *
      */{{ "/* vVv */"|rjust:"72" }}
     initialState: function() {
-        {{ parsed|engine_hook:"initialState" }}
+        {% engine_hook parsed "initialState" %}
     },{{ "/* ^A^ */"|rjust:"73" }}{% endif %}
     
     /*
      * Perform custom initialization.
      */{{ "/* vVv */"|rjust:"72" }}
     register: function() {
-        {{ parsed|engine_hook:"register" }}
+        {% engine_hook parsed "register" %}
     } {{ "/* ^A^ */"|rjust:"73" }}
     
 });

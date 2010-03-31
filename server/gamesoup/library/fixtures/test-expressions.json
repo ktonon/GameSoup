@@ -1,63 +1,10 @@
 [
     {
         "pk": 2, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "", 
-            "name": "item", 
-            "signature": "Item item"
-        }
-    }, 
-    {
-        "pk": 1, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": 2, 
-            "interface_name": "", 
-            "name": "returned", 
-            "signature": "Nothing returned"
-        }
-    }, 
-    {
-        "pk": 4, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "", 
-            "name": "returned", 
-            "signature": "Item returned"
-        }
-    }, 
-    {
-        "pk": 5, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "", 
-            "name": "returned", 
-            "signature": "Over returned"
-        }
-    }, 
-    {
-        "pk": 3, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "", 
-            "name": "visitor", 
-            "signature": "Visitor<Item=Item> visitor"
-        }
-    }, 
-    {
-        "pk": 2, 
         "model": "library.method", 
         "fields": {
             "interface": 8,
-            "parameters": [], 
-            "signature": "call()", 
             "name": "call", 
-            "returned": 1, 
             "description": ""
         }
     }, 
@@ -66,10 +13,7 @@
         "model": "library.method", 
         "fields": {
             "interface": 11,
-            "parameters": [], 
-            "signature": "Over getRandomObject()", 
             "name": "getRandomObject", 
-            "returned": 5, 
             "description": ""
         }
     }, 
@@ -78,10 +22,7 @@
         "model": "library.method", 
         "fields": {
             "interface": 12,
-            "parameters": [], 
-            "signature": "Item instantiate()", 
             "name": "instantiate", 
-            "returned": 4, 
             "description": ""
         }
     }, 
@@ -90,10 +31,7 @@
         "model": "library.method", 
         "fields": {
             "interface": 9,
-            "parameters": [], 
-            "signature": "Item next()", 
             "name": "next", 
-            "returned": 4, 
             "description": ""
         }
     }, 
@@ -102,10 +40,7 @@
         "model": "library.method", 
         "fields": {
             "interface": 13,
-            "parameters": [], 
-            "signature": "Item read()", 
             "name": "read", 
-            "returned": 4, 
             "description": ""
         }
     }, 
@@ -114,10 +49,7 @@
         "model": "library.method", 
         "fields": {
             "interface": 9,
-            "parameters": [], 
-            "signature": "resetIterator()", 
             "name": "resetIterator", 
-            "returned": 1, 
             "description": ""
         }
     }, 
@@ -126,12 +58,7 @@
         "model": "library.method", 
         "fields": {
             "interface": 14,
-            "parameters": [
-                2
-            ], 
-            "signature": "write(Item item)", 
             "name": "write", 
-            "returned": 1, 
             "description": ""
         }
     }, 

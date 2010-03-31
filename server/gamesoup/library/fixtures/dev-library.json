@@ -1,608 +1,156 @@
 [
     {
-        "pk": 32, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Item", 
-            "name": "a", 
-            "interface_expression": "Item", 
-            "signature": "Item a"
-        }
-    }, 
-    {
-        "pk": 36, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Action", 
-            "name": "a", 
-            "interface_expression": "Action", 
-            "signature": "Action a"
-        }
-    }, 
-    {
-        "pk": 42, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Cell", 
-            "name": "a", 
-            "interface_expression": "Cell", 
-            "signature": "Cell a"
-        }
-    }, 
-    {
-        "pk": 10, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Action", 
-            "name": "action", 
-            "interface_expression": "Action", 
-            "signature": "Action action"
-        }
-    }, 
-    {
-        "pk": 33, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Item", 
-            "name": "b", 
-            "interface_expression": "Item", 
-            "signature": "Item b"
-        }
-    }, 
-    {
-        "pk": 37, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Action", 
-            "name": "b", 
-            "interface_expression": "Action", 
-            "signature": "Action b"
-        }
-    }, 
-    {
-        "pk": 43, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Cell", 
-            "name": "b", 
-            "interface_expression": "Cell", 
-            "signature": "Cell b"
-        }
-    }, 
-    {
-        "pk": 5, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Board", 
-            "name": "board", 
-            "interface_expression": "Board", 
-            "signature": "Board board"
-        }
-    }, 
-    {
-        "pk": 41, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Board", 
-            "name": "board", 
-            "interface_expression": "Board<Cell=%(Readable)s<Item=%(String)s>>", 
-            "signature": "Board<Cell=Readable<Item=String>> board"
-        }
-    }, 
-    {
-        "pk": 8, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Integer", 
-            "name": "colCount", 
-            "interface_expression": "Integer", 
-            "signature": "Integer colCount"
-        }
-    }, 
-    {
-        "pk": 29, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Iterable", 
-            "name": "collection", 
-            "interface_expression": "Iterable", 
-            "signature": "Iterable collection"
-        }
-    }, 
-    {
-        "pk": 21, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Receiver", 
-            "name": "destination", 
-            "interface_expression": "Receiver", 
-            "signature": "Receiver destination"
-        }
-    }, 
-    {
-        "pk": 25, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Writable", 
-            "name": "destination", 
-            "interface_expression": "Writable", 
-            "signature": "Writable destination"
-        }
-    }, 
-    {
-        "pk": 11, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "String", 
-            "name": "event", 
-            "interface_expression": "String", 
-            "signature": "String event"
-        }
-    }, 
-    {
-        "pk": 27, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Factory", 
-            "name": "factory", 
-            "interface_expression": "Factory<Item=%(Item)s>", 
-            "signature": "Factory<Item=Item> factory"
-        }
-    }, 
-    {
-        "pk": 28, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Factory", 
-            "name": "factory", 
-            "interface_expression": "Factory", 
-            "signature": "Factory factory"
-        }
-    }, 
-    {
-        "pk": 34, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Any", 
-            "name": "focus", 
-            "interface_expression": "Any", 
-            "signature": "Any focus"
-        }
-    }, 
-    {
-        "pk": 38, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "String", 
-            "name": "invalidMessage", 
-            "interface_expression": "String", 
-            "signature": "String invalidMessage"
-        }
-    }, 
-    {
-        "pk": 20, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Item", 
-            "name": "item", 
-            "interface_expression": "Item", 
-            "signature": "Item item"
-        }
-    }, 
-    {
-        "pk": 23, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "String", 
-            "name": "label", 
-            "interface_expression": "String", 
-            "signature": "String label"
-        }
-    }, 
-    {
-        "pk": 24, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "String", 
-            "name": "message", 
-            "interface_expression": "String", 
-            "signature": "String message"
-        }
-    }, 
-    {
-        "pk": 9, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Any", 
-            "name": "observed", 
-            "interface_expression": "Any", 
-            "signature": "Any observed"
-        }
-    }, 
-    {
-        "pk": 30, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "String", 
-            "name": "param1", 
-            "interface_expression": "String", 
-            "signature": "String param1"
-        }
-    }, 
-    {
-        "pk": 31, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Readable", 
-            "name": "param2", 
-            "interface_expression": "Readable", 
-            "signature": "Readable param2"
-        }
-    }, 
-    {
-        "pk": 6, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Integer", 
-            "name": "radius", 
-            "interface_expression": "Integer", 
-            "signature": "Integer radius"
-        }
-    }, 
-    {
-        "pk": 15, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Item", 
-            "name": "returned", 
-            "interface_expression": "Item", 
-            "signature": "Item returned"
-        }
-    }, 
-    {
-        "pk": 16, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Nothing", 
-            "name": "returned", 
-            "interface_expression": "Nothing", 
-            "signature": "Nothing returned"
-        }
-    }, 
-    {
-        "pk": 17, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Boolean", 
-            "name": "returned", 
-            "interface_expression": "Boolean", 
-            "signature": "Boolean returned"
-        }
-    }, 
-    {
-        "pk": 26, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Over", 
-            "name": "returned", 
-            "interface_expression": "Over", 
-            "signature": "Over returned"
-        }
-    }, 
-    {
-        "pk": 39, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "String", 
-            "name": "returned", 
-            "interface_expression": "String", 
-            "signature": "String returned"
-        }
-    }, 
-    {
-        "pk": 7, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Integer", 
-            "name": "rowCount", 
-            "interface_expression": "Integer", 
-            "signature": "Integer rowCount"
-        }
-    }, 
-    {
-        "pk": 2, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Float", 
-            "name": "scale", 
-            "interface_expression": "Float", 
-            "signature": "Float scale"
-        }
-    }, 
-    {
-        "pk": 12, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "ReadWrite", 
-            "name": "source", 
-            "interface_expression": "ReadWrite", 
-            "signature": "ReadWrite source"
-        }
-    }, 
-    {
-        "pk": 35, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Focusable", 
-            "name": "target", 
-            "interface_expression": "Focusable", 
-            "signature": "Focusable target"
-        }
-    }, 
-    {
-        "pk": 22, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Predicate", 
-            "name": "validator", 
-            "interface_expression": "Predicate", 
-            "signature": "Predicate validator"
-        }
-    }, 
-    {
-        "pk": 3, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "String", 
-            "name": "value", 
-            "interface_expression": "String", 
-            "signature": "String value"
-        }
-    }, 
-    {
-        "pk": 1, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Integer", 
-            "name": "width", 
-            "interface_expression": "Integer", 
-            "signature": "Integer width"
-        }
-    }, 
-    {
-        "pk": 4, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Readable", 
-            "name": "word", 
-            "interface_expression": "Readable", 
-            "signature": "Readable word"
-        }
-    }, 
-    {
-        "pk": 40, 
-        "model": "library.variable", 
-        "fields": {
-            "interface": null, 
-            "interface_name": "Readable", 
-            "name": "word", 
-            "interface_expression": "Readable<Item=%(String)s>", 
-            "signature": "Readable<Item=String> word"
-        }
-    }, 
-    {
         "pk": 5, 
         "model": "library.method", 
         "fields": {
-            "name": "areAdjacent", 
-            "parameters": [
-                32, 
-                42, 
-                33, 
-                43
-            ], 
-            "description": "Are a and b adjacent?", 
-            "signature": "Boolean areAdjacent(Item a, Item b)", 
             "interface": 7, 
-            "returned": 17
+            "return_expression_is_built_in": true, 
+            "name": "areAdjacent", 
+            "return_expression": "Boolean", 
+            "description": "Are a and b adjacent?"
         }
     }, 
     {
         "pk": 1, 
         "model": "library.method", 
         "fields": {
-            "name": "call", 
-            "parameters": [], 
-            "description": "Compute some value.", 
-            "signature": "Item call()", 
             "interface": 10, 
-            "returned": 15
+            "return_expression_is_built_in": false, 
+            "name": "call", 
+            "return_expression": "Item", 
+            "description": "Compute some value."
         }
     }, 
     {
         "pk": 6, 
         "model": "library.method", 
         "fields": {
-            "name": "call", 
-            "parameters": [], 
-            "description": "What is the truth value of this predicate object?", 
-            "signature": "Boolean call()", 
             "interface": 17, 
-            "returned": 17
+            "return_expression_is_built_in": true, 
+            "name": "call", 
+            "return_expression": "Boolean", 
+            "description": "What is the truth value of this predicate object?"
         }
     }, 
     {
         "pk": 4, 
         "model": "library.method", 
         "fields": {
-            "name": "doAction", 
-            "parameters": [], 
-            "description": "Perform the default action of this object.", 
-            "signature": "doAction()", 
             "interface": 16, 
-            "returned": 16
+            "return_expression_is_built_in": true, 
+            "name": "doAction", 
+            "return_expression": "Nothing", 
+            "description": "Perform the default action of this object."
         }
     }, 
     {
         "pk": 13, 
         "model": "library.method", 
         "fields": {
-            "name": "focus", 
-            "parameters": [], 
-            "description": "Give focus to the object. Input messages from the keyboard and mouse will go directly to this object after focus is called.", 
-            "signature": "focus()", 
             "interface": 23, 
-            "returned": 16
+            "return_expression_is_built_in": true, 
+            "name": "focus", 
+            "return_expression": "Nothing", 
+            "description": "Give focus to the object. Input messages from the keyboard and mouse will go directly to this object after focus is called."
         }
     }, 
     {
         "pk": 11, 
         "model": "library.method", 
         "fields": {
-            "name": "getRandomObject", 
-            "parameters": [], 
-            "description": "Return a random object from a distribution", 
-            "signature": "Over getRandomObject()", 
             "interface": 21, 
-            "returned": 26
+            "return_expression_is_built_in": false, 
+            "name": "getRandomObject", 
+            "return_expression": "Over", 
+            "description": "Return a random object from a distribution"
         }
     }, 
     {
         "pk": 12, 
         "model": "library.method", 
         "fields": {
-            "name": "instantiate", 
-            "parameters": [], 
-            "description": "Create an instance of a given type.", 
-            "signature": "Item instantiate()", 
             "interface": 22, 
-            "returned": 15
+            "return_expression_is_built_in": false, 
+            "name": "instantiate", 
+            "return_expression": "Item", 
+            "description": "Create an instance of a given type."
         }
     }, 
     {
         "pk": 3, 
         "model": "library.method", 
         "fields": {
-            "name": "nextInIteration", 
-            "parameters": [], 
-            "description": "Get the next object in the sequence. When the sequence is over, this should return null.", 
-            "signature": "Item nextInIteration()", 
             "interface": 15, 
-            "returned": 15
+            "return_expression_is_built_in": false, 
+            "name": "nextInIteration", 
+            "return_expression": "Item", 
+            "description": "Get the next object in the sequence. When the sequence is over, this should return null."
         }
     }, 
     {
         "pk": 10, 
         "model": "library.method", 
         "fields": {
-            "name": "pop", 
-            "parameters": [], 
-            "description": "Remove the object at the top of the stack and return it.", 
-            "signature": "Item pop()", 
             "interface": 3, 
-            "returned": 15
+            "return_expression_is_built_in": false, 
+            "name": "pop", 
+            "return_expression": "Item", 
+            "description": "Remove the object at the top of the stack and return it."
         }
     }, 
     {
         "pk": 9, 
         "model": "library.method", 
         "fields": {
-            "name": "push", 
-            "parameters": [
-                20
-            ], 
-            "description": "Push an object on top of the stack.", 
-            "signature": "push(Item item)", 
             "interface": 3, 
-            "returned": 16
+            "return_expression_is_built_in": true, 
+            "name": "push", 
+            "return_expression": "Nothing", 
+            "description": "Push an object on top of the stack."
         }
     }, 
     {
         "pk": 7, 
         "model": "library.method", 
         "fields": {
-            "name": "read", 
-            "parameters": [], 
-            "description": "Read this content of this object.", 
-            "signature": "Item read()", 
             "interface": 11, 
-            "returned": 15
+            "return_expression_is_built_in": false, 
+            "name": "read", 
+            "return_expression": "Item", 
+            "description": "Read this content of this object."
         }
     }, 
     {
         "pk": 14, 
         "model": "library.method", 
         "fields": {
-            "name": "reason", 
-            "parameters": [], 
-            "description": "What was the reason for the last answer this predicate gave?", 
-            "signature": "String reason()", 
             "interface": 17, 
-            "returned": 39
+            "return_expression_is_built_in": true, 
+            "name": "reason", 
+            "return_expression": "String", 
+            "description": "What was the reason for the last answer this predicate gave?"
         }
     }, 
     {
         "pk": 2, 
         "model": "library.method", 
         "fields": {
-            "name": "resetIteration", 
-            "parameters": [], 
-            "description": "Reset the iteraction. The next call to nextInIteration should be the first in the sequence.", 
-            "signature": "resetIteration()", 
             "interface": 15, 
-            "returned": 16
+            "return_expression_is_built_in": true, 
+            "name": "resetIteration", 
+            "return_expression": "Nothing", 
+            "description": "Reset the iteraction. The next call to nextInIteration should be the first in the sequence."
         }
     }, 
     {
         "pk": 8, 
         "model": "library.method", 
         "fields": {
-            "name": "write", 
-            "parameters": [
-                20
-            ], 
-            "description": "Write a value to the content of this object.", 
-            "signature": "write(Item item)", 
             "interface": 12, 
-            "returned": 16
+            "return_expression_is_built_in": true, 
+            "name": "write", 
+            "return_expression": "Nothing", 
+            "description": "Write a value to the content of this object."
         }
     }, 
     {
@@ -963,7 +511,7 @@
                 7, 
                 15
             ], 
-            "code": "/*\r\n * Type: SquareGrid\r\n * A board arranged in rows and columns.\r\n */\r\ngamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 BUILT-INS                                 \r\n// this._colCount                                                       Integer\r\n// this._rowCount                                                       Integer\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SquareGrid.addMethods({\r\n    \r\n    /*---------------------------------------->                           Board\r\n     * Boolean areAdjacent(Foo a, Foo b)\r\n     * \r\n     * Are a and b adjacent?\r\n     */                                                               /* vVv */\r\n    areAdjacent: function(a, a, b, b) {\r\n        \r\n    },                                                                /* ^A^ */\r\n\r\n    /*---------------------------------------->                        Iterable\r\n     * Foo nextInIteration()\r\n     * \r\n     * Get the next object in the sequence. When the sequence is over, this should return null.\r\n     */                                                               /* vVv */\r\n    nextInIteration: function() {\r\n        var cell = this._cells[this._iteratorIndex];\r\n        this._iteratorIndex++;\r\n        return cell;\r\n    },                                                                /* ^A^ */\r\n\r\n    /*---------------------------------------->                        Iterable\r\n     * Nothing resetIteration()\r\n     * \r\n     * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.\r\n     */                                                               /* vVv */\r\n    resetIteration: function() {\r\n        this._iteratorIndex = 0;\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SquareGrid.addMethods({ \r\n    \r\n    /*\r\n     * Extend the DOM and apply styling.\r\n     */                                                               /* vVv */\r\n    render: function() {\r\n        this._node.insert({bottom: '<div class=\"inner-container\"></div>'});\r\n        var container = this._node.down('.inner-container');\r\n        var t = new Template('<div class=\"col-#{i} row-#{j} cell\" style=\"position: absolute; left: #{left}px; top: #{top}px; width: #{width}px; height: #{height}px;\"></div>')\r\n        var c = {\r\n            left: 0,\r\n            top: 0,\r\n            width: (this._width / this._colCount).round() - 2,\r\n            height: (this._height / this._rowCount).round() - 2\r\n        };\r\n        for (c.i=0; c.i<this._colCount; c.i++) {\r\n            c.top = 0;\r\n            for (c.j=0; c.j<this._rowCount; c.j++) {\r\n                container.insert({bottom: t.evaluate(c)});\r\n                c.top += c.height + 2;\r\n            }\r\n            c.left += c.width + 2;\r\n        }\r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     *\r\n     */                                                               /* vVv */\r\n    stateSchema: function() {\r\n        \r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     *\r\n     */                                                               /* vVv */\r\n    initialState: function() {\r\n        \r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        this._cells = $A();\r\n        this._factory = new gamesoup.library.types.CellFactory();\r\n        var t = new Template('.col-#{i}.row-#{j}');\r\n        var c = {};\r\n        for (c.i=0; c.i<this._colCount; c.i++) {\r\n            for (c.j=0; c.j<this._rowCount; c.j++) {\r\n                var cell = this._factory.instantiate();\r\n                var cellContainerNode = this._node.down(t.evaluate(c));\r\n                cellContainerNode.insert({bottom: cell._node});\r\n                this._cells.push(cell);\r\n            }\r\n        }\r\n        this.resetIteration();\r\n    }                                                                 /* ^A^ */\r\n    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SquareGrid.addMethods({\r\n    // Helper methods go here...\r\n});", 
+            "code": "/*\r\n * Type: SquareGrid\r\n * A board arranged in rows and columns.\r\n */\r\ngamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 BUILT-INS                                 \r\n// this._colCount                                                       Integer\r\n// this._rowCount                                                       Integer\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SquareGrid.addMethods({\r\n    \r\n    /*---------------------------------------->                           Board\r\n     * areAdjacent(a : Item ; b : Item) : Boolean\r\n     * \r\n     * Are a and b adjacent?\r\n     */                                                               /* vVv */\r\n    areAdjacent: function(a, b) {\r\n        \r\n    },                                                                /* ^A^ */\r\n\r\n    /*---------------------------------------->                        Iterable\r\n     * nextInIteration() : Item\r\n     * \r\n     * Get the next object in the sequence. When the sequence is over, this should return null.\r\n     */                                                               /* vVv */\r\n    nextInIteration: function() {\r\n        var cell = this._cells[this._iteratorIndex];\r\n        this._iteratorIndex++;\r\n        return cell;\r\n    },                                                                /* ^A^ */\r\n\r\n    /*---------------------------------------->                        Iterable\r\n     * resetIteration()\r\n     * \r\n     * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.\r\n     */                                                               /* vVv */\r\n    resetIteration: function() {\r\n        this._iteratorIndex = 0;\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SquareGrid.addMethods({ \r\n    \r\n    /*\r\n     * Extend the DOM and apply styling.\r\n     */                                                               /* vVv */\r\n    render: function() {\r\n        this._node.insert({bottom: '<div class=\"inner-container\"></div>'});\r\n        var container = this._node.down('.inner-container');\r\n        var t = new Template('<div class=\"col-#{i} row-#{j} cell\" style=\"position: absolute; left: #{left}px; top: #{top}px; width: #{width}px; height: #{height}px;\"></div>')\r\n        var c = {\r\n            left: 0,\r\n            top: 0,\r\n            width: (this._width / this._colCount).round() - 2,\r\n            height: (this._height / this._rowCount).round() - 2\r\n        };\r\n        for (c.i=0; c.i<this._colCount; c.i++) {\r\n            c.top = 0;\r\n            for (c.j=0; c.j<this._rowCount; c.j++) {\r\n                container.insert({bottom: t.evaluate(c)});\r\n                c.top += c.height + 2;\r\n            }\r\n            c.left += c.width + 2;\r\n        }\r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     *\r\n     */                                                               /* vVv */\r\n    stateSchema: function() {\r\n        \r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     *\r\n     */                                                               /* vVv */\r\n    initialState: function() {\r\n        \r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        this._cells = $A();\r\n        this._factory = new gamesoup.library.types.CellFactory();\r\n        var t = new Template('.col-#{i}.row-#{j}');\r\n        var c = {};\r\n        for (c.i=0; c.i<this._colCount; c.i++) {\r\n            for (c.j=0; c.j<this._rowCount; c.j++) {\r\n                var cell = this._factory.instantiate();\r\n                var cellContainerNode = this._node.down(t.evaluate(c));\r\n                cellContainerNode.insert({bottom: cell._node});\r\n                this._cells.push(cell);\r\n            }\r\n        }\r\n        this.resetIteration();\r\n    }                                                                 /* ^A^ */\r\n    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SquareGrid.addMethods({\r\n    // Helper methods go here...\r\n});", 
             "name": "SquareGrid", 
             "visible": true, 
             "has_state": true, 
@@ -1291,6 +839,50 @@
             "is_built_in": false, 
             "expression": "Readable<Item=String>", 
             "name": "word"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.methodparameter", 
+        "fields": {
+            "interfaces": [], 
+            "of_method": 5, 
+            "is_built_in": false, 
+            "expression": "Item", 
+            "name": "a"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.methodparameter", 
+        "fields": {
+            "interfaces": [], 
+            "of_method": 5, 
+            "is_built_in": false, 
+            "expression": "Item", 
+            "name": "b"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "library.methodparameter", 
+        "fields": {
+            "interfaces": [], 
+            "of_method": 9, 
+            "is_built_in": false, 
+            "expression": "Item", 
+            "name": "item"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "library.methodparameter", 
+        "fields": {
+            "interfaces": [], 
+            "of_method": 8, 
+            "is_built_in": false, 
+            "expression": "Item", 
+            "name": "item"
         }
     }, 
     {

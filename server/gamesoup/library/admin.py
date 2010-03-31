@@ -2,19 +2,24 @@ from django.contrib import admin
 from models import *
 
 
+class MethodParameterInline(admin.TabularInline):
+    model = MethodParameter
+    fields = ('name', 'expression')
+    extra = 3
 class MethodAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('interface', 'signature', 'description',)}),
+        (None, {'fields': ('interface', 'name', 'return_expression', 'description')}),
         )
-    list_display = ('name', 'signature', 'interface')
-    list_filter = ('interface',)
+    list_display = ('get_signature', 'interface')
     search_fields = ('name', 'returned__interface__name', 'parameters__interface__name', 'interface__name')
+    raw_id_fields = ('interface',)
+    inlines = (MethodParameterInline,)
 admin.site.register(Method, MethodAdmin)
 
 
 class MethodInline(admin.StackedInline):
     model = Method
-    fields = ('signature', 'description')
+    fields = ('name',)
     extra = 1
 class InterfaceTemplateParameterInline(admin.TabularInline):
     model = InterfaceTemplateParameter
@@ -65,12 +70,3 @@ class TypeAdmin(admin.ModelAdmin):
             'js/gamesoup/library/template-parameter-binding.js',
             )
 admin.site.register(Type, TypeAdmin)
-
-
-# class VariableAdmin(admin.ModelAdmin):
-#     fieldsets = (
-#         (None, {'fields': ('signature',)}),
-#         )
-#     list_display = ('name', 'interface')
-#     search_fields = ('name', 'interface__name')
-# admin.site.register(Variable, VariableAdmin)

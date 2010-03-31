@@ -143,6 +143,21 @@
         }
     }, 
     {
+        "pk": 16, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Reset button", 
+            "satisfied": true, 
+            "height": 2, 
+            "width": 3, 
+            "game": 1, 
+            "y": 0, 
+            "x": 30, 
+            "type": 5, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 5, 
         "model": "games.object", 
         "fields": {
@@ -390,6 +405,26 @@
             "object_argument": 3, 
             "parameter": 8, 
             "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 16, 
+            "object_argument": 12, 
+            "parameter": 3, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 16, 
+            "object_argument": null, 
+            "parameter": 4, 
+            "built_in_argument": "Reset"
         }
     }
 ]

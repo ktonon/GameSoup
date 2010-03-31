@@ -30,6 +30,7 @@ def show_graph(request, graph_type, format):
 @staff_member_required
 def models_graph(request, format):
     g = yapgvb.Digraph('Models')
+    # g.rankdir = 'LR'
     engine = request.GET.get('engine', 'dot')
     g.layout(getattr(yapgvb.engines, engine))
     kwargs = {

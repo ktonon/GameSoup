@@ -14,7 +14,6 @@ from alphacabbage.django.choices import *
 from gamesoup.library.errors import *
 from gamesoup.library.fields import *
 from gamesoup.library.managers import *
-from gamesoup.library.parsers import *
 from gamesoup.library.code import TypeCode
 
 
@@ -23,14 +22,11 @@ class Method(models.Model):
     Method signature.
     '''
     interface = models.ForeignKey('Interface', related_name='methods')
-    name = models.CharField(max_length=200, blank=True, editable=False)
+    name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    parameters = models.ManyToManyField('Variable', related_name='parameter_of_method', blank=True, editable=False)
-    returned = models.ForeignKey('Variable', related_name='returned_from_method', blank=True, editable=False)
-    signature = SignatureField(parse_method_signature, unique=True)
+    return_expression = InterfaceExpressionField('Return', default='Nothing')
+    return_expression_is_built_in = models.BooleanField()
     # parameters -- See MethodParameter#of_method
-
-    objects = SignatureManager()
 
     class Meta:
         ordering = ['name']
@@ -38,19 +34,26 @@ class Method(models.Model):
     def __unicode__(self):
         return self.signature
     
+    def get_signature(self):
+        w = u'%s(%s)' % (self.name, ' ; '.join(['%s : %s' % (param.name, param.expression) for param in self.parameters.all()]))
+        if self.return_expression != 'Nothing':
+            w += ' : %s' % self.return_expression
+        return w
+    get_signature.short_description = 'Signature'
+    signature = property(get_signature)
+    
+    @classmethod
+    def reset(cls):
+        for method in cls.objects.all():
+            method.save()
+        
     @staticmethod
     def pre_save(sender, instance, **kwargs):
-        d = parse_method_signature(instance.signature)
-        instance.name = d['name']
-        instance.returned = d['returned']
-
-    @staticmethod
-    def post_save(sender, instance, **kwargs):
-        d = parse_method_signature(instance.signature)
-        instance.parameters.add(*d['parameters'])
+        from gamesoup.library.templation import InterfaceExpression
+        exp = InterfaceExpression(instance.return_expression)
+        instance.return_expression_is_built_in = exp.is_built_in
 
 pre_save.connect(Method.pre_save, sender=Method)
-post_save.connect(Method.post_save, sender=Method)
 
 
 class Interface(models.Model):
@@ -70,6 +73,9 @@ class Interface(models.Model):
     def __unicode__(self):
         qs = self.template_parameters.all()
         return self.name + (qs and u'<%s>' % ','.join([u'%s=%s' % (tp.name, tp.weakest) for tp in qs]) or u'')
+
+    def is_nothing(self):
+        return self == self.__class__.objects.nothing()
 
     def implemented_by_short(self):
         return ', '.join([type.name for type in self.implemented_by.all()])
@@ -149,7 +155,6 @@ class Parameter(models.Model):
     name = IdentifierField(unique=False)
     expression = InterfaceExpressionField()
     is_built_in = models.BooleanField(editable=False)
-    interfaces = models.ManyToManyField(Interface, related_name='used_in_parameter', editable=False)
     
     class Meta:
         ordering = ['name']
@@ -166,6 +171,13 @@ class Parameter(models.Model):
     
     @staticmethod
     def pre_save(sender, instance, **kwargs):
+        from gamesoup.library.templation import InterfaceExpression
+        exp = InterfaceExpression(instance.expression)
+        instance.is_built_in = exp.is_built_in
+
+    @staticmethod
+    def post_save(sender, instance, **kwargs):
+        from gamesoup.library.templation import InterfaceExpression
         exp = InterfaceExpression(instance.expression)
         instance.is_built_in = exp.is_built_in
         instance.interfaces.clear()
@@ -176,42 +188,17 @@ class Parameter(models.Model):
 class TypeParameter(Parameter):
     of_type = models.ForeignKey(Type, related_name='parameters')
     of = property(lambda self: self.of_type)
+    interfaces = models.ManyToManyField(Interface, related_name='used_in_type_parameter', editable=False)
 pre_save.connect(Parameter.pre_save, sender=TypeParameter)
+post_save.connect(Parameter.post_save, sender=TypeParameter)
 
 
-# class MethodParameter(Parameter):
-#     of_method = models.ForeignKey(Method)#, related_name='parameters')
-#     of = property(lambda self: self.of_method)
-# pre_save.connect(Parameter.pre_save, sender=MethodParameter)
-
-    
-class Variable(models.Model):
-    '''
-    A variable declaration.
-    '''
-    name = models.CharField(max_length=100, blank=True, editable=False)
-    interface_name = models.CharField(max_length=100, blank=True, editable=False)
-    interface = models.ForeignKey('Interface', blank=True, editable=False, null=True)
-    interface_expression = InterfaceExpressionField(editable=False)
-    signature = SignatureField(parse_variable_signature, unique=True)
-
-    class Meta:
-        ordering = ['name']
-
-    objects = SignatureManager()
-    
-    def __unicode__(self):
-        return self.signature
-        
-    @staticmethod
-    def pre_save(sender, instance, **kwargs):
-        d = parse_variable_signature(instance.signature)
-        instance.name = d['name']
-        instance.interface = d['interface']
-        instance.interface_name = d['interface_name']
-        instance.interface_expression = instance.interface_name + (d['template_arguments'] or '')
-
-pre_save.connect(Variable.pre_save, sender=Variable)
+class MethodParameter(Parameter):
+    of_method = models.ForeignKey(Method, related_name='parameters')
+    of = property(lambda self: self.of_method)
+    interfaces = models.ManyToManyField(Interface, related_name='used_in_method_parameter', editable=False)
+pre_save.connect(Parameter.pre_save, sender=MethodParameter)
+post_save.connect(Parameter.post_save, sender=MethodParameter)
 
 
 ###############################################################################
