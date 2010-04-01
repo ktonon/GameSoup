@@ -124,7 +124,8 @@ class Type(models.Model):
         c = Context({
             'type': self,
             'built_ins': self.parameters.filter(is_built_in=True),
-            'references': self.parameters.filter(is_built_in=False),
+            'references': self.parameters.filter(is_built_in=False, is_factory=False),
+            'factories': self.parameters.filter(is_built_in=False, is_factory=True),
             'has_parameters': self.parameters.count() != 0,
             'methods': Method.objects.filter(interface__implemented_by=self).distinct(),
             'parsed': parsed,
@@ -156,7 +157,9 @@ class Parameter(models.Model):
 
     def get_interface(self):
         if self.interfaces.count() > 1:
-            raise Exception('There are more than one interface for the parameter %s' % self.name)
+            from traceback import print_stack
+            print_stack()
+            raise Exception('There are more than one interfaces for the parameter %s' % self.name)
         return self.interfaces.all()[0]
     interface = property(get_interface)
     
@@ -177,7 +180,7 @@ class Parameter(models.Model):
 
 class TypeParameter(Parameter):
     of_type = models.ForeignKey(Type, related_name='parameters')
-    of = property(lambda self: self.of_type)
+    is_factory = models.BooleanField(default=False)
     interfaces = models.ManyToManyField(Interface, related_name='used_in_type_parameter', editable=False)
 pre_save.connect(Parameter.pre_save, sender=TypeParameter)
 post_save.connect(Parameter.post_save, sender=TypeParameter)
@@ -185,7 +188,6 @@ post_save.connect(Parameter.post_save, sender=TypeParameter)
 
 class MethodParameter(Parameter):
     of_method = models.ForeignKey(Method, related_name='parameters')
-    of = property(lambda self: self.of_method)
     interfaces = models.ManyToManyField(Interface, related_name='used_in_method_parameter', editable=False)
 pre_save.connect(Parameter.pre_save, sender=MethodParameter)
 post_save.connect(Parameter.post_save, sender=MethodParameter)

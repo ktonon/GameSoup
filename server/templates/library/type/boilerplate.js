@@ -18,7 +18,10 @@ gamesoup.library.types.{{ type.name }} = Class.create(gamesoup.library.types.Bas
 // this._{{ param.name|ljust:"25" }} {{ param.expression|safe|rjust:"44" }}{% endfor %}{% endif %}{% if references %}
 //{{ "REFERENCES"|center:"75" }}
 {% for param in references %}// this._{{ param.name|ljust:"25" }} {{ param.expression|safe|rjust:"44" }}
-{% endfor %}{% endif %}{% endif %}{% if methods %}
+{% endfor %}{% endif %}{% endif %}{% if factories %}
+//{{ "FACTORIES"|center:"75" }}
+{% for factory in factories %}// this._{{ factory.name|ljust:"25" }} {{ factory.expression|safe|rjust:"44" }}
+{% endfor %}{% endif %}{% if methods %}
 
 /*****************************************************************************/
 /*{{ "Interface Methods"|center:"75" }}*/

@@ -10,6 +10,9 @@ gamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType
 //                                 BUILT-INS                                 
 // this._colCount                                                       Integer
 // this._rowCount                                                       Integer
+//                                 FACTORIES                                 
+// this._cellType                                         [Readable & Writable]
+
 
 /*****************************************************************************/
 /*                             Interface Methods                             */
@@ -17,7 +20,7 @@ gamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType
 gamesoup.library.types.SquareGrid.addMethods({
     
     /*---------------------------------------->                           Board
-     * areAdjacent(a : Item ; b : Item) : Boolean
+     * areAdjacent(a : cell ; b : cell) : Boolean
      * 
      * Are a and b adjacent?
      */                                                               /* vVv */
@@ -26,7 +29,7 @@ gamesoup.library.types.SquareGrid.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Iterable
-     * nextInIteration() : Item
+     * nextInIteration() : item
      * 
      * Get the next object in the sequence. When the sequence is over, this should return null.
      */                                                               /* vVv */
@@ -96,18 +99,7 @@ gamesoup.library.types.SquareGrid.addMethods({
      * Perform custom initialization.
      */                                                               /* vVv */
     register: function() {
-        this._cells = $A();
-        this._factory = new gamesoup.library.types.CellFactory();
-        var t = new Template('.col-#{i}.row-#{j}');
-        var c = {};
-        for (c.i=0; c.i<this._colCount; c.i++) {
-            for (c.j=0; c.j<this._rowCount; c.j++) {
-                var cell = this._factory.instantiate();
-                var cellContainerNode = this._node.down(t.evaluate(c));
-                cellContainerNode.insert({bottom: cell._node});
-                this._cells.push(cell);
-            }
-        }
+        this._createCells();
         this.resetIteration();
     }                                                                 /* ^A^ */
     
@@ -118,5 +110,23 @@ gamesoup.library.types.SquareGrid.addMethods({
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
 gamesoup.library.types.SquareGrid.addMethods({
-    // Helper methods go here...
+    _createCells: function() {
+        this._cells = $A();
+        var t = new Template('.col-#{i}.row-#{j}');
+        var c = {};
+        for (c.i=0; c.i<this._colCount; c.i++) {
+            for (c.j=0; c.j<this._rowCount; c.j++) {
+                var cell = this._instantiateCell();
+                var cellContainerNode = this._node.down(t.evaluate(c));
+                cellContainerNode.insert({bottom: cell._node});
+                this._cells.push(cell);
+            }
+        }        
+    },
+    _instantiateCell: function() {
+        var cell = new this._cellType();
+        cell.createDOM();
+        cell.register();
+        return cell;        
+    }
 });

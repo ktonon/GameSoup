@@ -15,7 +15,7 @@
     <fieldset class="module aligned">
         {% for param in built_ins %}
         {% parameter_binding obj param as binding %}
-        <div class="form-row built-in" interface="{{ param.interface.name }}" name="{{ param.name }}" parameterID="{{ param.id }}" value="{{ binding }}"></div>
+        <div class="form-row built-in" interface="{{ param.expression }}" name="{{ param.name }}" parameterID="{{ param.id }}" value="{{ binding }}"></div>
         {% endfor %}
     </fieldset>        
     {% endif %}
@@ -24,7 +24,7 @@
     <fieldset class="module aligned">
         {% for param in refs %}
         {% parameter_binding obj param as binding %}
-        <div class="form-row ref {% satisfiable_parameter obj param %}" interfaceID="{{ param.interface.id }}" name="{{ param.name }}" parameterID="{{ param.id }}" boundTo="{{ binding }}"></div>
+        <div class="form-row ref {% satisfiable_parameter obj param %}" name="{{ param.name }}" parameterID="{{ param.id }}" boundTo="{{ binding }}"></div>
         {% endfor %}
     </fieldset>        
     {% endif %}

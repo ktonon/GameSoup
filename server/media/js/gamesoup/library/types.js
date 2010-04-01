@@ -20,6 +20,9 @@ mod.BaseType = Class.create({
     },
     observe: function(eventName, action) {
         this._node.observe(eventName, action);
+    },
+    getNode: function() {
+        return this._node;
     }
 });
 

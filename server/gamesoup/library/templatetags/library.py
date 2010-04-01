@@ -67,8 +67,11 @@ class GetObjectNode(template.Node):
         self.varname = varname
         self.model = model
     def render(self, context):
-        id = self.id_var.resolve(context)
-        context[self.varname] = self.model.objects.get(pk=id)
+        try:
+            id = self.id_var.resolve(context)
+            context[self.varname] = self.model.objects.get(pk=id)
+        except Exception:
+            pass
         return u''
 
 def get_object(parser, token, model):

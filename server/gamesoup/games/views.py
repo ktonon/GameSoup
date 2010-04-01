@@ -1,5 +1,6 @@
 import json
 from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Q
 from django.http import *
 from django.shortcuts import *
 from django.template import Context
@@ -35,7 +36,7 @@ def game_flow(request, game_id, format):
             else:
                 n.fillcolor = '#99ccff'
         nodes[obj.id] = n
-    for ref in TypeParameterBinding.objects.filter(instance__game=game, parameter__is_built_in=False):
+    for ref in TypeParameterBinding.objects.filter(instance__game=game, parameter__is_built_in=False, parameter__is_factory=False):
         e = g.add_edge(nodes[ref.instance.id], nodes[ref.object_argument.id])
         e.label = ref.parameter.name
         e.color = 'gray'
@@ -70,9 +71,11 @@ def game_flow(request, game_id, format):
 def game_code(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     t = get_template('games/game/code.js')
+    query = Q(instances__game=game) | Q(bound_to__instance__game=game)
+    types = Type.objects.filter(query).distinct().order_by('name')
     c = Context({
         'game': game,
-        'types': Type.objects.filter(instances__game=game).distinct().order_by('name'),
+        'types': types,
         'objects': game.object_set.all(),
         'stateful_objects': game.object_set.filter(type__has_state=True),
         'visible_objects': game.object_set.filter(type__visible=True),
@@ -114,14 +117,16 @@ def search_required_by(request):
     from django.db.models import Q
     obj_ids = map(int, filter(bool, request.POST['object_ids'].split(',')))
     if obj_ids:
-        qs = Type.objects.all()
+        type_ids = set()
         for obj_id in obj_ids:
             obj = Object.objects.get(pk=obj_id)
-            query = Q()
             for param in obj.type.parameters.all():
-                query = query | Q(implements=param.interface)
-            qs = qs.filter(query)
-        type_ids = [t.id for t in qs]
+                qs = Type.objects.all()
+                expr = InterfaceExpression.parse(param.expression)
+                for interface in expr.interfaces:
+                    qs = qs.filter(implements=interface)
+                type_ids |= set([t.id for t in qs])
+        type_ids = list(type_ids)
     else:
         type_ids = []
     response = HttpResponse(mimetype='application/json')
@@ -256,7 +261,7 @@ def save_parameter_binding(request, game_id, object_id, parameter_id):
         binding = obj.parameter_bindings.get(parameter=param)
     except TypeParameterBinding.DoesNotExist:
         binding = TypeParameterBinding(instance=obj, parameter=param)
-    if param.interface.is_built_in:
+    if param.is_built_in:
         binding.built_in_argument = x
     else:
         binding.object_argument = Object.objects.get(pk=x)
@@ -271,7 +276,10 @@ def candidate_refs(request, game_id, object_id, parameter_id):
         param = obj.type.parameters.get(pk=parameter_id)
     except TypeParameter.DoesNotExist:
         raise Http404()
-    qs = game.object_set.filter(type__implements=param.interface)
+    qs = game.object_set.all()
+    expr = InterfaceExpression.parse(param.expression)
+    for interface in expr.interfaces:
+        qs = qs.filter(type__implements=interface)
     response = HttpResponse(mimetype='application/json')
     response.write(json.dumps(['object-%d' % obj.id for obj in qs]))
     return response

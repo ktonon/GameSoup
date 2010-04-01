@@ -1,5 +1,7 @@
 import json
 from django import template
+from gamesoup.library.expressions.semantics import InterfaceExpression
+from gamesoup.library.templatetags.library import get_object as _get_object
 
 
 register = template.Library()
@@ -61,7 +63,11 @@ def satisfiable_parameter(object, parameter):
     This is meant to be used to produce a CSS class name.
     '''
     from gamesoup.games.models import Object
-    sat = Object.objects.filter(game=object.game, type__implements=parameter.interface).count() > 0
+    qs = Object.objects.filter(game=object.game)
+    expr = InterfaceExpression.parse(parameter.expression)
+    for interface in expr.interfaces:
+        qs = qs.filter(type__implements=interface)
+    sat = qs.count() > 0
     return not sat and 'unsatisfiable' or ''
 
 
@@ -80,7 +86,10 @@ def set_object_parameters(object):
         if binding.parameter.is_built_in:
             w += json.dumps(_built_in[binding.parameter.interface.name](binding.built_in_argument))
         else:
-            w += 'gamesoup.matches.objects[%d]' % binding.object_argument.id
+            if binding.parameter.is_factory:
+                w += 'gamesoup.library.types.%s' % binding.type_argument.name
+            else:
+                w += 'gamesoup.matches.objects[%d]' % binding.object_argument.id
         result += '%s;\n' % w
     return result
 
@@ -124,3 +133,37 @@ def parameter_binding(parser, token):
     except ValueError:
         raise template.TemplateSyntaxError, "Invalid usage"
     return ParameterBindingNode(obj_varname, param_varname, binding_varname)
+
+
+###############################################################################
+# FOR LOADING OBJECTS INTO admin/change_form.html TEMPLATES
+
+
+@register.tag
+def get_game(parser, token):
+    '''
+    Load a Game object into the context given a primary key.
+
+    Usage::
+
+        {% get_interface for object_id as varname %}
+
+    after this call *varname* will contain the Game object.
+    '''
+    from gamesoup.games.models import Game
+    return _get_object(parser, token, Game)
+
+
+@register.tag
+def get_object(parser, token):
+    '''
+    Load an Object object into the context given a primary key.
+
+    Usage::
+
+        {% get_interface for object_id as varname %}
+
+    after this call *varname* will contain the Object object.
+    '''
+    from gamesoup.games.models import Object
+    return _get_object(parser, token, Object)

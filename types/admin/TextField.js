@@ -10,7 +10,7 @@ gamesoup.library.types.TextField = Class.create(gamesoup.library.types.BaseType)
 gamesoup.library.types.TextField.addMethods({
     
     /*---------------------------------------->                        Readable
-     * read() : Item
+     * read() : item
      * 
      * Read this content of this object.
      */                                                               /* vVv */
@@ -19,7 +19,7 @@ gamesoup.library.types.TextField.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Writable
-     * write(item : Item)
+     * write(item : item)
      * 
      * Write a value to the content of this object.
      */                                                               /* vVv */

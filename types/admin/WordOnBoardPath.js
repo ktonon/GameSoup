@@ -8,8 +8,8 @@ gamesoup.library.types.WordOnBoardPath = Class.create(gamesoup.library.types.Bas
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._board                                Board<Cell=Readable<Item=String>>
-// this._word                                             Readable<Item=String>
+// this._board                                               Board<item=String>
+// this._word                                             Readable<item=String>
 
 
 /*****************************************************************************/
@@ -56,8 +56,8 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
      * Perform custom initialization.
      */                                                               /* vVv */
     register: function() {
-        this._failReason = new Template("The word #{word} was not on the board");
-        this._successReason = new Template("The word #{word} was found!");
+        this._failReason = new Template("The word '#{word}' was not on the board");
+        this._successReason = new Template("The word '#{word}' was found!");
         this._lastReason = "";
     }                                                                 /* ^A^ */
     

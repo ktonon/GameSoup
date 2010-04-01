@@ -54,8 +54,8 @@ class Object(models.Model):
     An instance of a type.
     '''
     name = models.CharField(max_length=50, blank=True)
-    game = models.ForeignKey(Game)
-    type = models.ForeignKey(Type, related_name='instances')
+    game = models.ForeignKey(Game, editable=False)
+    type = models.ForeignKey(Type, related_name='instances', editable=False)
     x = models.IntegerField(default=0)
     y = models.IntegerField(default=0)
     width = models.IntegerField(default=5)
@@ -144,15 +144,41 @@ class TypeParameterBinding(models.Model):
     # Only one of the following 2 fields will be set depending on the nature of parameter.
     object_argument = models.ForeignKey('Object', blank=True, null=True, related_name='bound_to')
     built_in_argument = models.TextField(blank=True)
+    type_argument = models.ForeignKey(Type, blank=True, null=True, related_name='bound_to')
 
     def __unicode__(self):
         return unicode(self.get_argument())
-        
+    
+    class Meta:
+        ordering = ('parameter',)
+
+    def get_kind(self):
+        if self.parameter.is_built_in:
+            return 'built-in'
+        else:
+            if self.parameter.is_factory:
+                return 'factory'
+            else:
+                return 'reference'
+
     def get_argument(self):
-        if self.parameter.interface.is_built_in:
+        if self.parameter.is_built_in:
             return self.built_in_argument
         else:
-            return '%d' % self.object_argument.id
+            if self.parameter.is_factory:
+                return '%d' % self.type_argument.id
+            else:
+                return '%d' % self.object_argument.id
+
+    def get_argument_link(self):
+        if self.parameter.is_built_in:
+            return self.built_in_argument
+        else:
+            if self.parameter.is_factory:
+                return '<a href="%s">%s</a>' % (reverse('admin:library_type_change', args=[self.type_argument.id]), self.type_argument)
+            else:
+                return '<a href="%s">%s</a>' % (reverse('admin:games_object_change', args=[self.object_argument.id]), self.object_argument)
+
 
 post_save.connect(Object.update_cache, sender=TypeParameterBinding)
 post_delete.connect(Object.update_cache, sender=TypeParameterBinding)

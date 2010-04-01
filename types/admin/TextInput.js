@@ -9,6 +9,15 @@ gamesoup.library.types.TextInput = Class.create(gamesoup.library.types.BaseType)
 /*****************************************************************************/
 gamesoup.library.types.TextInput.addMethods({
     
+    /*---------------------------------------->                       Clearable
+     * clear()
+     * 
+     * Clear the content of this object.
+     */                                                               /* vVv */
+    clear: function() {
+        this._inputNode.setValue('');
+    },                                                                /* ^A^ */
+
     /*---------------------------------------->                       Focusable
      * focus()
      * 
@@ -19,7 +28,7 @@ gamesoup.library.types.TextInput.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Readable
-     * read() : Item
+     * read() : item
      * 
      * Read this content of this object.
      */                                                               /* vVv */
@@ -28,12 +37,12 @@ gamesoup.library.types.TextInput.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Writable
-     * write(item : Item)
+     * write(item : item)
      * 
      * Write a value to the content of this object.
      */                                                               /* vVv */
     write: function(item) {
-        this._inputNode.setValue();
+        this._inputNode.setValue(item);
     }                                                                 /* ^A^ */
 
 });

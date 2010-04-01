@@ -9,6 +9,7 @@
 
 {% block after_field_sets %}
 {% get_interface for object_id as interface %}
+{% if interface %}
 <div class="module">
     <h2>Edit method details</h2>
     <ul>
@@ -16,5 +17,6 @@
         <li><a href="{% url admin:library_method_change method.id %}">{{ method.signature }}</a></li>
         {% endfor %}
     </ul>    
-</div>
+</div>    
+{% endif %}
 {% endblock after_field_sets %}
