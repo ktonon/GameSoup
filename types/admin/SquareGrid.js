@@ -11,7 +11,7 @@ gamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType
 // this._colCount                                                       Integer
 // this._rowCount                                                       Integer
 //                                 FACTORIES                                 
-// this._cellType                                         [Readable & Writable]
+// this._cellType                   [Readable<item=item> & Writable<item=item>]
 
 
 /*****************************************************************************/
@@ -20,7 +20,7 @@ gamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType
 gamesoup.library.types.SquareGrid.addMethods({
     
     /*---------------------------------------->                           Board
-     * areAdjacent(a : cell ; b : cell) : Boolean
+     * areAdjacent(a : [Readable<item=Any> & Writable<item=Any>] ; b : [Readable<item=Any> & Writable<item=Any>]) : Boolean
      * 
      * Are a and b adjacent?
      */                                                               /* vVv */
@@ -29,7 +29,7 @@ gamesoup.library.types.SquareGrid.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Iterable
-     * nextInIteration() : item
+     * nextInIteration() : Any
      * 
      * Get the next object in the sequence. When the sequence is over, this should return null.
      */                                                               /* vVv */
@@ -112,8 +112,8 @@ gamesoup.library.types.SquareGrid.addMethods({
 gamesoup.library.types.SquareGrid.addMethods({
     _createCells: function() {
         this._cells = $A();
-        var selectorTemplate = new Template('.col-#{i}.row-#{j}');
-        var cellIDTemplate = new Template('#{id}-cell-#{i}-#{j}');
+        var selectorTemplate = new Template(".col-#{i}.row-#{j}");
+        var cellIDTemplate = new Template("#{id}-cell-#{i}-#{j}");
         var c = {id: this._id};
         for (c.i=0; c.i<this._colCount; c.i++) {
             for (c.j=0; c.j<this._rowCount; c.j++) {

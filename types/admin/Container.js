@@ -1,16 +1,16 @@
 /*
- * Type: TextField
- * A text output field that can be updated during the game.
+ * Type: Container
+ * An object that simply contains another object.
  */
-gamesoup.library.types.TextField = Class.create(gamesoup.library.types.BaseType);
+gamesoup.library.types.Container = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
 /*                             Interface Methods                             */
 /*****************************************************************************/
-gamesoup.library.types.TextField.addMethods({
+gamesoup.library.types.Container.addMethods({
     
     /*---------------------------------------->                        Readable
-     * read() : item
+     * read() : Any
      * 
      * Read this content of this object.
      */                                                               /* vVv */
@@ -19,7 +19,7 @@ gamesoup.library.types.TextField.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Writable
-     * write(item : item)
+     * write(item : Any)
      * 
      * Write a value to the content of this object.
      */                                                               /* vVv */
@@ -36,7 +36,7 @@ gamesoup.library.types.TextField.addMethods({
 /*                         Do not call them yourself!                        */
 /*                    They are called in the order shown.                    */
 /*****************************************************************************/
-gamesoup.library.types.TextField.addMethods({ 
+gamesoup.library.types.Container.addMethods({ 
     
     /*
      * Extend the DOM and apply styling.
@@ -72,6 +72,6 @@ gamesoup.library.types.TextField.addMethods({
 /*                           Implementation Methods                          */
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
-gamesoup.library.types.TextField.addMethods({
+gamesoup.library.types.Container.addMethods({
     // Helper methods go here...
 });

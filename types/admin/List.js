@@ -10,7 +10,7 @@ gamesoup.library.types.List = Class.create(gamesoup.library.types.BaseType);
 gamesoup.library.types.List.addMethods({
     
     /*---------------------------------------->                        Iterable
-     * nextInIteration() : item
+     * nextInIteration() : Any
      * 
      * Get the next object in the sequence. When the sequence is over, this should return null.
      */                                                               /* vVv */
@@ -21,7 +21,7 @@ gamesoup.library.types.List.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                           Stack
-     * pop() : item
+     * pop() : Any
      * 
      * Remove the object at the top of the stack and return it.
      */                                                               /* vVv */
@@ -31,7 +31,7 @@ gamesoup.library.types.List.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                           Stack
-     * push(item : item)
+     * push(item : Any)
      * 
      * Push an object on top of the stack.
      */                                                               /* vVv */
@@ -41,7 +41,7 @@ gamesoup.library.types.List.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Readable
-     * read() : item
+     * read() : Any
      * 
      * Read this content of this object.
      */                                                               /* vVv */
@@ -59,7 +59,7 @@ gamesoup.library.types.List.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Writable
-     * write(item : item)
+     * write(item : Any)
      * 
      * Write a value to the content of this object.
      */                                                               /* vVv */

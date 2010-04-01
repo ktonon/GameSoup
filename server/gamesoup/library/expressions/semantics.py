@@ -30,6 +30,19 @@ class InterfaceExpression(object):
         return len(self._atomics) == 1
     is_atomic = property(_is_atomic)
 
+    def resolve(self, context):
+        '''
+        Resolve variables in this expression against a context.
+        
+        The context is a dictionary where keys are variable ids
+        and values are interface expressions.
+        '''
+        atomics = [atom.resolve(context) for atom in self._atomics]
+        if len(atomics) > 1:
+            return '[%s]' % ' & '.join(atomics)
+        else:
+            return ' & '.join(atomics)
+
     @classmethod
     def parse(cls, w):
         raw_expr = parse_interface_expression(w)
@@ -59,13 +72,24 @@ class AtomicInterfaceExpression(object):
             except Interface.DoesNotExist, e:
                 from traceback import print_stack
                 print_stack()
-                print self._raw_atomic.identifier
+                # print self._raw_atomic.identifier
                 raise Interface.DoesNotExist('The interface "%s" refered to in the interface expression "%r" does not exist' % (self._raw_atomic.identifier, self._raw_atomic))
         return self._interface
     interface = property(_get_interface)
 
     def __getitem__(self, parameter_name):
         return self._argdict[parameter_name]
+
+    def resolve(self, context):
+        if self.is_variable:
+            id = self._raw_atomic.identifier
+            return id in context and `context[id]` or id
+        elif self._arguments:
+            w = self._raw_atomic.identifier
+            args = ['%s=%s' % (arg[0], arg[1].resolve(context)) for arg in self._arguments]
+            return '%s<%s>' % (w, ','.join(args))
+        else:
+            return `self`
 
     # def tighter_than(self, other):
     #     from gamesoup.library.models import Interface

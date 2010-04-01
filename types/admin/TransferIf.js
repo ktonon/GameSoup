@@ -1,21 +1,22 @@
 /*
- * Type: InitializeCollection
- * For each writable cell in a collection, provide a newly instantiated object.
+ * Type: TransferIf
+ * Action that reads a string from a source and if it is ok, sends it to a receiver. The source is cleared.
  */
-gamesoup.library.types.InitializeCollection = Class.create(gamesoup.library.types.BaseType);
+gamesoup.library.types.TransferIf = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._collection                                                    Iterable
-// this._factory                                                        Factory
+// this._destination                                        Writable<item=item>
+// this._source                                             Readable<item=item>
+// this._validator                                                    Predicate
 
 
 /*****************************************************************************/
 /*                             Interface Methods                             */
 /*****************************************************************************/
-gamesoup.library.types.InitializeCollection.addMethods({
+gamesoup.library.types.TransferIf.addMethods({
     
     /*---------------------------------------->                          Action
      * doAction()
@@ -23,13 +24,16 @@ gamesoup.library.types.InitializeCollection.addMethods({
      * Perform the default action of this object.
      */                                                               /* vVv */
     doAction: function() {
-        this._collection.resetIteration();
-        var nextCell = this._collection.nextInIteration()
-        while (nextCell) {
-            var item = this._factory.instantiate();
-            nextCell.write(item);
-            nextCell = this._collection.nextInIteration();
+        if (this._validator.call()) {
+            // Success
+            var item = this._source.read();
+            this._destination.write(item);
+        } else {
+            // Failure
+            gamesoup.matches.messageBoard.postLocally(this._validator.reason());
         }
+        // Need support for multiple interfaces on parameters.
+        // this._source.clear();
     }                                                                 /* ^A^ */
 
 });
@@ -40,7 +44,7 @@ gamesoup.library.types.InitializeCollection.addMethods({
 /*                         Do not call them yourself!                        */
 /*                    They are called in the order shown.                    */
 /*****************************************************************************/
-gamesoup.library.types.InitializeCollection.addMethods({ 
+gamesoup.library.types.TransferIf.addMethods({ 
     
     /*
      * Perform custom initialization.
@@ -55,6 +59,6 @@ gamesoup.library.types.InitializeCollection.addMethods({
 /*                           Implementation Methods                          */
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
-gamesoup.library.types.InitializeCollection.addMethods({
+gamesoup.library.types.TransferIf.addMethods({
     // Helper methods go here...
 });

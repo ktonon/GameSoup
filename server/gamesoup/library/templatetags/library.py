@@ -57,6 +57,11 @@ def interface_method(parsed, name):
     return mark_safe(parsed.interface_method(name))
 
 
+@register.simple_tag
+def method_signature_for_type(type, method):
+    return method.get_signature(as_implemented_by_type=type)
+
+
 ###############################################################################
 # FOR LOADING OBJECTS INTO admin/change_form.html TEMPLATES
 

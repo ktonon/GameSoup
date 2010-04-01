@@ -10,7 +10,7 @@ gamesoup.library.types.RandomEnglishLetters = Class.create(gamesoup.library.type
 gamesoup.library.types.RandomEnglishLetters.addMethods({
     
     /*---------------------------------------->                    Distribution
-     * getRandomObject() : over
+     * getRandomObject() : String
      * 
      * Return a random object from a distribution
      */                                                               /* vVv */

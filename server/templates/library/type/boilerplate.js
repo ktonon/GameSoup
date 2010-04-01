@@ -29,7 +29,7 @@ gamesoup.library.types.{{ type.name }} = Class.create(gamesoup.library.types.Bas
 gamesoup.library.types.{{ type.name }}.addMethods({
     {% for method in methods %}
     /*---------------------------------------->{{ method.interface.name|rjust:"32" }}
-     * {{ method.signature }}
+     * {% method_signature_for_type type method %}
      * {% code_doc method 1 %}
      */{{ "/* vVv */"|rjust:"72" }}
     {{ method.name }}: function({% for param in method.parameters.all %}{{ param.name }}{% if not forloop.last %}, {% endif %}{% endfor %}) {

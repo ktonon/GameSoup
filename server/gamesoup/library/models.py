@@ -33,10 +33,25 @@ class Method(models.Model):
     def __unicode__(self):
         return self.signature
     
-    def get_signature(self):
-        w = u'%s(%s)' % (self.name, ' ; '.join(['%s : %s' % (param.name, param.expression) for param in self.parameters.all()]))
+    def get_signature(self, as_implemented_by_type=None):
+        from gamesoup.library.expressions.semantics import InterfaceExpression
+        context = self.interface.template_context
+        if as_implemented_by_type:
+            as_implemented_by_type.update_interface_template_context(self.interface, context)
+            c = as_implemented_by_type.template_context
+            context = dict([
+                (k, InterfaceExpression.parse(expr.resolve(c)))
+                for k, expr in context.items()
+                ])
+        print context
+        params = []
+        for method_param in self.parameters.all():
+            expr = InterfaceExpression.parse(method_param.expression)
+            expr_text = expr.resolve(context)
+            params.append('%s : %s' % (method_param.name, expr_text))
+        w = u'%s(%s)' % (self.name, ' ; '.join(params))
         if self.return_expression != 'Nothing':
-            w += ' : %s' % self.return_expression
+            w += ' : %s' % InterfaceExpression.parse(self.return_expression).resolve(context)
         return w
     get_signature.short_description = 'Signature'
     signature = property(get_signature)
@@ -80,6 +95,14 @@ class Interface(models.Model):
     doc_link.allow_tags = True
     doc_link.short_description = 'Documentation'
 
+    def _get_template_context(self):
+        from gamesoup.library.expressions.semantics import InterfaceExpression
+        context = {}
+        for template_param in self.template_parameters.all():
+            context[template_param.name] = InterfaceExpression.parse(template_param.weakest)
+        return context
+    template_context = property(_get_template_context)
+
     
 class Type(models.Model):
     '''
@@ -117,6 +140,30 @@ class Type(models.Model):
             counts[method.name] = counts.get(method.name, 0) + 1
         names = [name for name, count in counts.items() if count > 1]
         return qs.filter(name__in=names).order_by('name')
+    
+    def _get_template_context(self):
+        from gamesoup.library.expressions.semantics import InterfaceExpression
+        context = {}
+        for template_param in self.template_parameters.all():
+            context[template_param.name] = InterfaceExpression.parse(template_param.weakest)
+        return context
+    template_context = property(_get_template_context)
+    
+    def update_interface_template_context(self, interface, context):
+        '''
+        Update an interfaces template context with template parameter bindings from this type.
+        '''
+        from django.core.exceptions import MultipleObjectsReturned
+        from gamesoup.library.expressions.semantics import InterfaceExpression
+        for variable_id, expr in context.items():
+            try:
+                binding = self.interfacetemplateparameterbinding_set.get(parameter__name=variable_id, parameter__of_interface=interface)
+                context[variable_id] = InterfaceExpression.parse(binding.bound_to)
+            except InterfaceTemplateParameterBinding.DoesNotExist:
+                pass
+            except MultipleObjectsReturned, e:
+                print self.name
+                raise e
     
     def generated_code(self):
         t = get_template('library/type/boilerplate.js')

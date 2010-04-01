@@ -1,22 +1,21 @@
 /*
- * Type: SubmitStringWithCheck
- * Action that reads a string from a source and if it is ok, sends it to a receiver. The source is cleared.
+ * Type: InitializeCollectionWithDistribution
+ * For each writable cell in a collection, provide a newly instantiated object from a random distribution.
  */
-gamesoup.library.types.SubmitStringWithCheck = Class.create(gamesoup.library.types.BaseType);
+gamesoup.library.types.InitializeCollectionWithDistribution = Class.create(gamesoup.library.types.BaseType);
 
 /*****************************************************************************/
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._destination                                      Writable<item=String>
-// this._source                                           Readable<item=String>
-// this._validator                                                    Predicate
+// this._collection                          Iterable<item=Writable<item=item>>
+// this._distribution                                   Distribution<item=item>
 
 
 /*****************************************************************************/
 /*                             Interface Methods                             */
 /*****************************************************************************/
-gamesoup.library.types.SubmitStringWithCheck.addMethods({
+gamesoup.library.types.InitializeCollectionWithDistribution.addMethods({
     
     /*---------------------------------------->                          Action
      * doAction()
@@ -24,16 +23,13 @@ gamesoup.library.types.SubmitStringWithCheck.addMethods({
      * Perform the default action of this object.
      */                                                               /* vVv */
     doAction: function() {
-        if (this._validator.call()) {
-            // Success
-            var item = this._source.read();
-            this._destination.write(item);
-        } else {
-            // Failure
-            gamesoup.matches.messageBoard.postLocally(this._validator.reason());
+        this._collection.resetIteration();
+        var writableObj = this._collection.nextInIteration()
+        while (writableObj) {
+            var item = this._distribution.getRandomObject();
+            writableObj.write(item);
+            writableObj = this._collection.nextInIteration();
         }
-        // Need support for multiple interfaces on parameters.
-        // this._source.clear();
     }                                                                 /* ^A^ */
 
 });
@@ -44,7 +40,7 @@ gamesoup.library.types.SubmitStringWithCheck.addMethods({
 /*                         Do not call them yourself!                        */
 /*                    They are called in the order shown.                    */
 /*****************************************************************************/
-gamesoup.library.types.SubmitStringWithCheck.addMethods({ 
+gamesoup.library.types.InitializeCollectionWithDistribution.addMethods({ 
     
     /*
      * Perform custom initialization.
@@ -59,6 +55,6 @@ gamesoup.library.types.SubmitStringWithCheck.addMethods({
 /*                           Implementation Methods                          */
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
-gamesoup.library.types.SubmitStringWithCheck.addMethods({
+gamesoup.library.types.InitializeCollectionWithDistribution.addMethods({
     // Helper methods go here...
 });
