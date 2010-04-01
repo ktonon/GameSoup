@@ -164,8 +164,12 @@ mod.Reference = Class.create(mod.Parameter, {
 		var url = gs.utils.makeURL('saveParameterBinding', this._options);
 		new Ajax.Request(url, {
 			method: 'post',
+			evalJS: true,
 			postBody: 'value=' + this.getValue(),
-			onSuccess: function() {this._node.fire('assembler:systemChanged')}.bind(this)
+			onSuccess: function(transport) {
+			    this._boundToDisclosure.update(transport.responseJSON.value);
+			    this._node.fire('assembler:systemChanged')
+			}.bind(this)
 		});
 	}	
 });
@@ -229,5 +233,60 @@ mod.UnsatisfiableReference = Class.create(mod.Parameter, {
 });
 gs.tracerize('UnsatisfiableReference', mod.UnsatisfiableReference);
 
+
+mod.FactoryReference = Class.create(mod.Parameter, {
+    initialize: function($super, node, options) {
+        $super(node, options);
+		this.createWidget();
+		this._boundToDisclosure.update(this._node.getAttribute('boundTo'));
+		// Event handlers
+		this._widget.observe('click', this.search.bind(this));
+		this._watchForType = this.bindType.bind(this);
+		this._dropbox.observe('dropbox:change', this._watchForType);
+	},
+	release: function() {
+		this._widget.stopObserving('click');
+        this._dropbox.stopObserving('dropbox:change', this._watchForType);
+	},
+	createWidget: function() {
+	    this._node.insert({bottom: '<input type="text" id="id_factoryref" style="display: none" />'});
+		this._node.insert({bottom: '<input type="button" id="lookup_id_factoryref" value="Search" title="Find a type to use as a factory." /> <span class="bound-to-disclosure"></span>'});
+        this._dropbox = this._node.down('input[type=text]');
+		this._widget = this._node.down('input[type=button]');
+		this._boundToDisclosure = this._node.down('.bound-to-disclosure');
+	},
+	search: function() {
+		var url = gs.utils.makeURL('searchRequiredByParameter', this._options);
+		new Ajax.Request(url, {
+			method: 'get',
+			evalJS: true,
+			onSuccess: function(transport) {
+				var type_ids = transport.responseJSON;
+				this._widget.setAttribute('href', gs.utils.makeURL('browseTypes') + '?id__in=' + type_ids.join(','));
+				showRelatedObjectLookupPopup(this._widget);
+				// Now a popup appears with a list of possible types.
+				// When the user selects a type, its id will get put into the dropbox
+				// and 'dropbox:change' will fire.
+				// The Assembler is already watching for this event and will take
+				// care of instantiating the object and refreshing the page.
+			}.bind(this)
+		});
+	},
+	bindType: function(event) {
+	    event.stop(); // Prevent other handlers from doing anyting with dropbox:change
+		var typeID = this._dropbox.getValue();
+        var url = gs.utils.makeURL('saveParameterBinding', this._options);
+        new Ajax.Request(url, {
+            method: 'post',
+            evalJS: true,
+            postBody: 'value=' + typeID,
+            onSuccess: function(transport) {
+                this._boundToDisclosure.update(transport.responseJSON.value);
+                this._node.fire('assembler:systemChanged');
+            }.bind(this)
+        });
+	}	
+});
+gs.tracerize('UnsatisfiableReference', mod.UnsatisfiableReference);
 
 })();

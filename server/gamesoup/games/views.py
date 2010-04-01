@@ -36,7 +36,16 @@ def game_flow(request, game_id, format):
             else:
                 n.fillcolor = '#99ccff'
         nodes[obj.id] = n
-    for ref in TypeParameterBinding.objects.filter(instance__game=game, parameter__is_built_in=False, parameter__is_factory=False):
+    for type in Type.objects.filter(bound_to__instance__game=game).distinct():
+        n = g.add_node('type_%d' % type.id, label=str(type).replace('"', '\\"'))
+        n.width = len(str(type)) / 10
+        n.style = 'filled'
+        n.fillcolor = 'black'
+        n.fontcolor = 'white'
+        nodes['type_%d' % type.id] = n
+    
+    bindings = TypeParameterBinding.objects.filter(instance__game=game, parameter__is_built_in=False)
+    for ref in bindings.filter(parameter__is_factory=False):
         e = g.add_edge(nodes[ref.instance.id], nodes[ref.object_argument.id])
         e.label = ref.parameter.name
         e.color = 'gray'
@@ -44,6 +53,15 @@ def game_flow(request, game_id, format):
         e.labelfloat = True
         e.fontsize = 14
         e.len = 3
+    for factory in bindings.filter(parameter__is_factory=True):
+        e = g.add_edge(nodes[factory.instance.id], nodes['type_%d' % factory.type_argument.id])
+        e.label = factory.parameter.name
+        e.color = 'gray'
+        e.fontcolor = 'gray'
+        e.labelfloat = True
+        e.fontsize = 14
+        e.len = 3
+
     # Danglers
     for param in TypeParameter.objects.filter(of_type__instances__game=game, is_built_in=False).distinct():
         if param.bindings.filter(instance__game=game).count() == 0:
@@ -141,6 +159,8 @@ def search_required_by_parameter(request, parameter_id):
     expr = InterfaceExpression.parse(param.expression)
     for interface in expr.interfaces:
         qs = qs.filter(implements=interface)
+    if param.is_factory:
+        qs = qs.filter(parameters__isnull=True).distinct()
     type_ids = [t.id for t in qs]
     response = HttpResponse(mimetype='application/json')
     response.write(json.dumps(type_ids or [0])) # See comment above
@@ -233,7 +253,8 @@ def object_configure(request, game_id, object_id):
         'title': 'Configure %s' % obj.type.name,
         'obj': obj,
         'built_ins': obj.type.parameters.filter(is_built_in=True).order_by('name'),
-        'refs': obj.type.parameters.filter(is_built_in=False).order_by('name'),
+        'refs': obj.type.parameters.filter(is_built_in=False, is_factory=False).order_by('name'),
+        'factories': obj.type.parameters.filter(is_built_in=False, is_factory=True).order_by('name'),
         'nothing_to_configure': obj.type.parameters.count() == 0,
     }
     return render_to_response('admin/games/object-configure.html', context)
@@ -261,13 +282,22 @@ def save_parameter_binding(request, game_id, object_id, parameter_id):
         binding = obj.parameter_bindings.get(parameter=param)
     except TypeParameterBinding.DoesNotExist:
         binding = TypeParameterBinding(instance=obj, parameter=param)
+    data = {}
     if param.is_built_in:
         binding.built_in_argument = x
+        data['value'] = x
     else:
-        binding.object_argument = Object.objects.get(pk=x)
+        if param.is_factory:
+            binding.type_argument = Type.objects.get(pk=x)
+            data['value'] = binding.type_argument.name
+        else:
+            binding.object_argument = Object.objects.get(pk=x)
+            data['value'] = binding.object_argument.name
     binding.save()
-    return HttpResponse()
-
+    response = HttpResponse(mimetype='application/json')
+    response.write(json.dumps(data))
+    return response
+    
 
 @staff_member_required
 def candidate_refs(request, game_id, object_id, parameter_id):

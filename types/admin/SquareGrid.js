@@ -112,20 +112,24 @@ gamesoup.library.types.SquareGrid.addMethods({
 gamesoup.library.types.SquareGrid.addMethods({
     _createCells: function() {
         this._cells = $A();
-        var t = new Template('.col-#{i}.row-#{j}');
-        var c = {};
+        var selectorTemplate = new Template('.col-#{i}.row-#{j}');
+        var cellIDTemplate = new Template('#{id}-cell-#{i}-#{j}');
+        var c = {id: this._id};
         for (c.i=0; c.i<this._colCount; c.i++) {
             for (c.j=0; c.j<this._rowCount; c.j++) {
-                var cell = this._instantiateCell();
-                var cellContainerNode = this._node.down(t.evaluate(c));
-                cellContainerNode.insert({bottom: cell._node});
+                var cellContainerNode = this._node.down(selectorTemplate.evaluate(c));
+                var cell = this._instantiateCell(cellIDTemplate.evaluate(c));
+                cellContainerNode.insert({bottom: cell.getNode()});
                 this._cells.push(cell);
             }
         }        
     },
-    _instantiateCell: function() {
-        var cell = new this._cellType();
+    _instantiateCell: function(cellID) {
+        var cell = new this._cellType(cellID);
         cell.createDOM();
+        if (cell.isVisible()) {
+            cell.render();            
+        }
         cell.register();
         return cell;        
     }

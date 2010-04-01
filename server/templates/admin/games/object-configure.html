@@ -28,6 +28,15 @@
         {% endfor %}
     </fieldset>        
     {% endif %}
+    {% if factories %}
+    <h2>Factories</h2>
+    <fieldset class="module aligned">
+        {% for param in factories %}
+        {% parameter_binding obj param as binding %}
+        <div class="form-row factory" name="{{ param.name }}" parameterID="{{ param.id }}" boundTo="{{ binding.type_argument.name }}"></div>
+        {% endfor %}
+    </fieldset>        
+    {% endif %}
     {% endif %}
     <div class="submit-row">
         <input class="default" type="button" value="Done" />

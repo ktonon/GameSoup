@@ -2,6 +2,14 @@
 {% load games %}
 
 
+{% block extrastyle %}
+{{ block.super }}
+<style type="text/css">
+.inline-group textarea {width: 200px; height: 1.5em;}
+</style>
+{% endblock extrastyle %}
+
+
 {% block extra-object-tools %}
     {% get_object for object_id as obj %}
     <li><a href="{% url admin:library_type_change obj.type.id %}">Type: {{ obj.type }}</a></li>

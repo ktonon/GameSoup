@@ -54,7 +54,13 @@ class AtomicInterfaceExpression(object):
 
     def _get_interface(self):
         if not hasattr(self, '_interface'):
-            self._interface = Interface.objects.get(name=self._raw_atomic.identifier)
+            try:
+                self._interface = Interface.objects.get(name=self._raw_atomic.identifier)
+            except Interface.DoesNotExist, e:
+                from traceback import print_stack
+                print_stack()
+                print self._raw_atomic.identifier
+                raise Interface.DoesNotExist('The interface "%s" refered to in the interface expression "%r" does not exist' % (self._raw_atomic.identifier, self._raw_atomic))
         return self._interface
     interface = property(_get_interface)
 

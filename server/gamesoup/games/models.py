@@ -88,7 +88,7 @@ class Object(models.Model):
         '''
         def satisfiable(param):
             # Is there a type in the game for the required interface?
-            if param.is_built_in:
+            if param.is_built_in or param.is_factory:
                 # Built-in parameters are always satisfiable.
                 return True
             else:                

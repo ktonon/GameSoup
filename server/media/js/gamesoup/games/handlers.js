@@ -11,8 +11,11 @@ mod.ConfigureObject = Class.create({
 		this._options = {objectID: this._objectID};
 		Object.extend(this._options, options);
 		this._nameInput = this._node.down('input[type="text"].object-name');
+		// Prepare parameters
 		this._builtIns = this._node.select('.built-in').collect(this.addBuiltIn.bind(this));
 		this._refs = this._node.select('.ref').collect(this.addRef.bind(this));
+		this._factories = this._node.select('.factory').collect(this.addFactory.bind(this));
+		// Done button
 		this._doneButton = this._node.down('.submit-row input[type=button]');		
 		// Event handlers
 		this._nameInput.observe('change', this.saveName.bind(this));
@@ -20,6 +23,8 @@ mod.ConfigureObject = Class.create({
 	},
 	release: function() {
 		this._builtIns.invoke('release');
+		this._refs.invoke('release');
+		this._factories.invoke('release');
 		this._doneButton.stopObserving();
 		this._node.stopObserving();
 	},
@@ -30,6 +35,9 @@ mod.ConfigureObject = Class.create({
 	addRef: function(node) {
 	    var RefClass = gamesoup.games.parameters[node.hasClassName('unsatisfiable') ? 'UnsatisfiableReference' : 'Reference'];
 		return new RefClass(node, this._options);
+	},
+	addFactory: function(node) {
+	    return new gamesoup.games.parameters.FactoryReference(node, this._options);
 	},
 	saveName: function(event) {
 	    var url = gs.utils.makeURL('updateObjectName', this._options);

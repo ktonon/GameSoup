@@ -1,4 +1,4 @@
-{% load games library %}/*
+{% load games library %}{% if game.is_satisfied %}/*
  * Game: {{ game.name }}{% code_doc game %}
  */
 {% if types %}
@@ -49,3 +49,7 @@ gamesoup.matches.objects[{{ obj.id }}].setSize({{ obj.width }}, {{ obj.height }}
 {% endif %}
 
 {% endfor %}{% endif %}
+{% else %}
+{# The game is not satisfied #}
+alert('The game is not satisfied!');
+{% endif %}
