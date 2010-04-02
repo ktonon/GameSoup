@@ -57,7 +57,7 @@ class TypeAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('name', 'description', ('visible', 'has_state'), 'implements')}),
         )
-    list_display = ('name', 'description', 'visible')
+    list_display = ('__unicode__', 'description', 'visible')
     list_filter = ('visible',)
     filter_horizontal = ('implements',)
     search_fields = ('name', 'description', 'implements__name')

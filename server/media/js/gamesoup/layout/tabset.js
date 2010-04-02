@@ -50,9 +50,15 @@ mod.Tab = Class.create({
 		this._handleNode = this._node.down('h1.handle');
 		// Events
 		this._handleNode.observe('click', function() {this._node.fire('tab:requestFocus')}.bind(this));
+		// Adjust layout
+		this.adjustHeight();
 	},
 	release: function() {
 		this._handleNode.stopObserving('click');
+	},
+	adjustHeight: function() {
+	    var h = document.viewport.getHeight() - this._node.cumulativeOffset()[1] - 40;
+	    this._node.setStyle({height: h + 'px'});
 	},
 	demote: function() {
 		var z = new Number(this._node.getStyle('z-index'));

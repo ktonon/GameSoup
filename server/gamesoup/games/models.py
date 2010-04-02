@@ -101,6 +101,29 @@ class Object(models.Model):
                 return qs.count() > 0
         return all(map(satisfiable, self.type.parameters.all()))
 
+    # def _get_template_context(self):
+    #     from gamesoup.library.expressions.semantics import InterfaceExpression
+    #     context = {}
+    #     for template_binding in self.template_parameter_bindings.all():
+    #         context[template_binding.name] = InterfaceExpression.parse(template_param.bound_to)
+    #     return context
+    # template_context = property(_get_template_context)
+
+    def used_by(self):
+        qs = Object.objects.filter(parameter_bindings__object_argument=self)
+        return qs
+    
+    def expressions_required_by_users(self):
+        '''
+        A set of interface expressions which are required of this object by
+        other objects which bind it as a parameter.
+        '''
+        return []
+        
+    def get_strongest_expression(self):
+        return self.type.strongest_expression
+    strongest_expression = property(get_strongest_expression)
+
     def parameters_short(self):
         return ', '.join([p.name for p in self.type.parameters.all()])
 
@@ -188,5 +211,5 @@ post_delete.connect(Object.update_cache, sender=TypeParameterBinding)
 # TEMPLATING
 
 class TypeTemplateParameterBinding(TemplateParameterBinding):
-    object = models.ForeignKey(Object)
+    object = models.ForeignKey(Object, related_name='template_parameter_bindings')
     parameter = models.ForeignKey(TypeTemplateParameter)

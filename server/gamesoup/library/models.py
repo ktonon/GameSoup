@@ -43,7 +43,6 @@ class Method(models.Model):
                 (k, InterfaceExpression.parse(expr.resolve(c)))
                 for k, expr in context.items()
                 ])
-        print context
         params = []
         for method_param in self.parameters.all():
             expr = InterfaceExpression.parse(method_param.expression)
@@ -95,6 +94,17 @@ class Interface(models.Model):
     doc_link.allow_tags = True
     doc_link.short_description = 'Documentation'
 
+    def get_strongest_expression(self, as_implemented_by_type=None):
+        from gamesoup.library.expressions.semantics import InterfaceExpression
+        context = self.template_context
+        params = []
+        if as_implemented_by_type:
+            as_implemented_by_type.update_interface_template_context(self, context)
+            c = as_implemented_by_type.template_context
+            params = ['%s=%s' % (k, expr.resolve(c)) for k, expr in context.items()]
+        return self.name + (params and '<%s>' % ','.join(params) or '')
+    strongest_expression = property(get_strongest_expression)    
+
     def _get_template_context(self):
         from gamesoup.library.expressions.semantics import InterfaceExpression
         context = {}
@@ -120,7 +130,8 @@ class Type(models.Model):
         ordering = ['name']
     
     def __unicode__(self):
-        return self.name
+        qs = self.template_parameters.all()
+        return self.name + (qs and u'<%s>' % ','.join([u'%s=%s' % (tp.name, tp.weakest) for tp in qs]) or u'')
 
     def is_conflicted(self):
         '''
@@ -165,6 +176,17 @@ class Type(models.Model):
                 print self.name
                 raise e
     
+    def get_strongest_expression(self, as_instantiated_by_object=None):
+        from gamesoup.library.expressions.semantics import InterfaceExpression
+        obj = as_instantiated_by_object
+        expressions = [interface.get_strongest_expression(as_implemented_by_type=self) for interface in self.implements.all()]
+        w = ' & '.join(expressions)
+        w = len(expressions) > 1 and '[%s]' % w or w
+        if obj:
+            w = w
+        return w
+    strongest_expression = property(get_strongest_expression)
+
     def generated_code(self):
         t = get_template('library/type/boilerplate.js')
         parsed = TypeCode(self)
@@ -229,6 +251,13 @@ class TypeParameter(Parameter):
     of_type = models.ForeignKey(Type, related_name='parameters')
     is_factory = models.BooleanField(default=False)
     interfaces = models.ManyToManyField(Interface, related_name='used_in_type_parameter', editable=False)
+    
+    def get_strongest_expression(self):
+        from gamesoup.library.expressions.semantics import InterfaceExpression
+        context = self.of_type.template_context
+        expr = InterfaceExpression.parse(self.expression)
+        return expr.resolve(context)
+    strongest_expression = property(get_strongest_expression)
 pre_save.connect(Parameter.pre_save, sender=TypeParameter)
 post_save.connect(Parameter.post_save, sender=TypeParameter)
 

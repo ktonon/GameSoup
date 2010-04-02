@@ -9,6 +9,8 @@
                 <th id="satisfiable" title="Is it possible to set all the parameters given the objects already in the game?">Satisfiable</th>
                 <th id="ownership" title="Is it common to all players, or do each get their own copy?">Ownership</th>
                 <th id="parameters" title="Parameters in red still need to be set.">Parameters</th>
+                <th id="used-by" title="Used as a parameter by these objects.">Used by</th>
+                <th id="expression" title="The strongest interface expression required by this object.">Expression</th>
             </tr>
         </thead>
         {% if objects %}
@@ -27,6 +29,8 @@
                 </span> {% if not forloop.last %}&bull;{% endif %}
                 {% endfor %}
             </td>
+            <td class="used-by">{{ obj.used_by }}</td>
+            <td class="expression">{{ obj.strongest_expression }}</td>
         </tr>
         {% endfor %}
         {% else %}

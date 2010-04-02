@@ -58,8 +58,16 @@ def interface_method(parsed, name):
 
 
 @register.simple_tag
-def method_signature_for_type(type, method):
-    return method.get_signature(as_implemented_by_type=type)
+def method_signature_for_type(type, method, escaped=None):
+    w = method.get_signature(as_implemented_by_type=type)
+    if escaped:
+        w = w.replace('<', '&lt;').replace('>', '&gt;')
+    return w
+
+
+@register.simple_tag
+def get_strongest_expression(interface, type):
+    return interface.get_strongest_expression(as_implemented_by_type=type).replace('<', '&lt;').replace('>', '&gt;')
 
 
 ###############################################################################
@@ -113,3 +121,46 @@ def get_interface(parser, token):
     '''
     from gamesoup.library.models import Interface
     return get_object(parser, token, Interface)
+
+
+@register.tag
+def get_type(parser, token):
+    '''
+    Load a Type object into the context given a primary key.
+
+    Usage::
+
+        {% get_type for object_id as varname %}
+
+    after this call *varname* will contain the Type object.
+    '''
+    from gamesoup.library.models import Type
+    return get_object(parser, token, Type)
+
+
+class MethodsForTypeNode(template.Node):
+    def __init__(self, type_varname, methods_varname):
+        self.type_var = template.Variable(type_varname)
+        self.methods_varname = methods_varname
+    def render(self, context):
+        from gamesoup.library.models import Method
+        type = self.type_var.resolve(context)
+        qs = Method.objects.filter(interface__implemented_by=type)
+        context[self.methods_varname] = qs
+        return u''
+
+
+@register.tag
+def methods_for_type(parser, token):
+    '''
+    Load the methods of a given type into the context.
+
+    Usage::
+
+        {% methods_for_type type as varname %}
+    '''
+    try:
+        tag_name, type_varname, _as, methods_varname = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError, "See usage for %r" % token.contents.split()[0]
+    return MethodsForTypeNode(type_varname, methods_varname)

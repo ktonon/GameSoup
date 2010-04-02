@@ -1,5 +1,74 @@
 {% extends "admin/change_form_custom.html" %}
+{% load library %}
+
 
 {% block extra-object-tools %} 
 <li><a href="{% url library:generate_type_code object_id %}">Generate Code</a></li>
 {% endblock extra-object-tools %}
+
+
+{% block after_field_sets %}
+{% get_type for object_id as type %}
+{% if type %}
+    {% with type.implements.all as interfaces %}
+    {% if interfaces %}
+    <table class="module" style="width: 100%">
+        <caption>Implemented interfaces</caption>
+        <thead>
+            <tr>
+                <th>Strongest expression</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for interface in interfaces %}
+            <tr>
+                <td><pre>{% get_strongest_expression interface type %}</pre></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    {% endwith %}    
+    {% methods_for_type type as methods %}
+    {% if methods %}    
+    <table class="module" style="width: 100%">
+        <caption>Methods</caption>
+        <thead>
+            <tr>
+                <th>Signature</th>
+                <th>From interface</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for method in methods %}
+            <tr>
+                <td><pre>{% method_signature_for_type type method "escaped" %}</pre></td>
+                <td>{{ method.interface.name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    {% with type.parameters.all as parameters %}
+    {% if parameters %}
+    <table class="module" style="width: 100%">
+        <caption>Type parameters</caption>
+        <thead>
+            <tr>
+                <th>Parameter name</th>
+                <th>Strongest expression</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for param in parameters %}
+            <tr>
+                <td>{{ param.name }}</td>
+                <td><pre>{{ param.strongest_expression }}</pre></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    {% endwith %}
+{% endif %}
+{% endblock after_field_sets %}
