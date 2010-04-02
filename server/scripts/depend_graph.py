@@ -1,11 +1,10 @@
-import re
-import sys
+import os.path, re, sys
 from common import color, safe
 
 DEFAULT_PACKAGE = 'gamesoup'
 
 common = {
-    'filename': r'gamesoup/(?P<importer_app_name>[A-Za-z0-9_]+)/(?P<importer_module_path>[/.A-Za-z0-9_]+)\.py:\s*',
+    'filename': r'(?P<filename>gamesoup/(?P<importer_app_name>[A-Za-z0-9_]+)/(?P<importer_module_path>[/.A-Za-z0-9_]+)\.py):\s*',
     'package': r'(?P<package>[A-Za-z0-9_]+)',
     'app_name': r'(?P<app_name>[A-Za-z0-9_]+)',
     'module': r'(?P<module>[.A-Za-z0-9_]+)',
@@ -68,12 +67,15 @@ class App(Manager):
 
 class Module(Manager):
     
-    def __init__(self, package, app_name, module, **kwargs):
+    def __init__(self, package, app_name, module, size=None, **kwargs):
         self._app = App.create(package, app_name)
         self._module = path2name(module)
+        if self._module.endswith('.__init__'):
+            self._module = self._module[:-9]
         # if self._app.id == 'gamesoup__dot__library' and self._module in ['templation', 'parsers', 'models', 'fields']:
         #     self._module = 'models_cluster'
         self._kwargs = kwargs
+        self._size = size
     
     def get_id(self):
         return u'%s__dot__%s' % (self._app.id, self._module.replace('.', '_'))
@@ -110,13 +112,15 @@ for line in sys.stdin.xreadlines():
     m = m_import or m_from1 or m_from2 or m_from3
     if m:
         d = m.groupdict()
+        filename = d['filename']
+        x = os.path.getsize(filename)
         package = d.get('package', DEFAULT_PACKAGE)
         if package not in ['gamesoup']:
             continue
         importer_package = DEFAULT_PACKAGE
         importer_app_name = d['importer_app_name']
         importer_module = d['importer_module_path']
-        importer = Module.create(importer_package, importer_app_name, importer_module)
+        importer = Module.create(importer_package, importer_app_name, importer_module, size=x)
         app_name = d.get('app_name', importer_app_name)
     
     m = m_import or m_from2 or m_from3

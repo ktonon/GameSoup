@@ -29,6 +29,7 @@
                 <th>Name</th>
                 <th>Kind</th>
                 <th>Bound to</th>
+                <th>Expression</th>
             </tr>
         </thead>
         <tbody>
@@ -37,6 +38,7 @@
                 <td><a href="{% url admin:library_type_change obj.type.id %}">{{ binding.parameter.name }}</a></td>
                 <td>{{ binding.get_kind }}</td>
                 <td>{{ binding.get_argument_link|safe }}</td>
+                <td>{{ binding.parameter.strongest_expression.render_with_links|safe }}</td>
             </tr>
             {% endfor %}
         </tbody>

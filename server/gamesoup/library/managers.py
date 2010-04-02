@@ -1,4 +1,5 @@
 from django.db import models
+from gamesoup.library.expressions import TemplateContext
 
 
 class SignatureManager(models.Manager):
@@ -21,3 +22,10 @@ class InterfaceManager(models.Manager):
             return self.get_query_set().get(is_built_in=True, methods__isnull=True, name='Nothing')
         except self.model.DoesNotExist:
             raise self.model.DoesNotExist('Please define the Nothing interface')
+
+
+class ParameterManager(models.Manager):
+    
+    def get_context(self):
+        qs = self.get_query_set()
+        return TemplateContext([(p.name, p.expression) for p in qs.all()])

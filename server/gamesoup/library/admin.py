@@ -4,11 +4,11 @@ from models import *
 
 class MethodParameterInline(admin.TabularInline):
     model = MethodParameter
-    fields = ('name', 'expression')
+    fields = ('name', 'expression_text')
     extra = 3
 class MethodAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('name', 'return_expression', 'description')}),
+        (None, {'fields': ('name', 'return_expression_text', 'description')}),
         )
     list_display = ('get_signature', 'interface')
     search_fields = ('name', 'returned__interface__name', 'parameters__interface__name', 'interface__name')
@@ -47,7 +47,7 @@ class TypeParameterInline(admin.TabularInline):
     extra = 3
 class InterfaceTemplateParameterBindingInline(admin.TabularInline):
     model = InterfaceTemplateParameterBinding
-    fields = ('parameter', 'bound_to')
+    fields = ('parameter', 'expression_text')
     extra = 3
 class TypeTemplateParameterInline(admin.TabularInline):
     model = TypeTemplateParameter

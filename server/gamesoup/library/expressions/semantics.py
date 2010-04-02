@@ -3,8 +3,8 @@ For answering questions about how interface expressions relate to each other.
 '''
 
 
+from django.core.urlresolvers import reverse
 from gamesoup.library.expressions.syntax import parse_interface_expression
-from gamesoup.library.models import Interface
 
 
 class InterfaceExpression(object):
@@ -13,20 +13,45 @@ class InterfaceExpression(object):
     '''
     
     def __init__(self, raw_expr):
+        '''
+        This method is used internally. Use the @classmethod
+        InterfaceExpression.parse instead.
+        '''
         self._raw_expr = raw_expr
         self._atomics = map(AtomicInterfaceExpression, raw_expr.atomics)
 
-    def __getitem__(self, x):
-        return self._atomics[x]
+    def __getitem__(self, n):
+        '''
+        Return the nth AtomicInterfaceExpression that is part
+        of this expression.
+        '''
+        return self._atomics[n]
 
     def __repr__(self):
+        '''
+        Convert this expression back into string form.
+        '''
         return `self._raw_expr`
+    
+    def render_with_links(self):
+        '''
+        Render this expression with links to the interfaces involved.
+        '''
+        parts = []
+        for atom in self._atomics:
+            parts.append(atom.render_with_links())
+        w = ' & '.join(parts)
+        return len(parts) > 1 and '[%s]' % w or w
     
     def _get_interfaces(self):
         return [a.interface for a in self._atomics if not a.is_variable]
     interfaces = property(_get_interfaces)
 
     def _is_atomic(self):
+        '''
+        An interface expression is atomic if it only has ONE
+        AtomicInterfaceExpression.
+        '''
         return len(self._atomics) == 1
     is_atomic = property(_is_atomic)
 
@@ -44,8 +69,12 @@ class InterfaceExpression(object):
             return ' & '.join(atomics)
 
     @classmethod
-    def parse(cls, w):
-        raw_expr = parse_interface_expression(w)
+    def parse(cls, expression_text):
+        '''
+        Parse a string form of an interface expression and return
+        and instantiated InterfaceExpression.
+        '''
+        raw_expr = parse_interface_expression(expression_text)
         return cls(raw_expr)
 
 
@@ -61,18 +90,25 @@ class AtomicInterfaceExpression(object):
     def __repr__(self):
         return `self._raw_atomic`
     
+    def render_with_links(self):
+        if self.is_variable:
+            return self._raw_atomic.identifier
+        interface = self.interface
+        w = '<a href="%s">%s</a>' % (reverse('admin:library_interface_change', args=[interface.id]), interface.name)
+        if self._arguments:
+            w += '&lt;%s&gt;' % ','.join(['%s=%s' % (arg[0], arg[1].render_with_links()) for arg in self._arguments])
+        return w
+    
     def _is_variable(self):
         return self._raw_atomic.is_variable
     is_variable = property(_is_variable)
 
     def _get_interface(self):
+        from gamesoup.library.models import Interface
         if not hasattr(self, '_interface'):
             try:
                 self._interface = Interface.objects.get(name=self._raw_atomic.identifier)
             except Interface.DoesNotExist, e:
-                from traceback import print_stack
-                print_stack()
-                # print self._raw_atomic.identifier
                 raise Interface.DoesNotExist('The interface "%s" refered to in the interface expression "%r" does not exist' % (self._raw_atomic.identifier, self._raw_atomic))
         return self._interface
     interface = property(_get_interface)
@@ -108,7 +144,7 @@ class AtomicInterfaceExpression(object):
     #             expr = self._argdict[template_param]
     #         except KeyError:
     #             tp = self.interface.template_parameters.get(name=template_param)
-    #             expr = InterfaceExpression(tp.weakest)
+    #             expr = InterfaceExpression(tp.expression_text)
     #         if other_expr.tighter_than(expr) or not (expr.tighter_than(other_expr) or expr.same_as(other_expr)):
     #             return False
     #     return True
@@ -121,10 +157,13 @@ class AtomicInterfaceExpression(object):
 __test__ = {'doctest': """
 >>> from gamesoup.library.expressions.semantics import InterfaceExpression as Expr
 
->>> Expr.parse('Any')
+>>> any = Expr.parse('Any')
+>>> any
 Any
 
 >>> Expr.parse('[Any&Nothing]')
 [Any & Nothing]
+
+>>> foo = Expr.parse('Foo')
 
 """}

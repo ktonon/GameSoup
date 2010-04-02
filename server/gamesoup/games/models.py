@@ -9,7 +9,7 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.signals import *
 from gamesoup.library.models import *
-from gamesoup.library.expressions.semantics import InterfaceExpression
+from gamesoup.library.expressions import InterfaceExpression
 
 
 class Game(models.Model):
@@ -95,19 +95,11 @@ class Object(models.Model):
                 # For non-built-in parameters, the type must satisfy all
                 # of the required interfaces.
                 qs = Type.objects.filter(instances__game=self.game)
-                expr = InterfaceExpression.parse(param.expression)
+                expr = InterfaceExpression.parse(param.expression_text)
                 for interface in expr.interfaces:
                     qs = qs.filter(implements=interface)
                 return qs.count() > 0
         return all(map(satisfiable, self.type.parameters.all()))
-
-    # def _get_template_context(self):
-    #     from gamesoup.library.expressions.semantics import InterfaceExpression
-    #     context = {}
-    #     for template_binding in self.template_parameter_bindings.all():
-    #         context[template_binding.name] = InterfaceExpression.parse(template_param.bound_to)
-    #     return context
-    # template_context = property(_get_template_context)
 
     def used_by(self):
         qs = Object.objects.filter(parameter_bindings__object_argument=self)

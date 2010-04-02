@@ -8,6 +8,7 @@
 
 
 {% block after_field_sets %}
+<br/><hr/><br/>
 {% get_type for object_id as type %}
 {% if type %}
     {% with type.implements.all as interfaces %}
@@ -21,8 +22,9 @@
         </thead>
         <tbody>
             {% for interface in interfaces %}
-            <tr>
-                <td><pre>{% get_strongest_expression interface type %}</pre></td>
+            <tr class="{% cycle row1,row2 %}">
+                {% get_strongest_expression_for_interface interface of type as expr %}
+                <td><pre>{{ expr.render_with_links|safe }}</pre></td>
             </tr>
             {% endfor %}
         </tbody>
@@ -41,10 +43,10 @@
         </thead>
         <tbody>
             {% for method in methods %}
-            <tr>
-                <td><pre>{% method_signature_for_type type method "escaped" %}</pre></td>
-                <td>{{ method.interface.name }}</td>
-            </tr>
+            <tr class="{% cycle row1,row2 %}">
+                <td><pre><a href="{% url admin:library_method_change method.id %}">{% method_signature_for_type type method "escaped" %}</a></pre></td>
+                <td><a href="{% url admin:library_interface_change method.interface.id %}">{{ method.interface.name }}</a></td>
+            </tr> 
             {% endfor %}
         </tbody>
     </table>
@@ -61,9 +63,9 @@
         </thead>
         <tbody>
             {% for param in parameters %}
-            <tr>
+            <tr class="{% cycle row1,row2 %}">
                 <td>{{ param.name }}</td>
-                <td><pre>{{ param.strongest_expression }}</pre></td>
+                <td><pre>{{ param.strongest_expression.render_with_links|safe }}</pre></td>
             </tr>
             {% endfor %}
         </tbody>
@@ -71,4 +73,39 @@
     {% endif %}
     {% endwith %}
 {% endif %}
+<br/><hr/><br/>
 {% endblock after_field_sets %}
+
+
+{% block after_related_objects %}
+<br/><hr/><br/>
+{% get_type for object_id as type %}
+{% if type %}
+    {% with type.instances.all as objects %}
+    {% if objects %}
+    <table class="module" style="width: 100%">
+        <caption>Objects which are instances of {{ type.name }}</caption>
+        <thead>
+            <tr>
+                <th>Object name</th>
+                <th>From game</th>
+                <th>Expression</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in objects %}
+            <tr class="{% cycle row1,row2 %}">
+                <td><a href="{% url admin:games_object_change obj.id %}">{{ obj.name }}</a></td>
+                <td><a href="{% url admin:games_game_change obj.game.id %}">{{ obj.game.name }}</a></td>
+                <td>
+                    {% get_strongest_expression_for_type type of obj as expr %}
+                    <pre>{{ expr.render_with_links|safe }}</pre>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    {% endwith %}
+{% endif %}
+{% endblock after_related_objects %}

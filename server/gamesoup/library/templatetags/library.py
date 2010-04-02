@@ -65,9 +65,56 @@ def method_signature_for_type(type, method, escaped=None):
     return w
 
 
-@register.simple_tag
-def get_strongest_expression(interface, type):
-    return interface.get_strongest_expression(as_implemented_by_type=type).replace('<', '&lt;').replace('>', '&gt;')
+class GetStrongestExpressionForInterfaceNode(template.Node):
+    def __init__(self, type_varname, interface_varname, varname):
+        self.type_var = template.Variable(type_varname)
+        self.interface_var = template.Variable(interface_varname)
+        self.varname = varname
+    def render(self, context):
+        type = self.type_var.resolve(context)
+        interface = self.interface_var.resolve(context)
+        context[self.varname] = interface.get_strongest_expression(as_implemented_by_type=type)
+        return u''
+
+
+@register.tag
+def get_strongest_expression_for_interface(parser, token):
+    '''
+    Usage::
+    
+        {% get_strongest_expression_for_interface interface of type as varname %}
+    '''
+    try:
+        tag_name, interface_varname, _of, type_varname, _as, varname = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError, "See doc for %r" % token.contents.split()[0]
+    return GetStrongestExpressionForInterfaceNode(type_varname, interface_varname, varname)
+
+
+class GetStrongestExpressionForTypeNode(template.Node):
+    def __init__(self, type_varname, object_varname, varname):
+        self.type_var = template.Variable(type_varname)
+        self.object_var = template.Variable(object_varname)
+        self.varname = varname
+    def render(self, context):
+        obj = self.object_var.resolve(context)
+        type = self.type_var.resolve(context)
+        context[self.varname] = type.get_strongest_expression(as_instantiated_by_object=obj)
+        return u''
+
+
+@register.tag
+def get_strongest_expression_for_type(parser, token):
+    '''
+    Usage::
+
+        {% get_strongest_expression_for_interface interface of type as varname %}
+    '''
+    try:
+        tag_name, type_varname, _of, object_varname, _as, varname = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError, "See doc for %r" % token.contents.split()[0]
+    return GetStrongestExpressionForTypeNode(type_varname, object_varname, varname)
 
 
 ###############################################################################

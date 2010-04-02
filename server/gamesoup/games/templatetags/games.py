@@ -1,6 +1,6 @@
 import json
 from django import template
-from gamesoup.library.expressions.semantics import InterfaceExpression
+from gamesoup.library.expressions import InterfaceExpression
 from gamesoup.library.templatetags.library import get_object as _get_object
 
 
@@ -64,7 +64,7 @@ def satisfiable_parameter(object, parameter):
     '''
     from gamesoup.games.models import Object
     qs = Object.objects.filter(game=object.game)
-    expr = InterfaceExpression.parse(parameter.expression)
+    expr = InterfaceExpression.parse(parameter.expression_text)
     for interface in expr.interfaces:
         qs = qs.filter(type__implements=interface)
     sat = qs.count() > 0
@@ -84,7 +84,7 @@ def set_object_parameters(object):
     for binding in object.parameter_bindings.all():
         w = 'gamesoup.matches.objects[%d]._%s = ' % (object.id, binding.parameter.name)
         if binding.parameter.is_built_in:
-            w += json.dumps(_built_in[binding.parameter.interface.name](binding.built_in_argument))
+            w += json.dumps(_built_in[binding.parameter.expression_text](binding.built_in_argument))
         else:
             if binding.parameter.is_factory:
                 w += 'gamesoup.library.types.%s' % binding.type_argument.name

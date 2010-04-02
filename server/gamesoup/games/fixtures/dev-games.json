@@ -8,6 +8,14 @@
         }
     }, 
     {
+        "pk": 3, 
+        "model": "games.game", 
+        "fields": {
+            "name": "Test", 
+            "description": ""
+        }
+    }, 
+    {
         "pk": 18, 
         "model": "games.object", 
         "fields": {
@@ -33,6 +41,21 @@
             "game": 2, 
             "y": 0, 
             "x": 0, 
+            "type": 7, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 41, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Board", 
+            "satisfied": true, 
+            "height": 10, 
+            "width": 10, 
+            "game": 3, 
+            "y": 1, 
+            "x": 1, 
             "type": 7, 
             "per_player": false
         }
@@ -76,6 +99,21 @@
             "height": 5, 
             "width": 5, 
             "game": 2, 
+            "y": 0, 
+            "x": 0, 
+            "type": 12, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 40, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Fills board with letters", 
+            "satisfied": true, 
+            "height": 5, 
+            "width": 5, 
+            "game": 3, 
             "y": 0, 
             "x": 0, 
             "type": 12, 
@@ -136,6 +174,21 @@
             "height": 5, 
             "width": 5, 
             "game": 2, 
+            "y": 0, 
+            "x": 0, 
+            "type": 13, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 42, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Letters", 
+            "satisfied": true, 
+            "height": 5, 
+            "width": 5, 
+            "game": 3, 
             "y": 0, 
             "x": 0, 
             "type": 13, 
@@ -317,6 +370,17 @@
         }
     }, 
     {
+        "pk": 56, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 41, 
+            "object_argument": null, 
+            "type_argument": 3, 
+            "parameter": 22, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
         "pk": 19, 
         "model": "games.typeparameterbinding", 
         "fields": {
@@ -328,11 +392,33 @@
         }
     }, 
     {
+        "pk": 54, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 41, 
+            "object_argument": null, 
+            "type_argument": null, 
+            "parameter": 14, 
+            "built_in_argument": "4"
+        }
+    }, 
+    {
         "pk": 22, 
         "model": "games.typeparameterbinding", 
         "fields": {
             "instance": 20, 
             "object_argument": 17, 
+            "type_argument": null, 
+            "parameter": 10, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 52, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 40, 
+            "object_argument": 41, 
             "type_argument": null, 
             "parameter": 10, 
             "built_in_argument": ""
@@ -355,6 +441,17 @@
         "fields": {
             "instance": 20, 
             "object_argument": 21, 
+            "type_argument": null, 
+            "parameter": 11, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 53, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 40, 
+            "object_argument": 42, 
             "type_argument": null, 
             "parameter": 11, 
             "built_in_argument": ""
@@ -402,6 +499,17 @@
             "type_argument": null, 
             "parameter": 15, 
             "built_in_argument": "6"
+        }
+    }, 
+    {
+        "pk": 55, 
+        "model": "games.typeparameterbinding", 
+        "fields": {
+            "instance": 41, 
+            "object_argument": null, 
+            "type_argument": null, 
+            "parameter": 15, 
+            "built_in_argument": "4"
         }
     }, 
     {
