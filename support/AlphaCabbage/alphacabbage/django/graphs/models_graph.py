@@ -100,7 +100,7 @@ def make_models_graph(g, ignore_apps=None, **kwargs):
         # Step 3: import the app's models file. If this has errors we want them
         # to bubble up.
         module = import_module("%s.models" % app)        
-        models = [x for x in module.__dict__.values() if x.__class__ == ModelBase]
+        models = [x for x in module.__dict__.values() if hasattr(x, '__class__') and x.__class__ == ModelBase]
         for model in models:
             mg.add_model(model)
 

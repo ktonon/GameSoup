@@ -7,13 +7,13 @@ import re
 from django.db import models
 from django import forms
 from gamesoup.library.errors import *
-from gamesoup.library.expressions.syntax import parse_interface_expression
+from gamesoup.expressions.syntax import Expr
 
 
 __all__ = (
     'SignatureField',
     'IdentifierField',
-    'InterfaceExpressionField',
+    'ExprField',
     )
 
 
@@ -61,7 +61,7 @@ class IdentifierField(models.CharField):
     def formfield(self, **kwargs):
         defaults = {
             'form_class': forms.RegexField,
-            'regex': r'^[A-Za-z_][A-Za-z_0-9]*$',
+            'regex': r'^[A-Za-z_][A-Za-z_0-9]*\!?$',
             'error_messages': {'invalid': 'An identifier starts with a letter or underscore, and continues with letters, underscores, or numbers'},
             }
         defaults.update(kwargs)
@@ -74,31 +74,32 @@ class IdentifierField(models.CharField):
 # See gamesoup.library.templation
 
 
-class InterfaceExpressionFormField(forms.CharField):
+class ExprFormField(forms.CharField):
     
     def __init__(self, *args, **kwargs):
-        super(InterfaceExpressionFormField, self).__init__(*args, **kwargs)
+        super(ExprFormField, self).__init__(*args, **kwargs)
     
     def clean(self, value):
-        value = super(InterfaceExpressionFormField, self).clean(value)
+        value = super(ExprFormField, self).clean(value)
         try:
-            parse_interface_expression(value)
+            expr = Expr.parse(value)
+            print expr, `expr`
         except Exception, e:
             raise forms.ValidationError(e)
-        return value
+        return `expr`
 
 
-class InterfaceExpressionField(models.TextField):
+class ExprField(models.TextField):
     
     description = 'An interface expression.'
     
     def __init__(self, *args, **kwargs):
-        defaults = {'default': 'Any'}
+        defaults = {'default': '[]'}
         defaults.update(**kwargs)
-        super(InterfaceExpressionField, self).__init__(*args, **defaults)
+        super(ExprField, self).__init__(*args, **defaults)
     
     def formfield(self, **kwargs):
-        defaults = {'form_class': InterfaceExpressionFormField}
+        defaults = {'form_class': ExprFormField}
         defaults.update(**kwargs)
         defaults['widget'] = forms.TextInput
-        return super(InterfaceExpressionField, self).formfield(**defaults)
+        return super(ExprField, self).formfield(**defaults)

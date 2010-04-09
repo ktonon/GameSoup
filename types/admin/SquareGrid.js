@@ -11,7 +11,7 @@ gamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType
 // this._colCount                                                       Integer
 // this._rowCount                                                       Integer
 //                                 FACTORIES                                 
-// this._cellType                   [Readable<item=item> & Writable<item=item>]
+// this._cellType                   [Readable<item=item> + Writable<item=item>]
 
 
 /*****************************************************************************/
@@ -20,7 +20,7 @@ gamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType
 gamesoup.library.types.SquareGrid.addMethods({
     
     /*---------------------------------------->                           Board
-     * areAdjacent(a : [Readable<item=Any> & Writable<item=Any>] ; b : [Readable<item=Any> & Writable<item=Any>]) : Boolean
+     * areAdjacent(a : [Readable<item=Any> + Writable<item=Any>] ; b : [Readable<item=Any> + Writable<item=Any>]) : Boolean
      * 
      * Are a and b adjacent?
      */                                                               /* vVv */

@@ -72,8 +72,6 @@ class Module(Manager):
         self._module = path2name(module)
         if self._module.endswith('.__init__'):
             self._module = self._module[:-9]
-        # if self._app.id == 'gamesoup__dot__library' and self._module in ['templation', 'parsers', 'models', 'fields']:
-        #     self._module = 'models_cluster'
         self._kwargs = kwargs
         self._size = size
     

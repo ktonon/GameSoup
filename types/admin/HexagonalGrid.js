@@ -10,7 +10,7 @@ gamesoup.library.types.HexagonalGrid = Class.create(gamesoup.library.types.BaseT
 //                                 BUILT-INS                                 
 // this._radius                                                         Integer
 //                                 FACTORIES                                 
-// this._cellType                   [Readable<item=item> & Writable<item=item>]
+// this._cellType                   [Readable<item=item> + Writable<item=item>]
 
 
 /*****************************************************************************/

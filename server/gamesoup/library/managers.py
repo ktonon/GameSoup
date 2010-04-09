@@ -1,5 +1,5 @@
 from django.db import models
-from gamesoup.library.expressions import TemplateContext
+from gamesoup.expressions.context import TemplateContext
 
 
 class SignatureManager(models.Manager):
@@ -11,6 +11,9 @@ class SignatureManager(models.Manager):
 
 class InterfaceManager(models.Manager):
     
+    def for_expr(self, expr):
+        return self.get_query_set().filter(name__in=expr.ids)
+        
     def any(self):
         try:
             return self.get_query_set().get(is_built_in=False, methods__isnull=True, name='Any')

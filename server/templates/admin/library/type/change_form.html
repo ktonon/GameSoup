@@ -6,7 +6,7 @@
 <li><a href="{% url library:generate_type_code object_id %}">Generate Code</a></li>
 {% endblock extra-object-tools %}
 
-
+{% comment %}
 {% block after_field_sets %}
 <br/><hr/><br/>
 {% get_type for object_id as type %}
@@ -109,3 +109,4 @@
     {% endwith %}
 {% endif %}
 {% endblock after_related_objects %}
+{% endcomment %}

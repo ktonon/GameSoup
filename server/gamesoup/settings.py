@@ -31,6 +31,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
 )
 
+TEST_RUNNER = 'alphacabbage.django.test.run_tests'
+
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
@@ -40,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
 
+    'gamesoup.expressions',
     'gamesoup.library',
     'gamesoup.games',
     'gamesoup.matches',

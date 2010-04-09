@@ -8,7 +8,7 @@ from django.template.loader import get_template
 from alphacabbage.django.helpers import get_pair_or_404
 from alphacabbage.django.decorators import require_post
 from gamesoup.games.models import *
-from gamesoup.library.expressions import InterfaceExpression
+from gamesoup.expressions.syntax import Expr
 
 
 ###############################################################################
@@ -140,8 +140,8 @@ def search_required_by(request):
             obj = Object.objects.get(pk=obj_id)
             for param in obj.type.parameters.all():
                 qs = Type.objects.all()
-                expr = InterfaceExpression.parse(param.expression_text)
-                for interface in expr.interfaces:
+                expr = Expr.parse(param.expression_text)
+                for interface in Interface.objects.for_expr(expr):
                     qs = qs.filter(implements=interface)
                 type_ids |= set([t.id for t in qs])
         type_ids = list(type_ids)
@@ -156,8 +156,8 @@ def search_required_by(request):
 def search_required_by_parameter(request, parameter_id):
     param = get_object_or_404(TypeParameter, pk=parameter_id)
     qs = Type.objects.all()
-    expr = InterfaceExpression.parse(param.expression_text)
-    for interface in expr.interfaces:
+    expr = Expr.parse(param.expression_text)
+    for interface in Interface.objects.for_expr(expr):
         qs = qs.filter(implements=interface)
     if param.is_factory:
         qs = qs.filter(parameters__isnull=True).distinct()
@@ -307,8 +307,8 @@ def candidate_refs(request, game_id, object_id, parameter_id):
     except TypeParameter.DoesNotExist:
         raise Http404()
     qs = game.object_set.all()
-    expr = InterfaceExpression.parse(param.expression_text)
-    for interface in expr.interfaces:
+    expr = Expr.parse(param.expression_text)
+    for interface in Interface.objects.for_expr(expr):
         qs = qs.filter(type__implements=interface)
     response = HttpResponse(mimetype='application/json')
     response.write(json.dumps(['object-%d' % obj.id for obj in qs]))

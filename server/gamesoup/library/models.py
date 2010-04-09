@@ -15,7 +15,7 @@ from gamesoup.library.errors import *
 from gamesoup.library.fields import *
 from gamesoup.library.managers import *
 from gamesoup.library.code import TypeCode
-from gamesoup.library.expressions import InterfaceExpression
+from gamesoup.expressions.syntax import Expr
 
 
 class Method(models.Model):
@@ -25,7 +25,7 @@ class Method(models.Model):
     interface = models.ForeignKey('Interface', related_name='methods')
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    return_expression_text = InterfaceExpressionField('Return', default='Nothing')
+    return_expression_text = ExprField('Return', default='', blank=True)
 
     class Meta:
         ordering = ['name']
@@ -40,17 +40,16 @@ class Method(models.Model):
             type.update_template_context(self.interface, context)
             c = type.template_context
             context = dict([
-                (k, InterfaceExpression.parse(expr.resolve(c)))
+                (k, Expr.parse(expr.resolve(c)))
                 for k, expr in context.items()
                 ])
         params = []
         for method_param in self.parameters.all():
-            expr = InterfaceExpression.parse(method_param.expression_text)
-            expr_text = expr.resolve(context)
-            params.append('%s : %s' % (method_param.name, expr_text))
+            # expr_text = expr.resolve(context)
+            params.append('%s : %s' % (method_param.name, method_param.expression_text))
         w = u'%s(%s)' % (self.name, ' ; '.join(params))
-        if self.return_expression_text != 'Nothing':
-            w += ' : %s' % InterfaceExpression.parse(self.return_expression_text).resolve(context)
+        ret = Expr.parse(self.return_expression_text)
+        if ret: w += ' : %s' % self.return_expression_text
         return w
     get_signature.short_description = 'Signature'
     signature = property(get_signature)
@@ -103,7 +102,7 @@ class Interface(models.Model):
             c = type.template_context
             params = ['%s=%s' % (k, expr.resolve(c)) for k, expr in context.items()]
         w = self.name + (params and '<%s>' % ','.join(params) or '')
-        return InterfaceExpression.parse(w)
+        return Expr.parse(w)
     strongest_expression = property(get_strongest_expression)    
 
     def _get_template_context(self):
@@ -164,11 +163,11 @@ class Type(models.Model):
     def get_strongest_expression(self, as_instantiated_by_object=None):
         obj = as_instantiated_by_object
         expressions = [`interface.get_strongest_expression(as_implemented_by_type=self)` for interface in self.implements.all()]
-        w = ' & '.join(expressions)
+        w = ' + '.join(expressions)
         w = len(expressions) > 1 and '[%s]' % w or w
         if obj:
             w = w
-        return InterfaceExpression.parse(w)
+        return Expr.parse(w)
     strongest_expression = property(get_strongest_expression)
 
     def generated_code(self):
@@ -198,7 +197,7 @@ class Type(models.Model):
 
 class Parameter(models.Model):
     name = IdentifierField(unique=False)
-    expression_text = InterfaceExpressionField('Expression')
+    expression_text = ExprField('Expression')
     is_built_in = models.BooleanField(editable=False)
     
     class Meta:
@@ -209,18 +208,26 @@ class Parameter(models.Model):
         return self.name
     
     def get_expression(self):
-        return InterfaceExpression.parse(self.expression_text)
+        return Expr.parse(self.expression_text)
     expression = property(get_expression)
     
     @staticmethod
     def pre_save(sender, instance, **kwargs):
         expr = instance.expression
-        instance.is_built_in = expr.is_atomic and not expr[0].is_variable and expr[0].interface.is_built_in
+        instance.is_built_in = False
+        if len(expr) == 1:
+            try:
+                instance.is_built_in = Interface.objects.get(name=expr.ids[0]).is_built_in                
+            except Interface.DoesNotExist:
+                # It's ok, not a built in,
+                # probably a variable
+                pass
+        # instance.is_built_in = expr.is_built_in
 
     @staticmethod
     def post_save(sender, instance, **kwargs):
         instance.interfaces.clear()
-        for interface in instance.expression.interfaces:
+        for interface in Interface.objects.for_expr(instance.expression):
             instance.interfaces.add(interface)
 
 
@@ -230,7 +237,7 @@ class TypeParameter(Parameter):
     interfaces = models.ManyToManyField(Interface, related_name='used_in_type_parameter', editable=False)
     
     def get_strongest_expression(self):
-        return InterfaceExpression.parse(self.expression.resolve(self.of_type.template_context))
+        return Expr.parse(self.expression.resolve(self.of_type.template_context))
     strongest_expression = property(get_strongest_expression)
 pre_save.connect(Parameter.pre_save, sender=TypeParameter)
 post_save.connect(Parameter.post_save, sender=TypeParameter)
@@ -249,7 +256,7 @@ post_save.connect(Parameter.post_save, sender=MethodParameter)
 
 class TemplateParameter(models.Model):
     name = IdentifierField(unique=False)
-    expression_text = InterfaceExpressionField('Expression', help_text='What is the weakest interface required?')
+    expression_text = ExprField('Expression', help_text='What is the weakest interface required?')
 
     objects = ParameterManager()
 
@@ -258,15 +265,15 @@ class TemplateParameter(models.Model):
         ordering = ['name']
 
     def __unicode__(self):
-        return '%s::%s' % (self.of.name, self.name)
+        return '.'.join([self.of.name, self.name])
 
     def get_expression(self):
-        return InterfaceExpression.parse(self.expression_text)
+        return Expr.parse(self.expression_text)
     expression = property(get_expression)
     
 
 class TemplateParameterBinding(models.Model):
-    expression_text = InterfaceExpressionField('Expression')
+    expression_text = ExprField('Expression')
     
     class Meta:
         abstract=True
@@ -275,7 +282,7 @@ class TemplateParameterBinding(models.Model):
         return self.expression_text
 
     def get_expression(self):
-        return InterfaceExpression.parse(self.expression_text)
+        return Expr.parse(self.expression_text)
     expression = property(get_expression)
 
 
