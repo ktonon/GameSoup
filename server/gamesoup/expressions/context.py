@@ -49,6 +49,8 @@ class TemplateContext(UserDict.UserDict):
         I.a : []
         I.b : []
         I.c : []
+        >>> TemplateContext({})
+        <BLANKLINE>
         '''
         # Items sorted by keys
         return '\n'.join([

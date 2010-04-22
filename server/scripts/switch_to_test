@@ -2,4 +2,4 @@
 rm db/development.sqlite
 gamesoup/manage.py syncdb
 gamesoup/manage.py loaddata fixtures/test-data.json
-# gamesoup/manage.py loaddata gamesoup/library/fixtures/test-parsers.json
+gamesoup/manage.py loaddata gamesoup/library/fixtures/test-library.json

@@ -4,6 +4,7 @@ For parsing interface expressions.
 
 import re
 import sys
+from gamesoup.expressions.context import TemplateContext
 from gamesoup.expressions.grammar import Rule
 
 
@@ -93,7 +94,6 @@ class Expr(Cached):
         >>> e = Expr.parse('[D + B + C + A]')
         >>> e.atoms
         [A, B, C, D]
-        
         >>> e.atoms[0].__class__.__name__
         'Atom'
         """
@@ -112,19 +112,14 @@ class Expr(Cached):
         """
         >>> Expr.parse('[A]').is_singleton
         True
-        
         >>> Expr.parse('A!').is_singleton
         True
-        
         >>> Expr.parse('[@Type.a]').is_singleton
         True
-
         >>> Expr.parse('[43.a]').is_singleton
         True
-
         >>> Expr.parse('[A<item=B>]').is_singleton
         True
-        
         >>> Expr.parse('[A + B]').is_singleton
         False
         """
@@ -135,16 +130,12 @@ class Expr(Cached):
         """
         >>> Expr.parse('A').is_built_in
         False
-        
         >>> Expr.parse('@T.a').is_built_in
         False
-
         >>> Expr.parse('32.a').is_built_in
         False
-        
         >>> Expr.parse('A!').is_built_in
         True
-        
         >>> Expr.parse('[A<item=A!>]').is_built_in
         False
         """
@@ -155,19 +146,14 @@ class Expr(Cached):
         """
         >>> Expr.parse('A').is_var
         False
-
         >>> Expr.parse('A!').is_var
         False
-
         >>> Expr.parse('@T.a').is_var
         True
-
         >>> Expr.parse('21.a').is_var
         True
-
         >>> Expr.parse('[21.a]').is_var
         True
-
         >>> Expr.parse('[21.a + B]').is_var
         False
         """
@@ -191,7 +177,6 @@ class Expr(Cached):
         
             >>> Expr.parse('A')
             [A]
-        
             >>> Expr.parse('@T.a')
             [@T.a]
         
@@ -209,13 +194,10 @@ class Expr(Cached):
         """
         >>> len(Expr.parse('[]'))
         0
-        
         >>> len(Expr.parse('A'))
         1
-
         >>> len(Expr.parse('A!'))
         1
-        
         >>> len(Expr.parse('[A<item=[P+Q+R]> + B]'))
         2        
         """
@@ -284,6 +266,12 @@ class Expr(Cached):
         >>> e = Expr.parse('[@C.item + 12.item]')
         >>> e % c
         [Bar]
+        
+        >>> Expr.parse('Foo<item=[@T.a]>') % C({})
+        [Foo<item=[@T.a]>]
+        
+        >>> Expr.parse('[@T.a]') % C({})
+        [@T.a]
         '''
         # Note that atom % c returns an Expr, not an Atom,
         # so taking the sum of a list of Expr will call the
@@ -292,23 +280,109 @@ class Expr(Cached):
 
     @staticmethod
     def reduce(list_of_exprs):
-        return reduce(lambda x, y: x + y, list_of_exprs, Expr.parse('[]'))
+        l = len(list_of_exprs)
+        if l == 0:
+            return Expr.parse('[]')
+        elif l == 1:
+            return list_of_exprs[0]
+        else:
+            return reduce(lambda x, y: x + y, list_of_exprs)
     
     ###############################################################################
     # Comparison
 
     def super(self, other):
-        '''
+        """
         Is this expression a super expression of other?
         
         If so, any place other is required, this one will work too.
-        '''
+        
+        >>> r = Expr.parse('Readable')
+        >>> w = Expr.parse('Writable')
+        >>> r.super(r)
+        True
+        >>> r.super(w)
+        False
+        >>> w.super(r)
+        False
+        >>> (r + w).super(w)
+        True
+        >>> (r + w).super(r)
+        True
+        >>> (r + w).super(w + r)
+        True
+
+        >>> rs = Expr.parse('Readable<item=String>')
+        >>> rs.super(r)
+        True
+        >>> r.super(rs)
+        False
+        >>> rs.super(r + w)
+        False
+        >>> (r + w).super(rs)
+        False
+
+        >>> c1 = Expr.parse('Foo<bar=[Bar<far=Far,where=[Where+There]>+Car]>')
+        >>> c2 = Expr.parse('[Foo<bar=[Bar<far=[Far+War],where=[Here+There+Every+Where],at=Fat>+Car<item=Bitem>+Fat<hat=Cat>]>+Quick]')
+        >>> c2.super(c1)
+        True
+        >>> c1.super(c2)
+        False
+        """
         for atom1, atom2 in self.join(other):
             if atom1 and atom2 and not atom1.super(atom2):
                 return False
             if not atom1 and atom2:
                 return False
         return True
+
+    def resolvent_for(self, other):
+        """
+        Attempts to compute and return minimal resolvent that
+        will make (self % resolvent).super(other). If no such
+        resolvent exists a resolvent will still be returned, but
+        (self % resolvent) will not be super to other.
+        
+        >>> f1 = Expr.parse('Foo<item=[@T.a]>')
+        >>> f2 = Expr.parse('Foo<item=[Bar]>')
+        >>> f3 = Expr.parse('Bar<item=[]>')
+        >>> f2.resolvent_for(f1)
+        <BLANKLINE>
+        >>> f1.resolvent_for(f2)
+        @T.a : [Bar]
+        >>> f1 % f1.resolvent_for(f2)
+        [Foo<item=[Bar]>]
+        >>> f1.resolvent_for(f3)
+        <BLANKLINE>        
+
+        >>> f1 % f1.resolvent_for(f3)
+        [Foo<item=[@T.a]>]
+        
+        >>> a = Expr.parse('@T.a')
+        >>> b = Expr.parse('Bar')
+        >>> a.resolvent_for(b)
+        @T.a : [Bar]
+        >>> b.resolvent_for(a)
+        <BLANKLINE>
+        >>> b % b.resolvent_for(a)
+        [Bar]
+        
+        >>> Expr.parse(
+        ...     '[A<x=@T.pain> + B<x=T!> + C<x=D<x=12.foo>> + D]'
+        ... ).resolvent_for(Expr.parse(
+        ...     '[A<x=[Q+R]> + C<x=D<x=Q>> + B<x=S!>]'
+        ... ))
+        12.foo : [Q]
+        @T.pain : [Q + R]
+        """
+        c = TemplateContext({})
+        if self.is_var:
+            c[self.atoms[0].id] = other
+        else:
+            for atom1, atom2 in self.join(other):
+                if atom1 and atom2:
+                    c.update(atom1.resolvent_for(atom2))
+        return c
 
     def join(self, other):
         return _join(self, other, '_child', 'ids')
@@ -439,6 +513,9 @@ class Atom(Cached):
         B<item=[12.item + Car<item=[@C.item]>]>
         >>> atom % C({'12.item': e, '@C.item': e})
         [B<item=[Bar + Car<item=[Bar]>]>]
+        
+        >>> Expr.parse('[@T.a]').atoms[0] % C({})
+        [@T.a]
         """        
         if self.is_built_in:
             # Can't resolve a built-in 
@@ -448,7 +525,7 @@ class Atom(Cached):
             if self.id in c:
                 return c[self.id]
             else:
-                Expr.from_atoms([self])
+                return Expr.from_atoms([self])
         else:
             # Try to resolve any interface template arguments
             if len(self) == 0:
@@ -468,6 +545,31 @@ class Atom(Cached):
             if not arg1 and arg2:
                 return False
         return True
+
+    def resolvent_for(self, other):
+        """
+        Resolve self to other.
+        
+        >>> f1 = Expr.parse('Foo<item=12.item>').atoms[0]
+        >>> f2 = Expr.parse('Foo<item=Bar>').atoms[0]
+        >>> f3 = Expr.parse('Foo<item=Car>').atoms[0]
+        >>> f2.resolvent_for(f1)
+        <BLANKLINE>
+        >>> f1.resolvent_for(f2)
+        12.item : [Bar]
+        >>> f2.resolvent_for(f3)
+        <BLANKLINE>
+        """
+        c = TemplateContext({})
+        if self.is_built_in:
+            pass
+        elif self.is_var:
+            c[self.id] = other
+        else:
+            for arg1, arg2 in self.join(other):
+                if arg1 and arg2:
+                    c.update(arg1.expr.resolvent_for(arg2.expr))
+        return c
 
     def join(self, other):
         return _join(self, other, '_arg', 'param_ids')
@@ -524,6 +626,9 @@ class Arg(Cached):
         item=[]
         >>> a.resolve(C({'Foo.item': Expr.parse('Bar')}), interface_name='Foo')
         item=[Bar]
+        
+        >>> Expr.parse('Foo<item=[@T.a]>').atoms[0].args[0].resolve(C({}), interface_name='Foo')
+        item=[@T.a]
         """
         key = '.'.join([interface_name, self.id])
         if key in c:
@@ -543,99 +648,22 @@ def cmp_by_id(x, y):
 
 
 def _join(a, b, d, ids):
+    """
+    Iterates through children of two components in pairs (x, y),
+    where x is from a and y is from b, and both have the same
+    identifier. Note that x or y may be None, but not both.
+    
+    a, b    - Expr or Atom
+    d       - name of attribute which is a dictionary
+              mapping ids to children
+    ids     - name of attribute which is a list of ids
+    """
     for id in set(getattr(a, ids)) | set(getattr(b, ids)):
         yield getattr(a, d).get(id, None), getattr(b, d).get(id, None)
 
 
 __test__ = {'doctest': """
 >>> from gamesoup.expressions.syntax import Expr
-
->>> any = Expr.parse('[]')
->>> any
-[]
-
->>> any + any
-[]
-
->>> foo = Expr.parse('Foo')
->>> foo
-[Foo]
-
->>> bi = Expr.parse('BuiltIn!')
->>> bi
-BuiltIn!
-
->>> bi.is_built_in
-True
-
->>> foo is any + foo
-True
-
->>> foobar = Expr.parse(' [ Foo+Bar ] ')
->>> foobar
-[Bar + Foo]
-
->>> foobar is foobar + foo
-True
-
->>> foobar + Expr.parse('[Far + Car]')
-[Bar + Car + Far + Foo]
-
->>> Expr.parse('Foo<bar=Bar>')
-[Foo<bar=[Bar]>]
-
->>> Expr.parse(' Foo < bar  = Bar  , car = Car > ')
-[Foo<bar=[Bar], car=[Car]>]
-
->>> Expr.parse('Foo<bar=[Bar+Car]>')
-[Foo<bar=[Bar + Car]>]
-
->>> r = Expr.parse('Readable')
->>> w = Expr.parse('Writable')
->>> r.super(r)
-True
-
->>> r.super(w)
-False
-
->>> w.super(r)
-False
-
->>> (r + w).super(w)
-True
-
->>> (r + w).super(r)
-True
-
->>> (r + w).super(w + r)
-True
-
->>> rs = Expr.parse('Readable<item=String>')
->>> rs.super(r)
-True
-
->>> r.super(rs)
-False
-
->>> rs.super(r + w)
-False
-
->>> (r + w).super(rs)
-False
-
->>> c1 = Expr.parse('Foo<bar=[Bar<far=Far,where=[Where+There]>+Car]>')
->>> c1
-[Foo<bar=[Bar<far=[Far], where=[There + Where]> + Car]>]
-
->>> c2 = Expr.parse('[Foo<bar=[Bar<far=[Far+War],where=[Here+There+Every+Where],at=Fat>+Car<item=Bitem>+Fat<hat=Cat>]>+Quick]')
->>> c2.super(c1)
-True
-
->>> c1.super(c2)
-False
-
->>> Expr.parse('Foo<item=Bar>').super(Expr.parse('Foo<item=[]>'))
-True
 
 Here is an example:
 
