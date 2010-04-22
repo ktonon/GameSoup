@@ -112,6 +112,11 @@ class Type(models.Model):
         bc, c = self.binding_context, self.context
         return Expr.reduce([(i.expr % bc) % c for i in self.implements.all()])
     expr = property(_get_expr)
+
+    def _get_flat_expr(self):
+        bc = self.binding_context
+        return Expr.reduce([i.expr % bc for i in self.implements.all()])
+    flat_expr = property(_get_flat_expr)
     
     context = property(lambda self: self.template_parameters.get_context())
     binding_context = property(lambda self: self.template_bindings.get_context())
@@ -220,6 +225,7 @@ class TypeParameter(Parameter):
         expr = super(TypeParameter, self).get_expr()
         return expr % self.of_type.context
     expr = property(get_expr)
+    flat_expr = property(lambda self: super(TypeParameter, self).get_expr())
 pre_save.connect(Parameter.pre_save, sender=TypeParameter)
 post_save.connect(Parameter.post_save, sender=TypeParameter)
 

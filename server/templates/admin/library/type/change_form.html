@@ -9,10 +9,28 @@
 {% block after_field_sets %}
 {% get_type for object_id as type %}
 {% if type %}
-    <div class="module" style="width: 100%">
-        <h2>Expr</h2>
-        <p>{{ type.expr }}</p>
-    </div>
+    <table class="module" style="width: 100%">
+        <caption>Expressions</caption>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Expr</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>expr</td>
+                <td>{{ type.expr }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>flat_expr</td>
+                <td>{{ type.flat_expr }}</td>
+                <td>For finding resolvents.</td>
+            </tr>
+        </tbody>
+    </table>
 
     {% methods_for_type type as methods %}
     {% if methods %}    
@@ -27,7 +45,7 @@
         <tbody>
             {% for method in methods %}
             <tr class="{% cycle row1,row2 %}">
-                <td><pre><a href="{% url admin:library_method_change method.id %}">{% method_signature_for_type type method "escaped" %}</a></pre></td>
+                <td><a href="{% url admin:library_method_change method.id %}">{% method_signature_for_type type method "escaped" %}</a></td>
                 <td><a href="{% url admin:library_interface_change method.interface.id %}">{{ method.interface.name }}</a></td>
             </tr> 
             {% endfor %}
@@ -43,13 +61,15 @@
             <tr>
                 <th>Name</th>
                 <th>Expr</th>
+                <th>Flat Expr</th>
             </tr>
         </thead>
         <tbody>
             {% for param in parameters %}
             <tr class="{% cycle row1,row2 %}">
                 <td>{{ param.name }}</td>
-                <td><pre>{{ param.expr }}</pre></td>
+                <td>{{ param.expr }}</td>
+                <td>{{ param.flat_expr }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -58,39 +78,3 @@
     {% endwith %}
 {% endif %}
 {% endblock after_field_sets %}
-
-
-{% block after_related_objects %}
-<br/><hr/><br/>
-{% get_type for object_id as type %}
-{% if type %}
-    {% comment %}
-    {% with type.instances.all as objects %}
-    {% if objects %}
-    <table class="module" style="width: 100%">
-        <caption>Objects which are instances of {{ type.name }}</caption>
-        <thead>
-            <tr>
-                <th>Object name</th>
-                <th>From game</th>
-                <th>Expression</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for obj in objects %}
-            <tr class="{% cycle row1,row2 %}">
-                <td><a href="{% url admin:games_object_change obj.id %}">{{ obj.name }}</a></td>
-                <td><a href="{% url admin:games_game_change obj.game.id %}">{{ obj.game.name }}</a></td>
-                <td>
-                    {% get_expr_for_type type of obj as expr %}
-                    <pre>{{ expr.render_with_links|safe }}</pre>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
-    {% endwith %}
-    {% endcomment %}
-{% endif %}
-{% endblock after_related_objects %}

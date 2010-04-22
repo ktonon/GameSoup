@@ -63,11 +63,13 @@ def satisfiable_parameter(object, parameter):
     This is meant to be used to produce a CSS class name.
     '''
     from gamesoup.games.models import Object
+    from gamesoup.library.models import Interface
     qs = Object.objects.filter(game=object.game)
     expr = Expr.parse(parameter.expression_text)
     for interface in Interface.objects.for_expr(expr):
         qs = qs.filter(type__implements=interface)
-    sat = qs.count() > 0
+    I = [other for other in qs if other.bindable_to(object, parameter)]            
+    sat = len(I) > 0
     return not sat and 'unsatisfiable' or ''
 
 
