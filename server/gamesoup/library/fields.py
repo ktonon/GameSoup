@@ -83,7 +83,6 @@ class ExprFormField(forms.CharField):
         value = super(ExprFormField, self).clean(value)
         try:
             expr = Expr.parse(value)
-            print expr, `expr`
         except Exception, e:
             raise forms.ValidationError(e)
         return `expr`

@@ -274,24 +274,26 @@ class Expr(Cached):
         ...     'A.item': e,
         ...     '@C.item': e,
         ...     '12.item': e,
-        ... })
-        >>> e = Expr.parse('B<item=[12.item + Car<item=@C.item>]>')
+        ... })        
+        >>> e = Expr.parse('[A<item=[]> + B<item=[12.item + Car<item=@C.item>]> + @C.item]')
         >>> e
-        [B<item=[12.item + Car<item=[@C.item]>]>]
+        [@C.item + A<item=[]> + B<item=[12.item + Car<item=[@C.item]>]>]
         >>> e % c
-        [B<item=[Bar + Car<item=[Bar]>]>]
+        [A<item=[Bar]> + B<item=[Bar + Car<item=[Bar]>]> + Bar]
         
-        # >>> e = Expr.parse('[A<item=[]> + B<item=[12.item + Car<item=@C.item>]> + @C.item]')
-        # >>> e
-        # [@C.item + A<item=[]> + B<item=[12.item + Car<item=[@C.item]>]>]
-        # >>> e % c
-        # [A<item=[Bar]> + B<item=[Bar + Car<item=[Bar]>]> + Bar]
+        >>> e = Expr.parse('[@C.item + 12.item]')
+        >>> e % c
+        [Bar]
         '''
         # Note that atom % c returns an Expr, not an Atom,
         # so taking the sum of a list of Expr will call the
         # __add__ method of Expr.
-        return reduce(lambda x, y: x + y, [atom % c for atom in self.atoms])
+        return Expr.reduce([atom % c for atom in self.atoms])
 
+    @staticmethod
+    def reduce(list_of_exprs):
+        return reduce(lambda x, y: x + y, list_of_exprs, Expr.parse('[]'))
+    
     ###############################################################################
     # Comparison
 

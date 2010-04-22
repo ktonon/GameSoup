@@ -50,6 +50,6 @@ class LibraryTest(test.TestCase):
         self.assertEquals(`e1`, '[Stack<item=[@List.item]>]')
         self.assertEquals(`e2`, '[Stack<item=[]>]')
 
-    # def test_expr(self):
-    #     self.assertEquals(`self.s.expr`, '[Stack<item=[]>]')
-    #     self.assertEquals(`self.l.expr`, '[Stack<item=[]>]')
+    def test_expr(self):
+        self.assertEquals(`self.s.expr`, '[Stack<item=[]>]')
+        self.assertEquals(`self.l.expr`, '[Stack<item=[]>]')

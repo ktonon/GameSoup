@@ -35,21 +35,14 @@ class Method(models.Model):
     
     def get_signature(self, as_implemented_by_type=None):
         type = as_implemented_by_type
-        context = self.interface.template_context
-        if type:
-            type.update_template_context(self.interface, context)
-            c = type.template_context
-            context = dict([
-                (k, Expr.parse(expr.resolve(c)))
-                for k, expr in context.items()
-                ])
-        params = []
-        for method_param in self.parameters.all():
-            # expr_text = expr.resolve(context)
-            params.append('%s : %s' % (method_param.name, method_param.expression_text))
-        w = u'%s(%s)' % (self.name, ' ; '.join(params))
+        bc = type and type.binding_context or None
+        c = type and type.context or None
+        resolve = lambda expr: type and ((expr % bc) % c) or expr
+        w = u'%s(%s)' % (self.name, ' ; '.join([
+            '%s : %r' % (p.name, resolve(p.expr))
+            for p in self.parameters.all()]))            
         ret = Expr.parse(self.return_expression_text)
-        if ret: w += ' : %s' % self.return_expression_text
+        if ret: w += ' : %s' % resolve(ret)
         return w
     get_signature.short_description = 'Signature'
     signature = property(get_signature)
@@ -116,8 +109,8 @@ class Type(models.Model):
     # Dynamic
 
     def _get_expr(self):
-        c = self.context
-        return sum([self.apply_bindings(i.expr) % c for i in self.implements.all()])
+        bc, c = self.binding_context, self.context
+        return Expr.reduce([(i.expr % bc) % c for i in self.implements.all()])
     expr = property(_get_expr)
     
     context = property(lambda self: self.template_parameters.get_context())
@@ -157,23 +150,7 @@ class Type(models.Model):
     
     ###############################################################################
     # Commands
-    
-    def apply_bindings(self, expr):
-        '''
-        Apply any relevant interface template parameter bindings
-        of this type to the given expression.
-        '''
-        for binding in self.template_bindings.all():            
-            return binding.parameter
-        
-    def update_template_context(self, interface, context):
-        '''
-        Update an interfaces template context with template parameter
-        bindings from this type.
-        '''
-        qs = self.template_bindings.filter(parameter__of_interface=interface)
-        context.update_with_bindings(qs)
-    
+                
     def generated_code(self):
         t = get_template('library/type/boilerplate.js')
         parsed = TypeCode(self)
@@ -241,7 +218,7 @@ class TypeParameter(Parameter):
     
     def get_expr(self):
         expr = super(TypeParameter, self).get_expr()
-        return expr # TODO: FIX THIS Expr.parse(expr.resolve(self.of_type.template_context))
+        return expr % self.of_type.context
     expr = property(get_expr)
 pre_save.connect(Parameter.pre_save, sender=TypeParameter)
 post_save.connect(Parameter.post_save, sender=TypeParameter)

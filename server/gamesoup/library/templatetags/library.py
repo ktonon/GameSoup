@@ -117,6 +117,10 @@ def get_expr_for_type(parser, token):
     return GetStrongestExpressionForTypeNode(type_varname, object_varname, varname)
 
 
+@register.filter
+def expr_with_links(expr):
+    return expr.replace('<', '&lt;').replace('>', '&gt;')
+    
 ###############################################################################
 # FOR LOADING OBJECTS INTO admin/change_form.html TEMPLATES
 

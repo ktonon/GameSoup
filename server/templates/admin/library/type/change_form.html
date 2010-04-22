@@ -9,29 +9,10 @@
 {% block after_field_sets %}
 {% get_type for object_id as type %}
 {% if type %}
-    {% with type.implements.all as interfaces %}
-    {% if interfaces %}
-    <table class="module" style="width: 100%">
-        <caption>Implemented interfaces</caption>
-        <thead>
-            <tr>
-                <th>Interface</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for interface in interfaces %}
-            <tr class="{% cycle row1,row2 %}">
-                {% get_expr_for_interface interface of type as expr %}
-                <td>{{ expr }}</td>
-                <td><pre>{{ expr.render_with_links|safe }}</pre></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
-    {% endwith %}    
-
-    {% comment %}
+    <div class="module" style="width: 100%">
+        <h2>Expr</h2>
+        <p>{{ type.expr }}</p>
+    </div>
 
     {% methods_for_type type as methods %}
     {% if methods %}    
@@ -40,7 +21,7 @@
         <thead>
             <tr>
                 <th>Signature</th>
-                <th>From interface</th>
+                <th>Interface</th>
             </tr>
         </thead>
         <tbody>
@@ -60,22 +41,21 @@
         <caption>Type parameters</caption>
         <thead>
             <tr>
-                <th>Parameter name</th>
-                <th>Strongest expression</th>
+                <th>Name</th>
+                <th>Expr</th>
             </tr>
         </thead>
         <tbody>
             {% for param in parameters %}
             <tr class="{% cycle row1,row2 %}">
                 <td>{{ param.name }}</td>
-                <td><pre>{{ param.expr.render_with_links|safe }}</pre></td>
+                <td><pre>{{ param.expr }}</pre></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     {% endif %}
     {% endwith %}
-    {% endcomment %}
 {% endif %}
 {% endblock after_field_sets %}
 
