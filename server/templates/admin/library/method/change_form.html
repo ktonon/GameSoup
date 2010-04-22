@@ -12,5 +12,5 @@ input[type=text] {width: 500px;}
 
 {% block extra-object-tools %}
     {% get_method for object_id as method %}
-    <li><a href="{% url admin:library_interface_change method.interface.id %}">Interface</a></li>
+    <li><a href="{% url admin:library_interface_change method.interface.id %}">Interface: {{ method.interface.name }}</a></li>
 {% endblock extra-object-tools %}

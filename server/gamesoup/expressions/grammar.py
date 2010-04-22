@@ -16,26 +16,31 @@ EXPR_LIST_PART  ::= ATOMIC_EXPR
                 |   ATOMIC_EXPR "+" EXPR_LIST_PART
                 ;
                 
-ATOMIC_EXPR     ::= ID
+ATOMIC_EXPR     ::= INTERFACE_ID
                 |   INTERFACE_ID "<" ARG_LIST_PART ">"
-                ;
-                
-ID              ::= INTERFACE_ID
-                |   VARIABLE_ID
+                |   VARIABLE
                 ;
 
+VARIABLE        ::= INTERFACE_ID "." VARIABLE_ID
+                |   TYPE_ID "." VARIABLE_ID
+                |   OBJECT_ID "." VARIABLE_ID
+                ;
+                
 INTERFACE_ID    ::= /[A-Z][A-Za-z0-9_]*/ ;
 
 VARIABLE_ID     ::= /[a-z][A-Za-z0-9_]*/ ;
 
 BUILT_IN_ID     ::= /[A-Z][A-Za-z0-9_]*\!/ ;
 
+TYPE_ID         ::= /\@[A-Z][A-Za-z0-9_]*/ ;
+
+OBJECT_ID       ::= /[1-9][0-9]*/ ;
+
 ARG_LIST_PART   ::= ARG
                 |   ARG "," ARG_LIST_PART
                 ;
 
 ARG             ::= VARIABLE_ID "=" EXPR ;
-
 '''
 
 
@@ -47,6 +52,8 @@ class Rule(object):
     lex = {
         'interface_id': r'[A-Z][A-Za-z0-9_]*',
         'variable_id': r'[a-z][A-Za-z0-9_]*',
+        'type_id': r'\@[A-Z][A-Za-z0-9_]*',
+        'object_id': r'[1-9][0-9]*',
         'built_in_id': r'[A-Z][A-Za-z0-9_]*\!',
     }
     
@@ -54,7 +61,7 @@ class Rule(object):
     def expr(w):
         """
         >>> Rule.expr('Foo')
-        ('EXPR', ('ATOMIC_EXPR', ('ID', ('INTERFACE_ID', 'Foo'))))
+        ('EXPR', ('ATOMIC_EXPR', ('INTERFACE_ID', 'Foo')))
         
         >>> Rule.expr('Foo!')
         ('EXPR', ('BUILT_IN_ID', 'Foo!'))
@@ -66,21 +73,41 @@ class Rule(object):
         try:
             return ('EXPR', Rule.expr_list(w))
         except _E:
+            pass
+        try:
             return ('EXPR', Rule.built_in_id(w))
+        except _E:
+            pass
+        raise _E('Could not parse %s as EXPR' % w)
     
     @staticmethod
     def atomic_expr(w):
         """
         >>> Rule.atomic_expr('Foo')
-        ('ATOMIC_EXPR', ('ID', ('INTERFACE_ID', 'Foo')))
+        ('ATOMIC_EXPR', ('INTERFACE_ID', 'Foo'))
 
         >>> Rule.atomic_expr('Foo<bar=Bar>')
-        ('ATOMIC_EXPR', ('ID', ('INTERFACE_ID', 'Foo')), ('ARG_LIST_PART', ('ARG', ('ID', ('VARIABLE_ID', 'bar')), ('EXPR', ('ATOMIC_EXPR', ('ID', ('INTERFACE_ID', 'Bar')))))))
+        ('ATOMIC_EXPR', ('INTERFACE_ID', 'Foo'), ('ARG_LIST_PART', ('ARG', ('VARIABLE_ID', 'bar'), ('EXPR', ('ATOMIC_EXPR', ('INTERFACE_ID', 'Bar'))))))
+        
+        >>> Rule.atomic_expr('@Type.var')
+        ('ATOMIC_EXPR', ('VARIABLE', ('TYPE_ID', '@Type'), ('VARIABLE_ID', 'var')))
+
+        >>> Rule.atomic_expr('2.var')
+        ('ATOMIC_EXPR', ('VARIABLE', ('OBJECT_ID', '2'), ('VARIABLE_ID', 'var')))
+
+        >>> Rule.atomic_expr('Foo.var')
+        ('ATOMIC_EXPR', ('VARIABLE', ('INTERFACE_ID', 'Foo'), ('VARIABLE_ID', 'var')))
         """
-        m = re.match(r'^\s*(%(interface_id)s)\s*\<\s*(.*?)\s*\>\s*$' % Rule.lex, w)
+        m = re.match(r'^\s*(%(interface_id)s)\s*(?:\<\s*(.*?)\s*\>)?\s*$' % Rule.lex, w)
         if m:
-            return ('ATOMIC_EXPR', Rule.id(m.group(1)), Rule.arg_list_part(m.group(2)))
-        return ('ATOMIC_EXPR', Rule.id(w))
+            if m.group(2):
+                return ('ATOMIC_EXPR', Rule.interface_id(m.group(1)), Rule.arg_list_part(m.group(2)))
+            else:
+                return ('ATOMIC_EXPR', Rule.interface_id(m.group(1)))
+        try:
+            return ('ATOMIC_EXPR', Rule.variable(w))
+        except _E:
+            raise _E('Could not parse %s as ATOMIC_EXPR' % w)
 
     @staticmethod
     def expr_list(w):
@@ -102,23 +129,73 @@ class Rule(object):
                 pass # Keep trying
         # Try parsing as an atomic expression
         return ('EXPR_LIST_PART', Rule.atomic_expr(w))
-    
-    @staticmethod
-    def id(w):
-        """
-        >>> Rule.id('Foo')
-        ('ID', ('INTERFACE_ID', 'Foo'))
 
-        >>> Rule.id('foo')
-        ('ID', ('VARIABLE_ID', 'foo'))
+    @staticmethod
+    def variable(w):
+        """
+        >>> Rule.variable('@Type.var')
+        ('VARIABLE', ('TYPE_ID', '@Type'), ('VARIABLE_ID', 'var'))
+
+        >>> Rule.variable('2.var')
+        ('VARIABLE', ('OBJECT_ID', '2'), ('VARIABLE_ID', 'var'))
+
+        >>> Rule.variable('Foo.var')
+        ('VARIABLE', ('INTERFACE_ID', 'Foo'), ('VARIABLE_ID', 'var'))
+        """
+        m = re.match(r'^\s*(%(type_id)s)\.(%(variable_id)s)\s*$' % Rule.lex, w)
+        if m:
+            return ('VARIABLE', Rule.type_id(m.group(1)), Rule.variable_id(m.group(2)))
+        m = re.match(r'^\s*(%(object_id)s)\.(%(variable_id)s)\s*$' % Rule.lex, w)
+        if m:
+            return ('VARIABLE', Rule.object_id(m.group(1)), Rule.variable_id(m.group(2)))
+        m = re.match(r'^\s*(%(interface_id)s)\.(%(variable_id)s)\s*$' % Rule.lex, w)
+        if m:
+            return ('VARIABLE', Rule.interface_id(m.group(1)), Rule.variable_id(m.group(2)))
+        raise _E('Could not parse %s as VARIABLE' % w)
+        
+    @staticmethod
+    def interface_id(w):
+        """
+        >>> Rule.interface_id('Foo')
+        ('INTERFACE_ID', 'Foo')
         """
         m = re.match(r'^\s*(%(interface_id)s)\s*$' % Rule.lex, w)
         if m:
-            return ('ID', ('INTERFACE_ID', m.group(1)))
+            return ('INTERFACE_ID', m.group(1))
+        raise _E('Could not parse %s as INTERFACE_ID' % w)
+
+    @staticmethod
+    def variable_id(w):
+        """
+        >>> Rule.variable_id('foo')
+        ('VARIABLE_ID', 'foo')
+        """
         m = re.match(r'^\s*(%(variable_id)s)\s*$' % Rule.lex, w)
         if m:
-            return ('ID', ('VARIABLE_ID', m.group(1)))
-        raise _E('Could not parse %s as ID' % w)
+            return ('VARIABLE_ID', m.group(1))
+        raise _E('Could not parse %s as VARIABLE_ID' % w)    
+
+    @staticmethod
+    def type_id(w):
+        """
+        >>> Rule.type_id('@Foo')
+        ('TYPE_ID', '@Foo')
+        """
+        m = re.match(r'^\s*(%(type_id)s)\s*$' % Rule.lex, w)
+        if m:
+            return ('TYPE_ID', m.group(1))
+        raise _E('Could not parse %s as TYPE_ID' % w)
+
+    @staticmethod
+    def object_id(w):
+        """
+        >>> Rule.object_id('12')
+        ('OBJECT_ID', '12')
+        """
+        m = re.match(r'^\s*(%(object_id)s)\s*$' % Rule.lex, w)
+        if m:
+            return ('OBJECT_ID', m.group(1))
+        raise _E('Could not parse %s as OBJECT_ID' % w)
     
     @staticmethod
     def built_in_id(w):
@@ -145,7 +222,7 @@ class Rule(object):
     def arg(w):
         m = re.match(r'^\s*(%(variable_id)s)\s*\=\s*(.*?)\s*$' % Rule.lex, w)
         if m:
-            return ('ARG', Rule.id(m.group(1)), Rule.expr(m.group(2)))
+            return ('ARG', Rule.variable_id(m.group(1)), Rule.expr(m.group(2)))
         raise _E('Could not parse %s as ARG' % w)    
 
 

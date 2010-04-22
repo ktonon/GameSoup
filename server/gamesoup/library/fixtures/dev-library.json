@@ -14,7 +14,7 @@
         "model": "library.method", 
         "fields": {
             "interface": 10, 
-            "return_expression_text": "[item]", 
+            "return_expression_text": "[Function.item]", 
             "name": "call", 
             "description": "Compute some value."
         }
@@ -64,7 +64,7 @@
         "model": "library.method", 
         "fields": {
             "interface": 21, 
-            "return_expression_text": "[over]", 
+            "return_expression_text": "[Distribution.over]", 
             "name": "getRandomObject", 
             "description": "Return a random object from a distribution"
         }
@@ -74,7 +74,7 @@
         "model": "library.method", 
         "fields": {
             "interface": 15, 
-            "return_expression_text": "[item]", 
+            "return_expression_text": "[Iterable.item]", 
             "name": "nextInIteration", 
             "description": "Get the next object in the sequence. When the sequence is over, this should return null."
         }
@@ -84,7 +84,7 @@
         "model": "library.method", 
         "fields": {
             "interface": 3, 
-            "return_expression_text": "[item]", 
+            "return_expression_text": "[Stack.item]", 
             "name": "pop", 
             "description": "Remove the object at the top of the stack and return it."
         }
@@ -104,7 +104,7 @@
         "model": "library.method", 
         "fields": {
             "interface": 11, 
-            "return_expression_text": "[item]", 
+            "return_expression_text": "[Readable.item]", 
             "name": "read", 
             "description": "Read this content of this object."
         }
@@ -606,7 +606,7 @@
                 11, 
                 12
             ], 
-            "expression_text": "[Readable<item=[item]> + Writable<item=[item]>]", 
+            "expression_text": "[Readable<item=[@SquareGrid.item]> + Writable<item=[@SquareGrid.item]>]", 
             "is_built_in": false, 
             "is_factory": true, 
             "of_type": 7
@@ -621,7 +621,7 @@
                 11, 
                 12
             ], 
-            "expression_text": "[Readable<item=[item]> + Writable<item=[item]>]", 
+            "expression_text": "[Readable<item=[@Hexagonal.item]> + Writable<item=[@Hexagonal.item]>]", 
             "is_built_in": false, 
             "is_factory": true, 
             "of_type": 8
@@ -634,7 +634,7 @@
             "name": "colCount", 
             "interfaces": [], 
             "expression_text": "Integer!", 
-            "is_built_in": false, 
+            "is_built_in": true, 
             "is_factory": false, 
             "of_type": 7
         }
@@ -647,7 +647,7 @@
             "interfaces": [
                 15
             ], 
-            "expression_text": "[Iterable<item=[Writable<item=[item]>]>]", 
+            "expression_text": "[Iterable<item=[Writable<item=[@InitializeCollectionWithDistribution.item]>]>]", 
             "is_built_in": false, 
             "is_factory": false, 
             "of_type": 12
@@ -661,7 +661,7 @@
             "interfaces": [
                 12
             ], 
-            "expression_text": "[Writable<item=[item]>]", 
+            "expression_text": "[Writable<item=[@TransferIf.item]>]", 
             "is_built_in": false, 
             "is_factory": false, 
             "of_type": 6
@@ -675,7 +675,7 @@
             "interfaces": [
                 21
             ], 
-            "expression_text": "[Distribution<over=[item]>]", 
+            "expression_text": "[Distribution<over=[@InitializeCollectionWithDistribution.item]>]", 
             "is_built_in": false, 
             "is_factory": false, 
             "of_type": 12
@@ -700,7 +700,7 @@
             "name": "label", 
             "interfaces": [], 
             "expression_text": "String!", 
-            "is_built_in": false, 
+            "is_built_in": true, 
             "is_factory": false, 
             "of_type": 5
         }
@@ -712,7 +712,7 @@
             "name": "message", 
             "interfaces": [], 
             "expression_text": "String!", 
-            "is_built_in": false, 
+            "is_built_in": true, 
             "is_factory": false, 
             "of_type": 10
         }
@@ -738,7 +738,7 @@
             "name": "radius", 
             "interfaces": [], 
             "expression_text": "Integer!", 
-            "is_built_in": false, 
+            "is_built_in": true, 
             "is_factory": false, 
             "of_type": 8
         }
@@ -750,7 +750,7 @@
             "name": "rowCount", 
             "interfaces": [], 
             "expression_text": "Integer!", 
-            "is_built_in": false, 
+            "is_built_in": true, 
             "is_factory": false, 
             "of_type": 7
         }
@@ -763,7 +763,7 @@
             "interfaces": [
                 11
             ], 
-            "expression_text": "[Readable<item=[item]>]", 
+            "expression_text": "[Readable<item=[@TransferIf.item]>]", 
             "is_built_in": false, 
             "is_factory": false, 
             "of_type": 6
@@ -804,7 +804,7 @@
             "name": "value", 
             "interfaces": [], 
             "expression_text": "String!", 
-            "is_built_in": false, 
+            "is_built_in": true, 
             "is_factory": false, 
             "of_type": 2
         }
@@ -831,7 +831,7 @@
             "is_built_in": false, 
             "of_method": 5, 
             "name": "a", 
-            "expression_text": "[cell]"
+            "expression_text": "[Board.cell]"
         }
     }, 
     {
@@ -842,7 +842,7 @@
             "is_built_in": false, 
             "of_method": 5, 
             "name": "b", 
-            "expression_text": "[cell]"
+            "expression_text": "[Board.cell]"
         }
     }, 
     {
@@ -853,7 +853,7 @@
             "is_built_in": false, 
             "of_method": 9, 
             "name": "item", 
-            "expression_text": "[item]"
+            "expression_text": "[Stack.item]"
         }
     }, 
     {
@@ -864,7 +864,7 @@
             "is_built_in": false, 
             "of_method": 8, 
             "name": "item", 
-            "expression_text": "[item]"
+            "expression_text": "[Writable.item]"
         }
     }, 
     {
@@ -1008,7 +1008,7 @@
         "fields": {
             "parameter": 5, 
             "type": 4, 
-            "expression_text": "[item]"
+            "expression_text": "[@List.item]"
         }
     }, 
     {
@@ -1017,7 +1017,7 @@
         "fields": {
             "parameter": 2, 
             "type": 4, 
-            "expression_text": "[item]"
+            "expression_text": "[@List.item]"
         }
     }, 
     {
@@ -1026,7 +1026,7 @@
         "fields": {
             "parameter": 2, 
             "type": 8, 
-            "expression_text": "[item]"
+            "expression_text": "[@Hexagonal.item]"
         }
     }, 
     {
@@ -1035,7 +1035,7 @@
         "fields": {
             "parameter": 4, 
             "type": 3, 
-            "expression_text": "[item]"
+            "expression_text": "[@Container.item]"
         }
     }, 
     {
@@ -1044,7 +1044,7 @@
         "fields": {
             "parameter": 6, 
             "type": 3, 
-            "expression_text": "[item]"
+            "expression_text": "[@Container.item]"
         }
     }, 
     {
@@ -1053,7 +1053,7 @@
         "fields": {
             "parameter": 4, 
             "type": 4, 
-            "expression_text": "[item]"
+            "expression_text": "[@List.item]"
         }
     }, 
     {
@@ -1062,7 +1062,7 @@
         "fields": {
             "parameter": 6, 
             "type": 4, 
-            "expression_text": "[item]"
+            "expression_text": "[@List.item]"
         }
     }, 
     {
@@ -1080,7 +1080,7 @@
         "fields": {
             "parameter": 2, 
             "type": 7, 
-            "expression_text": "[Readable<item=[item]> + Writable<item=[item]>]"
+            "expression_text": "[Readable<item=[@SquareGrid.item]> + Writable<item=[@SquareGrid.item]>]"
         }
     }, 
     {
@@ -1089,7 +1089,7 @@
         "fields": {
             "parameter": 7, 
             "type": 7, 
-            "expression_text": "[Readable<item=[item]> + Writable<item=[item]>]"
+            "expression_text": "[Readable<item=[@SquareGrid.item]> + Writable<item=[@SquareGrid.item]>]"
         }
     }
 ]

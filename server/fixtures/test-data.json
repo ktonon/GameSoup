@@ -40,25 +40,7 @@
         "model": "sites.site", 
         "fields": {
             "domain": "gamesoup.org", 
-            "name": "GameSoup"
-        }
-    },
-    {
-        "pk": 1, 
-        "model": "library.interface", 
-        "fields": {
-            "description": "An empty interface. If you have an object of type any, then you don't know anything about it.", 
-            "is_built_in": false, 
-            "name": "Any"
-        }
-    }, 
-    {
-        "pk": 2, 
-        "model": "library.interface", 
-        "fields": {
-            "description": "Represents a value that doesn't contain anything.", 
-            "is_built_in": true, 
-            "name": "Nothing"
+            "name": "GameSoup Tester"
         }
     }
 ]

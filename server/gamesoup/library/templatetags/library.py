@@ -73,16 +73,16 @@ class GetStrongestExpressionForInterfaceNode(template.Node):
     def render(self, context):
         type = self.type_var.resolve(context)
         interface = self.interface_var.resolve(context)
-        context[self.varname] = interface.get_strongest_expression(as_implemented_by_type=type)
+        context[self.varname] = interface.get_expr(as_implemented_by_type=type)
         return u''
 
 
 @register.tag
-def get_strongest_expression_for_interface(parser, token):
+def get_expr_for_interface(parser, token):
     '''
     Usage::
     
-        {% get_strongest_expression_for_interface interface of type as varname %}
+        {% get_expr_for_interface interface of type as varname %}
     '''
     try:
         tag_name, interface_varname, _of, type_varname, _as, varname = token.split_contents()
@@ -99,16 +99,16 @@ class GetStrongestExpressionForTypeNode(template.Node):
     def render(self, context):
         obj = self.object_var.resolve(context)
         type = self.type_var.resolve(context)
-        context[self.varname] = type.get_strongest_expression(as_instantiated_by_object=obj)
+        context[self.varname] = type.get_expr(as_instantiated_by_object=obj)
         return u''
 
 
 @register.tag
-def get_strongest_expression_for_type(parser, token):
+def get_expr_for_type(parser, token):
     '''
     Usage::
 
-        {% get_strongest_expression_for_interface interface of type as varname %}
+        {% get_expr_for_interface interface of type as varname %}
     '''
     try:
         tag_name, type_varname, _of, object_varname, _as, varname = token.split_contents()

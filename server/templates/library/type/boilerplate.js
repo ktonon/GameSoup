@@ -17,10 +17,10 @@ gamesoup.library.types.{{ type.name }} = Class.create(gamesoup.library.types.Bas
 //{{ "BUILT-INS"|center:"75" }}{% for param in built_ins %}
 // this._{{ param.name|ljust:"25" }} {{ param.expression_text|safe|rjust:"44" }}{% endfor %}{% endif %}{% if references %}
 //{{ "REFERENCES"|center:"75" }}
-{% for param in references %}// this._{{ param.name|ljust:"25" }} {{ param.strongest_expression|safe|rjust:"44" }}
+{% for param in references %}// this._{{ param.name|ljust:"25" }} {{ param.expr|safe|rjust:"44" }}
 {% endfor %}{% endif %}{% endif %}{% if factories %}
 //{{ "FACTORIES"|center:"75" }}
-{% for factory in factories %}// this._{{ factory.name|ljust:"25" }} {{ factory.strongest_expression|safe|rjust:"44" }}
+{% for factory in factories %}// this._{{ factory.name|ljust:"25" }} {{ factory.expr|safe|rjust:"44" }}
 {% endfor %}{% endif %}{% if methods %}
 
 /*****************************************************************************/

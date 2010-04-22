@@ -6,9 +6,7 @@
 <li><a href="{% url library:generate_type_code object_id %}">Generate Code</a></li>
 {% endblock extra-object-tools %}
 
-{% comment %}
 {% block after_field_sets %}
-<br/><hr/><br/>
 {% get_type for object_id as type %}
 {% if type %}
     {% with type.implements.all as interfaces %}
@@ -17,13 +15,14 @@
         <caption>Implemented interfaces</caption>
         <thead>
             <tr>
-                <th>Strongest expression</th>
+                <th>Interface</th>
             </tr>
         </thead>
         <tbody>
             {% for interface in interfaces %}
             <tr class="{% cycle row1,row2 %}">
-                {% get_strongest_expression_for_interface interface of type as expr %}
+                {% get_expr_for_interface interface of type as expr %}
+                <td>{{ expr }}</td>
                 <td><pre>{{ expr.render_with_links|safe }}</pre></td>
             </tr>
             {% endfor %}
@@ -31,6 +30,9 @@
     </table>
     {% endif %}
     {% endwith %}    
+
+    {% comment %}
+
     {% methods_for_type type as methods %}
     {% if methods %}    
     <table class="module" style="width: 100%">
@@ -51,6 +53,7 @@
         </tbody>
     </table>
     {% endif %}
+
     {% with type.parameters.all as parameters %}
     {% if parameters %}
     <table class="module" style="width: 100%">
@@ -65,15 +68,15 @@
             {% for param in parameters %}
             <tr class="{% cycle row1,row2 %}">
                 <td>{{ param.name }}</td>
-                <td><pre>{{ param.strongest_expression.render_with_links|safe }}</pre></td>
+                <td><pre>{{ param.expr.render_with_links|safe }}</pre></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     {% endif %}
     {% endwith %}
+    {% endcomment %}
 {% endif %}
-<br/><hr/><br/>
 {% endblock after_field_sets %}
 
 
@@ -81,6 +84,7 @@
 <br/><hr/><br/>
 {% get_type for object_id as type %}
 {% if type %}
+    {% comment %}
     {% with type.instances.all as objects %}
     {% if objects %}
     <table class="module" style="width: 100%">
@@ -98,7 +102,7 @@
                 <td><a href="{% url admin:games_object_change obj.id %}">{{ obj.name }}</a></td>
                 <td><a href="{% url admin:games_game_change obj.game.id %}">{{ obj.game.name }}</a></td>
                 <td>
-                    {% get_strongest_expression_for_type type of obj as expr %}
+                    {% get_expr_for_type type of obj as expr %}
                     <pre>{{ expr.render_with_links|safe }}</pre>
                 </td>
             </tr>
@@ -107,6 +111,6 @@
     </table>
     {% endif %}
     {% endwith %}
+    {% endcomment %}
 {% endif %}
 {% endblock after_related_objects %}
-{% endcomment %}

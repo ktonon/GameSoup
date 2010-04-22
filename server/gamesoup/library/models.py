@@ -68,8 +68,17 @@ class Interface(models.Model):
     name = IdentifierField(help_text='A unique name. Should be specified using MixedCase with no spaces.')
     description = models.TextField(blank=True, help_text='This will serve as a human-readable, searchable account of this interface. Make this very detailed, because this will be the primary description of this interface for game designers.')
     is_built_in = models.BooleanField(default=False, help_text="Built-in interfaces are provided by the underlying language (JavaScript) or library (Prototype) and do not require a Type to be implemented.")
-    
+
     objects = InterfaceManager()
+
+    ###############################################################################
+    # Dynamic
+    
+    expr = property(lambda self: Expr.parse('%s<%s>' % (self.name, self.context)))
+    context = property(lambda self: self.template_parameters.get_context())
+    
+    ###############################################################################
+    # Representation
 
     class Meta:
         ordering = ['name']
@@ -77,9 +86,6 @@ class Interface(models.Model):
     def __unicode__(self):
         qs = self.template_parameters.all()
         return self.name + (qs and u'<%s>' % ','.join([u'%s=%s' % (tp.name, tp.expression_text) for tp in qs]) or u'')
-
-    def is_nothing(self):
-        return self == self.__class__.objects.nothing()
 
     def implemented_by_short(self):
         return ', '.join([type.name for type in self.implemented_by.all()])
@@ -92,22 +98,6 @@ class Interface(models.Model):
         )
     doc_link.allow_tags = True
     doc_link.short_description = 'Documentation'
-
-    def get_strongest_expression(self, as_implemented_by_type=None):
-        type = as_implemented_by_type
-        context = self.template_context
-        params = []
-        if type:
-            type.update_template_context(self, context)
-            c = type.template_context
-            params = ['%s=%s' % (k, expr.resolve(c)) for k, expr in context.items()]
-        w = self.name + (params and '<%s>' % ','.join(params) or '')
-        return Expr.parse(w)
-    strongest_expression = property(get_strongest_expression)    
-
-    def _get_template_context(self):
-        return self.template_parameters.get_context()
-    template_context = property(_get_template_context)
 
     
 class Type(models.Model):
@@ -122,6 +112,20 @@ class Type(models.Model):
     has_state = models.BooleanField(default=False)
     code = models.TextField(blank=True)
     
+    ###############################################################################
+    # Dynamic
+
+    def _get_expr(self):
+        c = self.context
+        return sum([self.apply_bindings(i.expr) % c for i in self.implements.all()])
+    expr = property(_get_expr)
+    
+    context = property(lambda self: self.template_parameters.get_context())
+    binding_context = property(lambda self: self.template_bindings.get_context())
+    
+    ###############################################################################
+    # Representation
+    
     class Meta:
         ordering = ['name']
     
@@ -129,6 +133,9 @@ class Type(models.Model):
         qs = self.template_parameters.all()
         return self.name + (qs and u'<%s>' % ','.join([u'%s=%s' % (tp.name, tp.expression_text) for tp in qs]) or u'')
 
+    ###############################################################################
+    # Queries
+    
     def is_conflicted(self):
         '''
         Do two distinct methods of this type have the same name?
@@ -148,10 +155,17 @@ class Type(models.Model):
         names = [name for name, count in counts.items() if count > 1]
         return qs.filter(name__in=names).order_by('name')
     
-    def _get_template_context(self):
-        return self.template_parameters.get_context()
-    template_context = property(_get_template_context)
+    ###############################################################################
+    # Commands
     
+    def apply_bindings(self, expr):
+        '''
+        Apply any relevant interface template parameter bindings
+        of this type to the given expression.
+        '''
+        for binding in self.template_bindings.all():            
+            return binding.parameter
+        
     def update_template_context(self, interface, context):
         '''
         Update an interfaces template context with template parameter
@@ -160,16 +174,6 @@ class Type(models.Model):
         qs = self.template_bindings.filter(parameter__of_interface=interface)
         context.update_with_bindings(qs)
     
-    def get_strongest_expression(self, as_instantiated_by_object=None):
-        obj = as_instantiated_by_object
-        expressions = [`interface.get_strongest_expression(as_implemented_by_type=self)` for interface in self.implements.all()]
-        w = ' + '.join(expressions)
-        w = len(expressions) > 1 and '[%s]' % w or w
-        if obj:
-            w = w
-        return Expr.parse(w)
-    strongest_expression = property(get_strongest_expression)
-
     def generated_code(self):
         t = get_template('library/type/boilerplate.js')
         parsed = TypeCode(self)
@@ -207,27 +211,26 @@ class Parameter(models.Model):
     def __unicode__(self):
         return self.name
     
-    def get_expression(self):
+    def get_expr(self):
         return Expr.parse(self.expression_text)
-    expression = property(get_expression)
+    expr = property(get_expr)
     
     @staticmethod
     def pre_save(sender, instance, **kwargs):
-        expr = instance.expression
+        expr = instance.expr
         instance.is_built_in = False
         if len(expr) == 1:
             try:
-                instance.is_built_in = Interface.objects.get(name=expr.ids[0]).is_built_in                
+                instance.is_built_in = Interface.objects.get(name=expr.ids[0]).is_built_in
             except Interface.DoesNotExist:
                 # It's ok, not a built in,
                 # probably a variable
                 pass
-        # instance.is_built_in = expr.is_built_in
 
     @staticmethod
     def post_save(sender, instance, **kwargs):
         instance.interfaces.clear()
-        for interface in Interface.objects.for_expr(instance.expression):
+        for interface in Interface.objects.for_expr(instance.expr):
             instance.interfaces.add(interface)
 
 
@@ -236,9 +239,10 @@ class TypeParameter(Parameter):
     is_factory = models.BooleanField(default=False)
     interfaces = models.ManyToManyField(Interface, related_name='used_in_type_parameter', editable=False)
     
-    def get_strongest_expression(self):
-        return Expr.parse(self.expression.resolve(self.of_type.template_context))
-    strongest_expression = property(get_strongest_expression)
+    def get_expr(self):
+        expr = super(TypeParameter, self).get_expr()
+        return expr # TODO: FIX THIS Expr.parse(expr.resolve(self.of_type.template_context))
+    expr = property(get_expr)
 pre_save.connect(Parameter.pre_save, sender=TypeParameter)
 post_save.connect(Parameter.post_save, sender=TypeParameter)
 
@@ -267,23 +271,25 @@ class TemplateParameter(models.Model):
     def __unicode__(self):
         return '.'.join([self.of.name, self.name])
 
-    def get_expression(self):
+    def get_expr(self):
         return Expr.parse(self.expression_text)
-    expression = property(get_expression)
+    expr = property(get_expr)
     
 
 class TemplateParameterBinding(models.Model):
     expression_text = ExprField('Expression')
     
+    objects = ParameterManager()
+
     class Meta:
         abstract=True
             
     def __unicode__(self):
-        return self.expression_text
+        return unicode(self.parameter)
 
-    def get_expression(self):
+    def get_expr(self):
         return Expr.parse(self.expression_text)
-    expression = property(get_expression)
+    expr = property(get_expr)
 
 
 # PARAMETERS
@@ -297,6 +303,9 @@ class InterfaceTemplateParameter(TemplateParameter):
 class TypeTemplateParameter(TemplateParameter):
     of_type = models.ForeignKey(Type, related_name='template_parameters')
     of = property(lambda self: self.of_type)
+
+    def __unicode__(self):
+        return '@' + super(TypeTemplateParameter, self).__unicode__()
 
 
 # BINDINGS

@@ -28,8 +28,8 @@ class Cached(object):
 
 class Expr(Cached):
     '''
-    This class accepts an interface expression (which is a string)
-    and parses it into an intermediate data structure.
+    This class accepts an interface expression (which is a string) and
+    parses it into an intermediate data structure.
     '''
     
     ###############################################################################
@@ -116,7 +116,10 @@ class Expr(Cached):
         >>> Expr.parse('A!').is_singleton
         True
         
-        >>> Expr.parse('[a]').is_singleton
+        >>> Expr.parse('[@Type.a]').is_singleton
+        True
+
+        >>> Expr.parse('[43.a]').is_singleton
         True
 
         >>> Expr.parse('[A<item=B>]').is_singleton
@@ -133,7 +136,10 @@ class Expr(Cached):
         >>> Expr.parse('A').is_built_in
         False
         
-        >>> Expr.parse('a').is_built_in
+        >>> Expr.parse('@T.a').is_built_in
+        False
+
+        >>> Expr.parse('32.a').is_built_in
         False
         
         >>> Expr.parse('A!').is_built_in
@@ -153,13 +159,16 @@ class Expr(Cached):
         >>> Expr.parse('A!').is_var
         False
 
-        >>> Expr.parse('a').is_var
+        >>> Expr.parse('@T.a').is_var
         True
 
-        >>> Expr.parse('[a]').is_var
+        >>> Expr.parse('21.a').is_var
         True
 
-        >>> Expr.parse('[a + B]').is_var
+        >>> Expr.parse('[21.a]').is_var
+        True
+
+        >>> Expr.parse('[21.a + B]').is_var
         False
         """
         return self.is_singleton and self.singleton.is_var
@@ -172,22 +181,22 @@ class Expr(Cached):
     
     def __repr__(self):
         """
-        Produce the normalized representation of this expression.
-        For each level of nesting, all identifiers will be sorted
+        Produce the normalized representation of this expression. For
+        each level of nesting, all identifiers will be sorted
         alphabetically. White space is also normalized.
-
+        
         Normal singleton interfaces and variables are placed within
-        square brackets, to indicate that they can be unioned with
-        other expressions.
+        square brackets, to indicate that they can be unioned with other
+        expressions.
         
             >>> Expr.parse('A')
             [A]
         
-            >>> Expr.parse('a')
-            [a]
+            >>> Expr.parse('@T.a')
+            [@T.a]
         
-        Built-in interfaces cannot be unioned with other interfaces,
-        so they are represented outside of any square brackets.
+        Built-in interfaces cannot be unioned with other interfaces, so
+        they are represented outside of any square brackets.
         
             >>> Expr.parse('A!')
             A!
@@ -213,10 +222,10 @@ class Expr(Cached):
         return len(self._child)
 
     def __nonzero__(self):
-        """
-        So that expressions are always evaluated as True. This is useful in
-        short-circuited boolean python expressions which first check that
-        an expression is not None and then use some property.
+        """        
+        So that expressions are always evaluated as True. This is useful
+        in short-circuited boolean python expressions which first check
+        that an expression is not None and then use some property.
         
         For example:
         
@@ -255,6 +264,34 @@ class Expr(Cached):
                 union.append(atom1 or atom2)
         return Expr.from_atoms(union)
 
+    def __mod__(self, c):
+        '''
+        Resolve this expression with the template context c.
+
+        >>> from gamesoup.expressions.context import TemplateContext as C
+        >>> e = Expr.parse('Bar')
+        >>> c = C({
+        ...     'A.item': e,
+        ...     '@C.item': e,
+        ...     '12.item': e,
+        ... })
+        >>> e = Expr.parse('B<item=[12.item + Car<item=@C.item>]>')
+        >>> e
+        [B<item=[12.item + Car<item=[@C.item]>]>]
+        >>> e % c
+        [B<item=[Bar + Car<item=[Bar]>]>]
+        
+        # >>> e = Expr.parse('[A<item=[]> + B<item=[12.item + Car<item=@C.item>]> + @C.item]')
+        # >>> e
+        # [@C.item + A<item=[]> + B<item=[12.item + Car<item=[@C.item]>]>]
+        # >>> e % c
+        # [A<item=[Bar]> + B<item=[Bar + Car<item=[Bar]>]> + Bar]
+        '''
+        # Note that atom % c returns an Expr, not an Atom,
+        # so taking the sum of a list of Expr will call the
+        # __add__ method of Expr.
+        return reduce(lambda x, y: x + y, [atom % c for atom in self.atoms])
+
     ###############################################################################
     # Comparison
 
@@ -271,11 +308,6 @@ class Expr(Cached):
                 return False
         return True
 
-    def resolve(self, other, resolvent=None):
-        '''
-        Resolve self to other.
-        '''
-
     def join(self, other):
         return _join(self, other, '_child', 'ids')
 
@@ -288,25 +320,30 @@ class Atom(Cached):
     @classmethod
     def from_tree(cls, tree):
         if tree[0] == 'ATOMIC_EXPR':
-            assert tree[1][0] == 'ID'
-            assert tree[1][1][0] in ('INTERFACE_ID', 'VARIABLE_ID')
-            args = []
-            if len(tree) > 2:
-                x = tree[2]
-                assert x[0] == 'ARG_LIST_PART'
-                while x:
-                    args.append(Arg.from_tree(x[1]))
-                    x = len(x) > 2 and x[2] or None
-            return cls.from_args(args, id=tree[1][1][1], is_var=tree[1][1][0] == 'VARIABLE_ID')
+            assert tree[1][0] in ('INTERFACE_ID', 'VARIABLE')
+            if tree[1][0] == 'INTERFACE_ID':
+                args = []
+                if len(tree) > 2:
+                    x = tree[2]
+                    assert x[0] == 'ARG_LIST_PART'
+                    while x:
+                        args.append(Arg.from_tree(x[1]))
+                        x = len(x) > 2 and x[2] or None
+                return cls.from_args(args, id=tree[1][1])
+            else: # tree[1][0] == 'VARIABLE'
+                assert tree[1][1][0] in ('INTERFACE_ID', 'TYPE_ID', 'OBJECT_ID')
+                assert tree[1][2][0] == 'VARIABLE_ID'
+                id = '%s.%s' % (tree[1][1][1], tree[1][2][1])
+                return cls.from_args([], id=id, var_type=tree[1][1][0][:-3].lower())
         else:
             assert tree[0] == 'BUILT_IN_ID'
             return cls.from_args([], id=tree[1], is_built_in=True)
     
     @classmethod
-    def from_args(cls, args, id, is_var=False, is_built_in=False):
+    def from_args(cls, args, id, var_type=None, is_built_in=False):
         atom = cls()
         atom._id = id
-        atom._is_var = is_var
+        atom._var_type = var_type
         atom._is_built_in = is_built_in
         atom._arg = dict([(arg.id, arg) for arg in args])
         return cls.unique(atom)
@@ -314,10 +351,14 @@ class Atom(Cached):
     ###############################################################################
     # Queries
     
-    is_var = property(lambda self: self._is_var)
+    is_var = property(lambda self: self._var_type is not None)
+    is_interface_var = property(lambda self: self._var_type == 'interface')
+    is_type_var = property(lambda self: self._var_type == 'type')
+    is_object_var = property(lambda self: self._var_type == 'object')
+    var_type = property(lambda self: self._var_type)
     id = property(lambda self: self._id)
     is_built_in = property(lambda self: self._is_built_in)
-    
+
     def get_sorted_param_ids(self):
         return sorted(self._arg.keys())
     param_ids = property(get_sorted_param_ids)
@@ -343,14 +384,77 @@ class Atom(Cached):
     
     def __add__(self, other):
         assert self.id == other.id
-        assert self.is_var == other.is_var
+        assert self.var_type == other.var_type
         union = []
         for arg1, arg2 in self.join(other):
             if arg1 and arg2 and arg1 != arg2:
                 union.append(arg1 + arg2)
             else:
                 union.append(arg1 or arg2)
-        return Atom.from_args(union, id=self.id, is_var=self.is_var)
+        return Atom.from_args(union, id=self.id, var_type=self.var_type)
+
+    def __mod__(self, c):
+        """
+        Resolve this atom with the template context c.
+        Returns an Expr, not an Atom.
+
+        >>> from gamesoup.expressions.context import TemplateContext as C
+        >>> a = Arg.from_expr(Expr.parse('[]'), id='item')
+        >>> e = Expr.parse('Bar')
+        >>> c = C({
+        ...     'Foo.item': e,
+        ...     '@Foo.item': e,
+        ...     '12.item': e,
+        ... })
+        >>> atom = Atom.from_args([a], id='Foo')
+        >>> atom
+        Foo<item=[]>
+        >>> atom % c
+        [Foo<item=[Bar]>]
+        
+        >>> atom = Atom.from_args([], id='@Foo.item', var_type='type')
+        >>> atom
+        @Foo.item
+        >>> atom % c
+        [Bar]
+
+        >>> atom = Atom.from_args([], id='12.item', var_type='object')
+        >>> atom
+        12.item
+        >>> atom % c
+        [Bar]
+        
+        >>> atom = Atom.from_args([], id='Integer!', is_built_in=True)
+        >>> atom
+        Integer!
+        >>> atom % c
+        Integer!
+        >>> (atom % c).__class__.__name__
+        'Expr'
+        
+        >>> atom = Expr.parse('B<item=[12.item + Car<item=@C.item>]>').atoms[0]
+        >>> atom
+        B<item=[12.item + Car<item=[@C.item]>]>
+        >>> atom % C({'12.item': e, '@C.item': e})
+        [B<item=[Bar + Car<item=[Bar]>]>]
+        """        
+        if self.is_built_in:
+            # Can't resolve a built-in 
+            return Expr.from_atoms([self])
+        elif self.is_var:
+            # Try to resolve this atom directly with the context
+            if self.id in c:
+                return c[self.id]
+            else:
+                Expr.from_atoms([self])
+        else:
+            # Try to resolve any interface template arguments
+            if len(self) == 0:
+                # If there are no args, can't resolve anything
+                return Expr.from_atoms([self])
+            # Note that arg % c returns an Arg
+            args = [arg.resolve(c, interface_name=self.id) for arg in self.args]
+            return Expr.from_atoms([Atom.from_args(args, id=self.id)])
 
     ###############################################################################
     # Comparison
@@ -374,12 +478,11 @@ class Arg(Cached):
     
     @classmethod
     def from_tree(cls, tree):
-        assert tree[0] == 'ARG', 'Found %s' % tree[0]
-        assert tree[1][0] == 'ID', 'Found %s' % tree[1][0]
-        assert tree[1][1][0] == 'VARIABLE_ID', 'Found %s' % tree[1][1][0]
+        assert tree[0] == 'ARG'
+        assert tree[1][0] == 'VARIABLE_ID'
         assert tree[2][0] == 'EXPR'        
         expr = Expr.from_tree(tree[2])
-        return cls.from_expr(expr, id=tree[1][1][1])
+        return cls.from_expr(expr, id=tree[1][1])
 
     @classmethod
     def from_expr(cls, expr, id):
@@ -408,6 +511,24 @@ class Arg(Cached):
         expr = self.expr + other.expr
         return Arg.from_expr(expr, id=self.id)
 
+    def resolve(self, c, interface_name):
+        """
+        Resolve this arg with the template context c.
+        Returns an Arg.
+        
+        >>> from gamesoup.expressions.context import TemplateContext as C
+        >>> a = Arg.from_expr(Expr.parse('[]'), id='item')
+        >>> a
+        item=[]
+        >>> a.resolve(C({'Foo.item': Expr.parse('Bar')}), interface_name='Foo')
+        item=[Bar]
+        """
+        key = '.'.join([interface_name, self.id])
+        if key in c:
+            return Arg.from_expr(c[key], id=self.id)
+        else:
+            return Arg.from_expr(self.expr % c, id=self.id)
+    
     ###############################################################################
     # Comparison
 
@@ -514,59 +635,6 @@ False
 >>> Expr.parse('Foo<item=Bar>').super(Expr.parse('Foo<item=[]>'))
 True
 
-Take for example, "Iterable<item=Readable<item=over>>". Here, the outer "item"
-is an interface template parameter of the interface Iterable. It is bound to an 
-expression which involves the type template parameter "over". "over" requires
-a minimum interface, but that minimum interface is not specified here. It can be
-found by looking up the type template parameter in the database.
-
-A resolvent is a dictionary which maps type template parameter names to other expressions.
-A resolvent can be applied to an expression to replace all occurences of each key with
-their respective values, yielding a new expression which is super to the first.
-
-Note that if expression a is super to expression b, in a strict sense (that is, they are
-not the same expression), then there are fewer objects which will be able to satisfy that
-expression.
-
-An objects working expression is a combination of the expression of its type, and of
-resolvents applied to it as a result of type parameter bindings. If an object is bound to
-the type parameter of another object, then the working expression of the object must
-be super to the working expression of the type parameter. If this is not already the case
-then a resolvent may be applied to the working expression of the object. The only way
-a resolvent can change an expression, is by binding type template parameters which are
-themselves bound to interface template parameters.
-
-However! Type template parameters are used in 2 places:
-    1) To bind interface template parameters
-    2) In type parameters
-
-And this is where it gets complicated. When you bind a type template parameter in order
-to change the interface of an object which instantiates it, you may also inadvertantly
-change the expressions of the type parameters. The cascades to any objects bound to those
-type parameters.
-
-So, we have an algorithm for binding type objects to type parameters which is recursive.
-It goes like this:
-
-(1) > Is bindee.expr.super(binder.param.expr)?
-        > Yes: Ok, you are good. Just bind it.
-        > No: Is bindee.expr.resolvable_with(binder.param.expr)?
-            > No: Ok, you cannot bind it. You are done.
-            > Yes:
-                > Get the resolvent r, that will make bindee.expr.super(binder.param.expr)
-                > Any any keys in r mentioned in bindee.Type's parameters?
-                    > No: Okay, no harm.
-                    > Yes: Are any of the affected parameters already bound?
-                        > In either case, you will also have to apply
-                          the resolvent to each affected parameter.
-                        > No: Okay, no harm.
-                        > Yes: RECURSE: apply (1) to the bound object and the parameter.
-                > Is bindee already bound to parameters of any other objects?
-                    > No: Okay.
-                    > Yes: RECURSE: apply (1) to bindee and each parameter to which
-                      it is already bound. But, make sure you use bindee's working
-                      expression as it would look AFTER applying the resolvent
-
 Here is an example:
 
 #     >>> obj = Expr.parse('Iterable<item=Readable<item=over>>')
@@ -574,22 +642,23 @@ Here is an example:
 #     >>> resolvent = obj.resolvent_for(param)
 #     >>> resolvent
 #     {'over': [Clearable]}
-# 
-# Now say we lookup the minimum interface required by the type template parameter
-# "over" and find it to be "[Drivable]". That's is no good, because:
-# 
+
+Now say we lookup the minimum interface required by the type template
+parameter "over" and find it to be "[Drivable]". That's is no good,
+because:
+
 #     >>> Expr.parse('Clearable').super(Expr.parse('Drivable'))
 #     False
-# 
-# 
-# because after applying the resolvent:
-# 
+
+
+because after applying the resolvent:
+
 #     >>> obj_after = obj.apply_resolvent(resolvent)
 #     >>> obj_after.super(param)
 #     True
-#     
-# In order to get this algorithm implemented. I need to do the following:
-# 
+    
+In order to get this algorithm implemented. I need to do the following:
+
 #     1)
 
 I have a general purpose type called

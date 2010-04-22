@@ -31,4 +31,4 @@ class ParameterManager(models.Manager):
     
     def get_context(self):
         qs = self.get_query_set()
-        return TemplateContext([(p.name, p.expression) for p in qs.all()])
+        return TemplateContext([(unicode(p), p.expr) for p in qs.all()])

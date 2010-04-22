@@ -112,9 +112,9 @@ class Object(models.Model):
         '''
         return []
         
-    def get_strongest_expression(self):
-        return self.type.strongest_expression
-    strongest_expression = property(get_strongest_expression)
+    def get_expr(self):
+        return self.type.expr
+    expr = property(get_expr)
 
     def parameters_short(self):
         return ', '.join([p.name for p in self.type.parameters.all()])

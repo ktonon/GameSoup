@@ -10,8 +10,8 @@ def render(w, g):
     '''
     try:
         tree = Rule.expr(w)
-    except Exception:
-        g.add_node('invalid', label='Could not parse')
+    except Exception, e:
+        g.add_node('invalid', label='%s' % e)
         return
     _add_tuple(tree, g)
     return tree

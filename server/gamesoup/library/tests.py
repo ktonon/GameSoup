@@ -5,7 +5,7 @@ from gamesoup.expressions import syntax, grammar
 
 
 class ViewsTest(test.TestCase):
-    fixtures = ['test-data.json', 'test-library.json']
+    fixtures = ['test-data.json']
     
     def setUp(self):
         self.cred = {'username': 'staff', 'password': 'foo'}
@@ -28,3 +28,28 @@ class ViewsTest(test.TestCase):
     def test_bulk_download(self):
         r = self.client.get('/admin/library/local-editing/bulk-download.tar')
         self.assertEquals(r['Content-Type'], 'application/x-tar')
+
+
+class LibraryTest(test.TestCase):
+    fixtures = ['test-data', 'test-library']
+    
+    def setUp(self):
+        self.s = models.Interface.objects.get(name='Stack')
+        self.l = models.Type.objects.get(name='List')
+    
+    def test_context(self):
+        self.assertEquals(`self.s.context`, 'Stack.item : []')
+        self.assertEquals(`self.l.context`, '@List.item : []')
+        self.assertEquals(`self.l.binding_context`, 'Stack.item : [@List.item]')
+    
+    def test_resolution(self):
+        e0 = self.s.expr
+        e1 = e0 % self.l.binding_context
+        e2 = e1 % self.l.context
+        self.assertEquals(`e0`, '[Stack<item=[]>]')
+        self.assertEquals(`e1`, '[Stack<item=[@List.item]>]')
+        self.assertEquals(`e2`, '[Stack<item=[]>]')
+
+    # def test_expr(self):
+    #     self.assertEquals(`self.s.expr`, '[Stack<item=[]>]')
+    #     self.assertEquals(`self.l.expr`, '[Stack<item=[]>]')

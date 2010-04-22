@@ -1,38 +1,61 @@
 [
     {
-        "pk": 1, 
-        "model": "library.interface", 
+        "pk": 2, 
+        "model": "library.method", 
         "fields": {
-            "description": "A built-in interface", 
-            "is_built_in": true, 
-            "name": "BuiltIn"
+            "interface": 1, 
+            "return_expression_text": "[Stack.item]", 
+            "name": "pop", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.method", 
+        "fields": {
+            "interface": 1, 
+            "return_expression_text": "0", 
+            "name": "push", 
+            "description": ""
         }
     }, 
     {
         "pk": 2, 
         "model": "library.interface", 
         "fields": {
-            "description": "An empty interface", 
+            "is_built_in": true, 
+            "name": "Integer!", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.interface", 
+        "fields": {
             "is_built_in": false, 
-            "name": "Empty"
+            "name": "Stack", 
+            "description": ""
         }
     }, 
     {
         "pk": 3, 
         "model": "library.interface", 
         "fields": {
-            "description": "An interface with a single method", 
-            "is_built_in": false, 
-            "name": "OneMethod"
+            "is_built_in": true, 
+            "name": "String!", 
+            "description": ""
         }
     }, 
     {
-        "pk": 4, 
-        "model": "library.interface", 
+        "pk": 3, 
+        "model": "library.type", 
         "fields": {
-            "description": "An interface with two methods", 
-            "is_built_in": false, 
-            "name": "TwoMethods"
+            "implements": [], 
+            "code": "", 
+            "name": "IntegerPusher", 
+            "visible": false, 
+            "has_state": false, 
+            "description": "Push integers onto a stack."
         }
     }, 
     {
@@ -40,13 +63,91 @@
         "model": "library.type", 
         "fields": {
             "implements": [
-                3
+                1
             ], 
-            "code": "",
-            "name": "SimpleType", 
+            "code": "", 
+            "name": "List", 
+            "visible": true, 
+            "has_state": true, 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [], 
+            "code": "", 
+            "name": "StringPusher", 
             "visible": false, 
             "has_state": false, 
-            "description": ""
+            "description": "Push strings onto a stack."
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "stack", 
+            "interfaces": [
+                1
+            ], 
+            "expression_text": "[Stack<item=String!>]", 
+            "is_built_in": false, 
+            "is_factory": false, 
+            "of_type": 2
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "name": "stack", 
+            "interfaces": [
+                1
+            ], 
+            "expression_text": "[Stack<item=Integer!>]", 
+            "is_built_in": false, 
+            "is_factory": false, 
+            "of_type": 3
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.methodparameter", 
+        "fields": {
+            "interfaces": [], 
+            "is_built_in": false, 
+            "of_method": 1, 
+            "name": "item", 
+            "expression_text": "[Stack.item]"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.interfacetemplateparameter", 
+        "fields": {
+            "of_interface": 1, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.typetemplateparameter", 
+        "fields": {
+            "of_type": 1, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.interfacetemplateparameterbinding", 
+        "fields": {
+            "parameter": 1, 
+            "type": 1, 
+            "expression_text": "[@List.item]"
         }
     }
 ]
