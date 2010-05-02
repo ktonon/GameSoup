@@ -64,13 +64,13 @@ class Interface(models.Model):
 
     objects = InterfaceManager()
 
-    ###############################################################################
+    #--------------------------------------------------------------------------
     # Dynamic
     
     expr = property(lambda self: Expr.parse('%s<%s>' % (self.name, self.context)))
     context = property(lambda self: self.template_parameters.get_context())
     
-    ###############################################################################
+    #--------------------------------------------------------------------------
     # Representation
 
     class Meta:
@@ -104,35 +104,34 @@ class Type(models.Model):
     visible = models.BooleanField(default=True)
     has_state = models.BooleanField(default=False)
     code = models.TextField(blank=True)
-    
-    ###############################################################################
-    # Dynamic
+        
+    class Meta:
+        ordering = ['name']
 
-    def _get_expr(self):
-        bc, c = self.binding_context, self.context
-        return Expr.reduce([(i.expr % bc) % c for i in self.implements.all()])
-    expr = property(_get_expr)
+    #--------------------------------------------------------------------------
+    # Representation
+
+    def __unicode__(self):
+        qs = self.template_parameters.all()
+        return self.name # + (qs and u'<%s>' % ','.join([u'%s=%s' % (tp.name, tp.expression_text) for tp in qs]) or u'')
+
+    #--------------------------------------------------------------------------
+    # Queries
+    
+    binding_context = property(lambda self: self.template_bindings.get_context())
+    context = property(lambda self: self.template_parameters.get_context())
 
     def _get_flat_expr(self):
         bc = self.binding_context
         return Expr.reduce([i.expr % bc for i in self.implements.all()])
     flat_expr = property(_get_flat_expr)
-    
-    context = property(lambda self: self.template_parameters.get_context())
-    binding_context = property(lambda self: self.template_bindings.get_context())
-    
-    ###############################################################################
-    # Representation
-    
-    class Meta:
-        ordering = ['name']
-    
-    def __unicode__(self):
-        qs = self.template_parameters.all()
-        return self.name + (qs and u'<%s>' % ','.join([u'%s=%s' % (tp.name, tp.expression_text) for tp in qs]) or u'')
 
-    ###############################################################################
-    # Queries
+    def _get_expr(self):
+        bc, c = self.binding_context, self.context
+        return Expr.reduce([(i.expr % bc) % c for i in self.implements.all()])
+    expr = property(_get_expr)
+    
+    final_expr = property(lambda self: self.expr)
     
     def is_conflicted(self):
         '''
@@ -153,17 +152,20 @@ class Type(models.Model):
         names = [name for name, count in counts.items() if count > 1]
         return qs.filter(name__in=names).order_by('name')
     
-    ###############################################################################
+    #--------------------------------------------------------------------------
     # Commands
                 
     def generated_code(self):
         t = get_template('library/type/boilerplate.js')
         parsed = TypeCode(self)
+        params = self.parameters.all()
+        def f(attr):
+            return filter(lambda p: getattr(p, attr), params)        
         c = Context({
             'type': self,
-            'built_ins': self.parameters.filter(is_built_in=True),
-            'references': self.parameters.filter(is_built_in=False, is_factory=False),
-            'factories': self.parameters.filter(is_built_in=False, is_factory=True),
+            'built_ins': f('is_built_in'),
+            'references': f('is_ref'),
+            'factories': f('is_factory'),
             'has_parameters': self.parameters.count() != 0,
             'methods': Method.objects.filter(interface__implemented_by=self).distinct(),
             'parsed': parsed,
@@ -184,61 +186,39 @@ class Type(models.Model):
 class Parameter(models.Model):
     name = IdentifierField(unique=False)
     expression_text = ExprField('Expression')
-    is_built_in = models.BooleanField(editable=False)
     
     class Meta:
         ordering = ['name']
         abstract = True
     
+    #--------------------------------------------------------------------------
+    # Representation
+    
     def __unicode__(self):
         return self.name
     
-    def get_expr(self):
-        return Expr.parse(self.expression_text)
-    expr = property(get_expr)
-    
-    @staticmethod
-    def pre_save(sender, instance, **kwargs):
-        expr = instance.expr
-        instance.is_built_in = False
-        if len(expr) == 1:
-            try:
-                instance.is_built_in = Interface.objects.get(name=expr.ids[0]).is_built_in
-            except Interface.DoesNotExist:
-                # It's ok, not a built in,
-                # probably a variable
-                pass
+    #--------------------------------------------------------------------------
+    # Queries
 
-    @staticmethod
-    def post_save(sender, instance, **kwargs):
-        instance.interfaces.clear()
-        for interface in Interface.objects.for_expr(instance.expr):
-            instance.interfaces.add(interface)
+    is_built_in = property(lambda self: self.expr.is_built_in)
+    flat_expr = property(lambda self: Expr.parse(self.expression_text))
+    interfaces = property(lambda self: Interface.objects.for_expr(self.expr))
 
 
 class TypeParameter(Parameter):
     of_type = models.ForeignKey(Type, related_name='parameters')
     is_factory = models.BooleanField(default=False)
-    interfaces = models.ManyToManyField(Interface, related_name='used_in_type_parameter', editable=False)
-    
-    def get_expr(self):
-        expr = super(TypeParameter, self).get_expr()
-        return expr % self.of_type.context
-    expr = property(get_expr)
-    flat_expr = property(lambda self: super(TypeParameter, self).get_expr())
-pre_save.connect(Parameter.pre_save, sender=TypeParameter)
-post_save.connect(Parameter.post_save, sender=TypeParameter)
+    is_ref = property(lambda self: not (self.is_built_in or self.is_factory))
+    expr = property(lambda self: self.flat_expr % self.of_type.context)
 
 
 class MethodParameter(Parameter):
-    of_method = models.ForeignKey(Method, related_name='parameters')
-    interfaces = models.ManyToManyField(Interface, related_name='used_in_method_parameter', editable=False)
-pre_save.connect(Parameter.pre_save, sender=MethodParameter)
-post_save.connect(Parameter.post_save, sender=MethodParameter)
+    of_method = models.ForeignKey(Method, related_name='parameters')    
+    expr = property(lambda self: self.flat_expr % self.of_method.interface.context)
 
 
 ###############################################################################
-# TEMPLATING
+# INTERFACE EXPRESSIONS PARAMETERS
 
 
 class TemplateParameter(models.Model):
@@ -251,13 +231,29 @@ class TemplateParameter(models.Model):
         abstract=True
         ordering = ['name']
 
-    def __unicode__(self):
-        return '.'.join([self.of.name, self.name])
-
-    def get_expr(self):
-        return Expr.parse(self.expression_text)
-    expr = property(get_expr)
+    #--------------------------------------------------------------------------
+    # Queries
     
+    expr = property(lambda self: Expr.parse(self.expression_text))
+    
+
+class InterfaceTemplateParameter(TemplateParameter):
+    of_interface = models.ForeignKey(Interface, related_name='template_parameters')
+
+    def __unicode__(self):
+        return '%s.%s' % (self.of_interface.name, self.name)
+
+
+class TypeTemplateParameter(TemplateParameter):
+    of_type = models.ForeignKey(Type, related_name='template_parameters')
+
+    def __unicode__(self):
+        return '@%s.%s' % (self.of_type.name, self.name)
+
+
+###############################################################################
+# INTERFACE EXPRESSION BINDINGS
+
 
 class TemplateParameterBinding(models.Model):
     expression_text = ExprField('Expression')
@@ -266,32 +262,17 @@ class TemplateParameterBinding(models.Model):
 
     class Meta:
         abstract=True
-            
+
+    #--------------------------------------------------------------------------
+    # Representation
+    
     def __unicode__(self):
         return unicode(self.parameter)
 
-    def get_expr(self):
-        return Expr.parse(self.expression_text)
-    expr = property(get_expr)
-
-
-# PARAMETERS
-
-
-class InterfaceTemplateParameter(TemplateParameter):
-    of_interface = models.ForeignKey(Interface, related_name='template_parameters')
-    of = property(lambda self: self.of_interface)
-
-
-class TypeTemplateParameter(TemplateParameter):
-    of_type = models.ForeignKey(Type, related_name='template_parameters')
-    of = property(lambda self: self.of_type)
-
-    def __unicode__(self):
-        return '@' + super(TypeTemplateParameter, self).__unicode__()
-
-
-# BINDINGS
+    #--------------------------------------------------------------------------
+    # Queries
+    
+    expr = property(lambda self: Expr.parse(self.expression_text))
 
     
 class InterfaceTemplateParameterBinding(TemplateParameterBinding):

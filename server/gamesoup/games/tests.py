@@ -1,23 +1,24 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
-
-Replace these with more appropriate tests for your application.
-"""
-
 from django.test import TestCase
+from gamesoup.library.models import *
+from gamesoup.games.models import *
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
+class GameTest(TestCase):
 
->>> 1 + 1 == 2
-True
-"""}
+    fixtures = ['test-data', 'test-library', 'test-games']
+    
+    def setUp(self):
+        self.game = Game.objects.get(name='Foggle')
+        self.list = self.game.object_set.get(type__name='List')
+        self.spush = self.game.object_set.get(type__name='StringPusher')
+        self.ipush = self.game.object_set.get(type__name='IntegerPusher')
+    
+    def test_dynamic_object_typing(self):
+        self.assertEquals(`self.spush.flat_expr`, '[]')
+        self.assertEquals(`self.ipush.flat_expr`, '[]')
 
+        self.assertEquals(`self.list.flat_expr`, '[Stack<item=[%d.item]>]' % self.list.id)
+        self.assertEquals(`self.list.expr`, '[Stack<item=[]>]')
+        self.assertEquals(`self.list.final_expr`, '[Stack<item=[%d.item]>]' % self.list.id)
+
+        self.spush.bind('stack', self.list)

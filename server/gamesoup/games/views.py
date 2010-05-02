@@ -44,8 +44,9 @@ def game_flow(request, game_id, format):
         n.fontcolor = 'white'
         nodes['type_%d' % type.id] = n
     
-    bindings = TypeParameterBinding.objects.filter(instance__game=game, parameter__is_built_in=False)
-    for ref in bindings.filter(parameter__is_factory=False):
+    bindings = ObjectParameterBinding.objects.filter(instance__game=game)
+    for ref in bindings.filter(parameter__type_parameter__is_factory=False):
+        if ref.parameter.is_built_in: continue
         e = g.add_edge(nodes[ref.instance.id], nodes[ref.object_argument.id])
         e.label = ref.parameter.name
         e.color = 'gray'
@@ -53,9 +54,10 @@ def game_flow(request, game_id, format):
         e.labelfloat = True
         e.fontsize = 14
         e.len = 3
-    for factory in bindings.filter(parameter__is_factory=True):
+    for factory in bindings.filter(parameter__type_parameter__is_factory=True):
+        if factory.parameter.is_built_in: continue
         e = g.add_edge(nodes[factory.instance.id], nodes['type_%d' % factory.type_argument.id])
-        e.label = factory.parameter.name
+        e.label = ''#factory.parameter.type_parameter.of_type.name
         e.color = 'gray'
         e.fontcolor = 'gray'
         e.labelfloat = True
@@ -63,15 +65,16 @@ def game_flow(request, game_id, format):
         e.len = 3
 
     # Danglers
-    for param in TypeParameter.objects.filter(of_type__instances__game=game, is_built_in=False).distinct():
-        if param.bindings.filter(instance__game=game).count() == 0:
-            for obj in Object.objects.filter(game=game, type__parameters=param).distinct():
-                n = g.add_node('missing_param_%d_%d' % (obj.id, param.id), label='')
-                n.color = 'white'
-                e = g.add_edge(nodes[obj.id], n)
-                e.color = 'red'
-                e.fontcolor = 'red'
-                e.label = param.name
+    for param in ObjectParameter.objects.filter(type_parameter__of_type__instances__game=game).distinct():
+        if param.is_built_in: continue
+        if param.binding is None:
+            obj = param.of_object
+            n = g.add_node('missing_param_%d_%d' % (obj.id, param.id), label='')
+            n.color = 'white'
+            e = g.add_edge(nodes[obj.id], n)
+            e.color = 'red'
+            e.fontcolor = 'red'
+            e.label = param.name
             
     g.layout(yapgvb.engines.dot)
     scratch_path = os.path.join(settings.MEDIA_ROOT, 'flow-scratch', 'game-%d.%s' % (game.id, format))
@@ -154,14 +157,8 @@ def search_required_by(request):
 
 @staff_member_required
 def search_required_by_parameter(request, parameter_id):
-    param = get_object_or_404(TypeParameter, pk=parameter_id)
-    qs = Type.objects.all()
-    expr = Expr.parse(param.expression_text)
-    for interface in Interface.objects.for_expr(expr):
-        qs = qs.filter(implements=interface)
-    if param.is_factory:
-        qs = qs.filter(parameters__isnull=True).distinct()
-    type_ids = [t.id for t in qs]
+    param = get_object_or_404(ObjectParameter, pk=parameter_id)
+    type_ids = [t.id for t in param.candidate_types]
     response = HttpResponse(mimetype='application/json')
     response.write(json.dumps(type_ids or [0])) # See comment above
     return response
@@ -249,13 +246,17 @@ def toggle_object_ownership(request, game_id, object_id):
 @staff_member_required
 def object_configure(request, game_id, object_id):
     game, obj = get_pair_or_404(Game, 'object_set', game_id, object_id)
+    params = obj.parameters.all()
+    def f(attr):
+        return filter(lambda p: getattr(p, attr), params)
     context = {
         'title': 'Configure %s' % obj.type.name,
         'obj': obj,
-        'built_ins': obj.type.parameters.filter(is_built_in=True).order_by('name'),
-        'refs': obj.type.parameters.filter(is_built_in=False, is_factory=False).order_by('name'),
-        'factories': obj.type.parameters.filter(is_built_in=False, is_factory=True).order_by('name'),
-        'nothing_to_configure': obj.type.parameters.count() == 0,
+        'parameters': params,
+        'built_ins': f('is_built_in'),
+        'refs': f('is_ref'),
+        'factories': f('is_factory'),
+        'nothing_to_configure': obj.parameters.count() == 0,
     }
     return render_to_response('admin/games/object-configure.html', context)
 
@@ -273,27 +274,11 @@ def delete_object(request, game_id, object_id):
 def save_parameter_binding(request, game_id, object_id, parameter_id):
     game, obj = get_pair_or_404(Game, 'object_set', game_id, object_id)
     try:
-        param = obj.type.parameters.get(pk=parameter_id)
-    except TypeParameter.DoesNotExist:
+        param = obj.parameters.get(pk=parameter_id)
+    except ObjectParameter.DoesNotExist:
         raise Http404()
-    value = {}
-    x = request.POST['value']
-    try:
-        binding = obj.parameter_bindings.get(parameter=param)
-    except TypeParameterBinding.DoesNotExist:
-        binding = TypeParameterBinding(instance=obj, parameter=param)
-    data = {}
-    if param.is_built_in:
-        binding.built_in_argument = x
-        data['value'] = x
-    else:
-        if param.is_factory:
-            binding.type_argument = Type.objects.get(pk=x)
-            data['value'] = binding.type_argument.name
-        else:
-            binding.object_argument = Object.objects.get(pk=x)
-            data['value'] = binding.object_argument.name
-    binding.save()
+    value = param.bind(request.POST['value'])
+    data = {'value': unicode(value)}
     response = HttpResponse(mimetype='application/json')
     response.write(json.dumps(data))
     return response
@@ -303,15 +288,11 @@ def save_parameter_binding(request, game_id, object_id, parameter_id):
 def candidate_refs(request, game_id, object_id, parameter_id):
     game, obj = get_pair_or_404(Game, 'object_set', game_id, object_id)
     try:
-        param = obj.type.parameters.get(pk=parameter_id)
-    except TypeParameter.DoesNotExist:
-        raise Http404()
-    qs = game.object_set.all()
-    expr = Expr.parse(param.expression_text)
-    for interface in Interface.objects.for_expr(expr):
-        qs = qs.filter(type__implements=interface)
+        param = obj.parameters.get(pk=parameter_id)
+    except ObjectParameter.DoesNotExist:
+        raise Http404()    
     response = HttpResponse(mimetype='application/json')
-    response.write(json.dumps(['object-%d' % obj.id for obj in qs]))
+    response.write(json.dumps(['object-%d' % obj.id for obj in param.candidate_objects]))
     return response
 
 

@@ -30,7 +30,7 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
         } else {
             this._lastReason = this._failReason.evaluate(c);            
         }
-        return false;
+        return true;
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                       Predicate

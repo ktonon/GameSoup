@@ -14,8 +14,7 @@
     <h2>Simple parameters</h2>
     <fieldset class="module aligned">
         {% for param in built_ins %}
-        {% parameter_binding obj param as binding %}
-        <div class="form-row built-in" interface="{{ param.expression_text }}" name="{{ param.name }}" parameterID="{{ param.id }}" value="{{ binding }}"></div>
+        <div class="form-row built-in" interface="{{ param.final_expr }}" name="{{ param.name }}" parameterID="{{ param.id }}" value="{% if param.binding %}{{ param.binding }}{% endif %}"></div>
         {% endfor %}
     </fieldset>        
     {% endif %}
@@ -23,8 +22,7 @@
     <h2>References to other objects</h2>
     <fieldset class="module aligned">
         {% for param in refs %}
-        {% parameter_binding obj param as binding %}
-        <div class="form-row ref {% satisfiable_parameter obj param %}" name="{{ param.name }}" parameterID="{{ param.id }}" boundTo="{{ binding }}"></div>
+        <div class="form-row ref {{ param.is_satisfiable|yesno:"satisfiable,unsatisfiable" }}" name="{{ param.name }}" parameterID="{{ param.id }}" boundTo="{{ param.binding }}"></div>
         {% endfor %}
     </fieldset>        
     {% endif %}
@@ -32,8 +30,7 @@
     <h2>Factories</h2>
     <fieldset class="module aligned">
         {% for param in factories %}
-        {% parameter_binding obj param as binding %}
-        <div class="form-row factory" name="{{ param.name }}" parameterID="{{ param.id }}" boundTo="{{ binding.type_argument.name }}"></div>
+        <div class="form-row factory" name="{{ param.name }}" parameterID="{{ param.id }}" boundTo="{{ param.binding.type_argument.name }}"></div>
         {% endfor %}
     </fieldset>        
     {% endif %}
@@ -42,3 +39,75 @@
         <input class="default" type="button" value="Done" />
     </div>
 </div>
+
+{# {% comment %} #}
+<div class="debug">
+    {% if obj.parameters.count %}
+    <table class="module" style="width: 100%">
+        <caption>Object parameters</caption>
+        <thead>
+            <tr>
+                <th>Param</th>
+                <th>Flat expr</th>
+                <th>Expr</th>
+                <th>Final expr</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for param in obj.parameters.all %}
+            <tr>
+                <td>{{ param.name }}</td>
+                <td>{{ param.flat_expr }}</td>
+                <td>{{ param.expr }}</td>
+                <td>{{ param.final_expr }}</td>
+            </tr>
+            {% endfor %}                
+        </tbody>
+    </table>
+    {% endif %}
+    {# <table class="module" style="width: 100%"> #}
+    {#     <caption>Replacing type template parameters with object template parameters</caption> #}
+    {#     <thead> #}
+    {#         <tr> #}
+    {#             <th>Param</th> #}
+    {#             <th>Expr</th> #}
+    {#             <th>Binding</th> #}
+    {#         </tr> #}
+    {#     </thead> #}
+    {#     <tbody> #}
+    {#         {% for binding in obj.template_bindings.all %} #}
+    {#         <tr> #}
+    {#             <td>{{ binding.parameter }}</td> #}
+    {#             <td>{{ binding.parameter.expr }}</td> #}
+    {#             <td>{{ binding.expr }}</td> #}
+    {#         </tr> #}
+    {#         {% endfor %} #}
+    {#     </tbody> #}
+    {# </table> #}
+    {% if obj.template_parameters.count %}
+    <table class="module" style="width: 100%">
+        <caption>Template parameters</caption>
+        <thead>
+            <tr>
+                <th>Param</th>
+                <th>Expr</th>
+                <th>Final expr</th>
+                <th>Binding</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for param in obj.template_parameters.all %}
+            <tr>
+                <td>{{ param }}</td>
+                <td>{{ param.expr }}</td>
+                <td>{{ param.final_expr }}</td>
+                {% if param.binding %}
+                <td>{{ param.binding.expr }}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{# {% endcomment %} #}

@@ -9,28 +9,27 @@
                 <th id="satisfiable" title="Is it possible to set all the parameters given the objects already in the game?">Satisfiable</th>
                 <th id="ownership" title="Is it common to all players, or do each get their own copy?">Ownership</th>
                 <th id="parameters" title="Parameters in red still need to be set.">Parameters</th>
-                <th id="used-by" title="Used as a parameter by these objects.">Used by</th>
-                <th id="expression" title="The strongest interface expression required by this object.">Expression</th>
             </tr>
         </thead>
         {% if objects %}
         {% for obj in objects %}
-        <tr id="object-{{ obj.id }}" class="object {% cycle row1,row2 %} {{ obj.satisfied|yesno:",unsatisfied" }} {{ obj.is_satisfiable|yesno:",unsatisfiable" }} {{ obj.type.visible|yesno:"visible," }} {{ obj.type.has_state|yesno:"stateful," }}" objectID="{{ obj.id }}">
+        <tr id="object-{{ obj.id }}" class="object {% cycle row1,row2 %} {{ obj.is_satisfied|yesno:",unsatisfied" }} {{ obj.is_satisfiable|yesno:",unsatisfiable" }} {{ obj.type.visible|yesno:"visible," }} {{ obj.type.has_state|yesno:"stateful," }}" objectID="{{ obj.id }}">
             <td class="type"><input type="button" value="{{ obj }}" /></td>
             <td class="delete-link" title="Remove this object">x</td>
-            <td class="satisfied"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.satisfied|yesno:"yes,no" }}.gif"></td>
+            <td class="satisfied"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.is_satisfied|yesno:"yes,no" }}.gif"></td>
             <td class="satisfiable"><img alt="True" src="/django-admin-media/img/admin/icon-{{ obj.is_satisfiable|yesno:"yes,no" }}.gif"></td>
             <td class="ownership {{ obj.type.has_state|yesno:"stateful," }}" {% if obj.type.has_state %}title="This object has game state. Click to change whether that state is shared (game ownership) or each player gets their own state."{% endif %}>{% if obj.type.has_state %}{{ obj.per_player|yesno:"player,game" }}{% endif %}</td>
             <td class="parameters">
-                {% for param in obj.type.parameters.all %}
-                {% parameter_binding obj param as binding %}
-                <span class="parameter {{ binding|yesno:"bound,unbound" }} {{ binding.get_kind }}" {% if binding and not param.is_built_in %}boundTo="{{ binding.get_argument }}" title="The referenced object is highlighted."{% endif %}>
-                    {{ param.name }}{% if binding %}:<span class="note">{{ binding.get_argument_link|safe }}</span>{% endif %}
+                {% for param in obj.parameters.all %}
+                <span class="parameter {{ param.css_classes }}"
+                    {% if param.binding and not param.is_built_in %}
+                        boundTo="{{ param.binding }}"
+                        title="The referenced object is highlighted."
+                    {% endif %}>
+                    {{ param.name }}{% if param.binding %}:<span class="note">{{ param.binding.get_argument_link|safe }}</span>{% endif %}
                 </span> {% if not forloop.last %}&bull;{% endif %}
                 {% endfor %}
             </td>
-            <td class="used-by">{{ obj.used_by }}</td>
-            <td class="expression">{{ obj.final_expr }}</td>
         </tr>
         {% endfor %}
         {% else %}

@@ -13,7 +13,11 @@ urlpatterns = patterns('gamesoup.games.views',
     url(r'^search-required-by/$', 'search_required_by', name='search_required_by'),
     url(r'^search-required-by-parameter/(?P<parameter_id>\d+)/$', 'search_required_by_parameter', name='search_required_by_parameter'),
 
-    ###############################################################################
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
+
     # Assembler
     url(r'^game/(?P<game_id>\d+)/assemble/$', 'assemble_game', name='assemble_game'),
     url(r'^game/(?P<game_id>\d+)/refresh-assembler/$', 'refresh_assembler', name='refresh_assembler'),

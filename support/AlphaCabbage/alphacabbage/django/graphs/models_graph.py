@@ -47,6 +47,8 @@ class ModelsGraph(object):
                 self.add_fk(model, fk)
             for m2m in m2ms_for_model(model):
                 self.add_m2m(model, m2m)
+            for o2o in o2os_for_model(model):
+                self.add_o2o(model, o2o)
         else:
             node = self.models[name]
         return node
@@ -58,6 +60,7 @@ class ModelsGraph(object):
         e = self.g.add_edge(source_node, target_node)
         e.len = self.len
         e.tooltip = '%s.%s ---> %s.%s' % (source.__name__, fk.verbose_name, target.__name__, fk.rel.related_name or '')
+        e.color = '#666666'
     
     def add_m2m(self, source, m2m):
         target = m2m.rel.to
@@ -67,6 +70,17 @@ class ModelsGraph(object):
         e.len = self.len
         e.tooltip = '%s.%s <--> %s.%s' % (source.__name__, m2m.verbose_name, target.__name__, m2m.rel.related_name or '')
         e.dir = 'both'
+        e.color = '#000000'
+
+    def add_o2o(self, source, o2o):
+        target = o2o.rel.to
+        source_node = self.add_model(source)
+        target_node = self.add_model(target)
+        e = self.g.add_edge(source_node, target_node)
+        e.len = self.len
+        e.tooltip = '%s.%s ---- %s.%s' % (source.__name__, o2o.verbose_name, target.__name__, o2o.rel.related_name or '')
+        e.dir = 'none'
+        e.color = '#000000'
 
 
 def make_models_graph(g, ignore_apps=None, **kwargs):
@@ -114,3 +128,9 @@ def fks_for_model(model):
 def m2ms_for_model(model):
     for m2m in model._meta.many_to_many:
         yield m2m
+
+def o2os_for_model(model):
+    from django.db.models.fields.related import OneToOneField
+    for field in model._meta.fields:
+        if field.__class__ == OneToOneField:
+            yield field

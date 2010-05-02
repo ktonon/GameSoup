@@ -25,6 +25,12 @@ mod.Dialog = Class.create({
 		this._node.stopObserving();
 		this._headerDraggable.destroy();
 	},
+	cancel: function(event) {
+	    if (this._node.visible() && event.keyCode == Event.KEY_ESC) {
+	        event.stop();
+	        this.hide();
+	    }
+	},
 	update: function(html) {
 		if (this._currentHandler) {
 			this._currentHandler.release();
@@ -47,14 +53,17 @@ mod.Dialog = Class.create({
 		$('curtain').hide();
 		$('content-main').stopObserving('selector:started', this._watchStarted);
 		$('content-main').stopObserving('selector:completed', this._watchCompleted);
+		document.stopObserving('keydown', this._watchCancel);
 		this._node.fire('assembler:transactionCompleted');
 	},
 	show: function() {
 		this._node.fire('assembler:transactionStarted');
 		this._watchStarted = this.suspend.bind(this);
 		this._watchCompleted = this.resume.bind(this);
+		this._watchCancel = this.cancel.bind(this);
 		$('content-main').observe('selector:started', this._watchStarted);
 		$('content-main').observe('selector:completed', this._watchCompleted);
+		document.observe('keydown', this._watchCancel);
 		$('curtain').show();
 		this._node.show();
 	},

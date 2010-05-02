@@ -34,6 +34,7 @@ gamesoup.library.types.SquareGrid.addMethods({
      * Get the next object in the sequence. When the sequence is over, this should return null.
      */                                                               /* vVv */
     nextInIteration: function() {
+        // changes
         var cell = this._cells[this._iteratorIndex];
         this._iteratorIndex++;
         return cell;

@@ -15,7 +15,7 @@ gamesoup.library.types.{{ type.name }} = Class.create(gamesoup.library.types.Bas
 /*{{ "Parameters"|center:"75" }}*/
 /*****************************************************************************/{% if built_ins %}
 //{{ "BUILT-INS"|center:"75" }}{% for param in built_ins %}
-// this._{{ param.name|ljust:"25" }} {{ param.expression_text|safe|rjust:"44" }}{% endfor %}{% endif %}{% if references %}
+// this._{{ param.name|ljust:"25" }} {{ param.expr|safe|rjust:"44" }}{% endfor %}{% endif %}{% if references %}
 //{{ "REFERENCES"|center:"75" }}
 {% for param in references %}// this._{{ param.name|ljust:"25" }} {{ param.expr|safe|rjust:"44" }}
 {% endfor %}{% endif %}{% endif %}{% if factories %}

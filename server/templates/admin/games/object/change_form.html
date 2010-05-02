@@ -20,7 +20,7 @@
 {% block after_field_sets %}
 {% get_object for object_id as obj %}
 {% if obj %}
-    {% with obj.parameter_bindings.all as bindings %}
+    {% with obj.bindings.all as bindings %}
     {% if bindings %}
     <table class="module" style="width: 100%">
         <caption>Bindings</caption>

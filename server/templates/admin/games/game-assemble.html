@@ -51,7 +51,7 @@
             {# Take advantage of Django's Related object lookup feature. JavaScript to search for an object using the django admin interface (in a popup window) and set a field with its ID already exists, so we'll hook into this and take over once the ID has been set. #}
             {# The input and the link are connected by their id fields. The link must be the same as the input, with "lookup_" as a prefix. #}
             <input id="id_palette" class="id-dropbox" value="" style="display: none" />
-            <a id="lookup_id_palette" class="addlink" onclick="return showRelatedObjectLookupPopup(this);" href="{% url admin:library_type_changelist %}?{{ game.palette_query }}" title="Instantiate a new object by browsing types which are already being used in your game.">Palette</a>
+            <a id="lookup_id_palette" class="addlink" onclick="return showRelatedObjectLookupPopup(this);" href="{% url admin:library_type_changelist %}?instance__game={{ game.id }}" title="Instantiate a new object by browsing types which are already being used in your game.">Palette</a>
         </li>
         <li>
             <input id="id_browse" class="id-dropbox" value="" style="display: none" />

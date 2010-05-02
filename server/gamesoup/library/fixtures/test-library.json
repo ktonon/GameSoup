@@ -89,11 +89,7 @@
         "model": "library.typeparameter", 
         "fields": {
             "name": "stack", 
-            "interfaces": [
-                1
-            ], 
-            "expression_text": "[Stack<item=String!>]", 
-            "is_built_in": false, 
+            "expression_text": "[Stack<item=[@StringPusher.item]>]", 
             "is_factory": false, 
             "of_type": 2
         }
@@ -103,11 +99,7 @@
         "model": "library.typeparameter", 
         "fields": {
             "name": "stack", 
-            "interfaces": [
-                1
-            ], 
             "expression_text": "[Stack<item=Integer!>]", 
-            "is_built_in": false, 
             "is_factory": false, 
             "of_type": 3
         }
@@ -116,8 +108,6 @@
         "pk": 1, 
         "model": "library.methodparameter", 
         "fields": {
-            "interfaces": [], 
-            "is_built_in": false, 
             "of_method": 1, 
             "name": "item", 
             "expression_text": "[Stack.item]"
@@ -139,6 +129,15 @@
             "of_type": 1, 
             "name": "item", 
             "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.typetemplateparameter", 
+        "fields": {
+            "of_type": 2, 
+            "name": "item", 
+            "expression_text": "String!"
         }
     }, 
     {

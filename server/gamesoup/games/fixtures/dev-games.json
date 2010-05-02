@@ -12,7 +12,6 @@
         "model": "games.object", 
         "fields": {
             "name": "SquareGrid", 
-            "satisfied": false, 
             "height": 5, 
             "width": 5, 
             "game": 1, 

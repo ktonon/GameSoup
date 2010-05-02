@@ -24,7 +24,7 @@
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/library/mixins.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/matches/engine.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% media_url %}js/gamesoup/matches/messages.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{ game.code_url }}"></script>
+<script type="text/javascript" charset="utf-8" src="{% url games:game_code game.id %}"></script>
 {% endblock extrahead %}
 
 

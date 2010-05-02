@@ -65,7 +65,7 @@ body {background: #e8e8e8;}
 /* Dialog */
 #dialog {
 	position: fixed;
-	top: 150px;
+	top: 50px;
 	left: 200px;
 	width: 600px;
 	overflow: auto;
@@ -99,6 +99,7 @@ body {background: #e8e8e8;}
 	color: white;
 }
 #dialog label {width: 200px;}
+#dialog fieldset.aligned div {text-align: left;}
 
 .unsatisfiable label {color: red;}
 .bound-to-disclosure {margin: 0 20px; font-size: 12pt;}

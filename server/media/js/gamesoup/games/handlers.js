@@ -29,7 +29,12 @@ mod.ConfigureObject = Class.create({
 		this._node.stopObserving();
 	},
 	addBuiltIn: function(node) {
-		var ParamClass = gamesoup.games.parameters[node.getAttribute('interface')];
+	    // Built-in parameters have an interface name ending with an
+	    // an exlamantion mark (!). For example, String!. The corresponding
+	    // JavaScript parameter class goes by the same name, minus
+	    // the !.
+	    var interfaceName = node.getAttribute('interface').sub(/\!/, '');
+		var ParamClass = gamesoup.games.parameters[interfaceName];
 		return new ParamClass(node, this._options);
 	},
 	addRef: function(node) {

@@ -14,6 +14,15 @@ mod.SingleObjectSelector = Class.create({
 		// Setup the selector buttons
 		this._objects = objects;
 		this._selectors = this._objects.collect(this.addSelector.bind(this));
+		this._watchCancel = this.cancel.bind(this);
+		document.observe('keydown', this._watchCancel);
+	},
+	release: function() {
+		this._selectors.invoke('stopObserving', 'click');
+        document.stopObserving('keydown', this._watchCancel);
+		this._scratch.innerHTML = '';
+	    $('scratch').hide();
+	    this._scratch.fire('selector:completed');
 	},
 	/*
 	 * For each object, create a button on the scratch space.
@@ -38,13 +47,15 @@ mod.SingleObjectSelector = Class.create({
 	},
 	selectAndRelease: function(event) {
 		var objectID = event.target.getAttribute('objectID');
-		// Cleanup
-		this._selectors.invoke('stopObserving', 'click');
-		this._scratch.innerHTML = '';
-		$('scratch').hide();
-		// Do the callback
 		this._callback(objectID);
-		this._scratch.fire('selector:completed');
+		this.release();
+	},
+	cancel: function(event) {
+	    if (event.keyCode == Event.KEY_ESC) {
+	        event.stop();
+	        gs.games.messageBox.clear();
+	        this.release();
+	    }
 	}
 });
 gs.tracerize('SingleObjectSelector', mod.SingleObjectSelector);
