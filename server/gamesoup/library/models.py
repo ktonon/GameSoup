@@ -185,7 +185,10 @@ class Type(models.Model):
 
 class Parameter(models.Model):
     name = IdentifierField(unique=False)
-    expression_text = ExprField('Expression')
+    expression_text = ExprField('Expression')    
+    # Cache to make searching for types more efficient
+    _interfaces = models.ManyToManyField('Interface', editable=False)
+    _is_built_in = models.BooleanField(editable=False)
     
     class Meta:
         ordering = ['name']
@@ -200,21 +203,54 @@ class Parameter(models.Model):
     #--------------------------------------------------------------------------
     # Queries
 
-    is_built_in = property(lambda self: self.expr.is_built_in)
+    is_built_in = property(lambda self: self._is_built_in)
     flat_expr = property(lambda self: Expr.parse(self.expression_text))
     interfaces = property(lambda self: Interface.objects.for_expr(self.expr))
 
+    #--------------------------------------------------------------------------
+    # Consistency (Cache maintenance)
+    
+    @staticmethod
+    def pre_update_cache(sender, instance, **kwargs):
+        instance._is_built_in = instance.expr.is_built_in
+
+    @staticmethod
+    def post_update_cache(sender, instance, **kwargs):
+        instance._interfaces.clear()
+        for interface in Interface.objects.for_expr(instance.expr):
+            instance._interfaces.add(interface)
+            
 
 class TypeParameter(Parameter):
     of_type = models.ForeignKey(Type, related_name='parameters')
     is_factory = models.BooleanField(default=False)
+    # Cache to make searching for types more efficient
+    _is_ref = models.BooleanField(editable=False)
+    
+    #--------------------------------------------------------------------------
+    # Queries
+    
     is_ref = property(lambda self: not (self.is_built_in or self.is_factory))
     expr = property(lambda self: self.flat_expr % self.of_type.context)
+    
+    #--------------------------------------------------------------------------
+    # Consistency (Cache maintenance)
+    
+    @staticmethod
+    def pre_update_cache(sender, instance, **kwargs):
+        instance._is_ref = not (instance.expr.is_built_in or instance.is_factory)
+
+pre_save.connect(TypeParameter.pre_update_cache, sender=TypeParameter)
+pre_save.connect(Parameter.pre_update_cache, sender=TypeParameter)
+post_save.connect(Parameter.post_update_cache, sender=TypeParameter)
 
 
 class MethodParameter(Parameter):
     of_method = models.ForeignKey(Method, related_name='parameters')    
     expr = property(lambda self: self.flat_expr % self.of_method.interface.context)
+    
+pre_save.connect(Parameter.pre_update_cache, sender=MethodParameter)
+post_save.connect(Parameter.post_update_cache, sender=MethodParameter)
 
 
 ###############################################################################

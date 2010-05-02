@@ -517,237 +517,354 @@
         "pk": 1, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                16
+            ], 
             "name": "a", 
+            "_is_built_in": false, 
             "expression_text": "[Action]", 
             "is_factory": false, 
-            "of_type": 18
+            "of_type": 18, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 3, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                16
+            ], 
             "name": "action", 
+            "_is_built_in": false, 
             "expression_text": "[Action]", 
             "is_factory": false, 
-            "of_type": 5
+            "of_type": 5, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 5, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                16
+            ], 
             "name": "action", 
+            "_is_built_in": false, 
             "expression_text": "[Action]", 
             "is_factory": false, 
-            "of_type": 16
+            "of_type": 16, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 7, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                16
+            ], 
             "name": "action", 
+            "_is_built_in": false, 
             "expression_text": "[Action]", 
             "is_factory": false, 
-            "of_type": 11
+            "of_type": 11, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 2, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                16
+            ], 
             "name": "b", 
+            "_is_built_in": false, 
             "expression_text": "[Action]", 
             "is_factory": false, 
-            "of_type": 18
+            "of_type": 18, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 19, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                7
+            ], 
             "name": "board", 
-            "expression_text": "[Board<item=String!>]", 
+            "_is_built_in": false, 
+            "expression_text": "[Board<cell=[Readable<item=String!>]>]", 
             "is_factory": false, 
-            "of_type": 9
+            "of_type": 9, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 22, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                11, 
+                12
+            ], 
             "name": "cellType", 
+            "_is_built_in": false, 
             "expression_text": "[Readable<item=[@SquareGrid.item]> + Writable<item=[@SquareGrid.item]>]", 
             "is_factory": true, 
-            "of_type": 7
+            "of_type": 7, 
+            "_is_ref": false
         }
     }, 
     {
         "pk": 23, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                11, 
+                12
+            ], 
             "name": "cellType", 
+            "_is_built_in": false, 
             "expression_text": "[Readable<item=[@Hexagonal.item]> + Writable<item=[@Hexagonal.item]>]", 
             "is_factory": true, 
-            "of_type": 8
+            "of_type": 8, 
+            "_is_ref": false
         }
     }, 
     {
         "pk": 14, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                9
+            ], 
             "name": "colCount", 
+            "_is_built_in": true, 
             "expression_text": "Integer!", 
             "is_factory": false, 
-            "of_type": 7
+            "of_type": 7, 
+            "_is_ref": false
         }
     }, 
     {
         "pk": 10, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                15
+            ], 
             "name": "collection", 
+            "_is_built_in": false, 
             "expression_text": "[Iterable<item=[Writable<item=[@InitializeCollectionWithDistribution.item]>]>]", 
             "is_factory": false, 
-            "of_type": 12
+            "of_type": 12, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 16, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                12
+            ], 
             "name": "destination", 
+            "_is_built_in": false, 
             "expression_text": "[Writable<item=[@TransferIf.item]>]", 
             "is_factory": false, 
-            "of_type": 6
+            "of_type": 6, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 11, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                21
+            ], 
             "name": "distribution", 
+            "_is_built_in": false, 
             "expression_text": "[Distribution<over=[@InitializeCollectionWithDistribution.item]>]", 
             "is_factory": false, 
-            "of_type": 12
+            "of_type": 12, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 6, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [], 
             "name": "focus", 
+            "_is_built_in": false, 
             "expression_text": "[]", 
             "is_factory": false, 
-            "of_type": 16
+            "of_type": 16, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 4, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                8
+            ], 
             "name": "label", 
+            "_is_built_in": true, 
             "expression_text": "String!", 
             "is_factory": false, 
-            "of_type": 5
+            "of_type": 5, 
+            "_is_ref": false
         }
     }, 
     {
         "pk": 13, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                8
+            ], 
             "name": "message", 
+            "_is_built_in": true, 
             "expression_text": "String!", 
             "is_factory": false, 
-            "of_type": 10
+            "of_type": 10, 
+            "_is_ref": false
         }
     }, 
     {
         "pk": 21, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                24
+            ], 
             "name": "object", 
+            "_is_built_in": false, 
             "expression_text": "[Clearable]", 
             "is_factory": false, 
-            "of_type": 19
+            "of_type": 19, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 9, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                9
+            ], 
             "name": "radius", 
+            "_is_built_in": true, 
             "expression_text": "Integer!", 
             "is_factory": false, 
-            "of_type": 8
+            "of_type": 8, 
+            "_is_ref": false
         }
     }, 
     {
         "pk": 15, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                9
+            ], 
             "name": "rowCount", 
+            "_is_built_in": true, 
             "expression_text": "Integer!", 
             "is_factory": false, 
-            "of_type": 7
+            "of_type": 7, 
+            "_is_ref": false
         }
     }, 
     {
         "pk": 17, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                11
+            ], 
             "name": "source", 
+            "_is_built_in": false, 
             "expression_text": "[Readable<item=[@TransferIf.item]>]", 
             "is_factory": false, 
-            "of_type": 6
+            "of_type": 6, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 8, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                23
+            ], 
             "name": "target", 
+            "_is_built_in": false, 
             "expression_text": "[Focusable]", 
             "is_factory": false, 
-            "of_type": 17
+            "of_type": 17, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 18, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                17
+            ], 
             "name": "validator", 
+            "_is_built_in": false, 
             "expression_text": "[Predicate]", 
             "is_factory": false, 
-            "of_type": 6
+            "of_type": 6, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 12, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                8
+            ], 
             "name": "value", 
+            "_is_built_in": true, 
             "expression_text": "String!", 
             "is_factory": false, 
-            "of_type": 2
+            "of_type": 2, 
+            "_is_ref": false
         }
     }, 
     {
         "pk": 20, 
         "model": "library.typeparameter", 
         "fields": {
+            "_interfaces": [
+                11
+            ], 
             "name": "word", 
+            "_is_built_in": false, 
             "expression_text": "[Readable<item=String!>]", 
             "is_factory": false, 
-            "of_type": 9
+            "of_type": 9, 
+            "_is_ref": true
         }
     }, 
     {
         "pk": 1, 
         "model": "library.methodparameter", 
         "fields": {
+            "_interfaces": [], 
             "of_method": 5, 
+            "_is_built_in": false, 
             "name": "a", 
             "expression_text": "[Board.cell]"
         }
@@ -756,7 +873,9 @@
         "pk": 2, 
         "model": "library.methodparameter", 
         "fields": {
+            "_interfaces": [], 
             "of_method": 5, 
+            "_is_built_in": false, 
             "name": "b", 
             "expression_text": "[Board.cell]"
         }
@@ -765,7 +884,9 @@
         "pk": 3, 
         "model": "library.methodparameter", 
         "fields": {
+            "_interfaces": [], 
             "of_method": 9, 
+            "_is_built_in": false, 
             "name": "item", 
             "expression_text": "[Stack.item]"
         }
@@ -774,7 +895,9 @@
         "pk": 4, 
         "model": "library.methodparameter", 
         "fields": {
+            "_interfaces": [], 
             "of_method": 8, 
+            "_is_built_in": false, 
             "name": "item", 
             "expression_text": "[Writable.item]"
         }

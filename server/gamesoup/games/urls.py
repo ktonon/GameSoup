@@ -10,7 +10,7 @@ urlpatterns = patterns('gamesoup.games.views',
     
     # Search
     url(r'^search-requires/$', 'search_requires', name='search_requires'),
-    url(r'^search-required-by/$', 'search_required_by', name='search_required_by'),
+    # url(r'^search-required-by/$', 'search_required_by', name='search_required_by'),
     url(r'^search-required-by-parameter/(?P<parameter_id>\d+)/$', 'search_required_by_parameter', name='search_required_by_parameter'),
 
     #--------------------------------------------------------------------------

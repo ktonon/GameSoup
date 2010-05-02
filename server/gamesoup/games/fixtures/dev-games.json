@@ -20,5 +20,47 @@
             "type": 7, 
             "per_player": false
         }
+    }, 
+    {
+        "pk": 1, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 1, 
+            "type_parameter": 22
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 1, 
+            "type_parameter": 14
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 1, 
+            "type_parameter": 15
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "games.typetemplateparameterbinding", 
+        "fields": {
+            "object": 1, 
+            "parameter": 7, 
+            "expression_text": "1.item"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "games.objecttemplateparameter", 
+        "fields": {
+            "of_object": 1, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
     }
 ]

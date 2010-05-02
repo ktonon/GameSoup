@@ -63,6 +63,7 @@ gs.tracerize('SingleObjectSelector', mod.SingleObjectSelector);
 
 mod.MultipleObjectSelector = Class.create({
 	initialize: function(objects, callback) {
+		$('curtain').show();
 		$('scratch').show()
 		this._scratch = $('scratch').down('.inner-container');
 		this._scratch.fire('selector:started');
@@ -77,7 +78,18 @@ mod.MultipleObjectSelector = Class.create({
 			style: 'position: fixed; top: 190px; left: 230px; font-size: 18pt; padding: 100px'
 		});
 		this._scratch.insert({bottom: this._doneButton});
-		this._doneButton.observe('click', this.release.bind(this));
+		this._doneButton.observe('click', this.selectAndRelease.bind(this));
+		this._watchCancel = this.cancel.bind(this);
+		document.observe('keydown', this._watchCancel);
+	},
+	release: function(event) {
+		this._doneButton.stopObserving();
+		this._selectors.invoke('stopObserving', 'click');
+		this._scratch.innerHTML = '';
+		$('curtain').hide();
+		$('scratch').hide()
+        document.stopObserving('keydown', this._watchCancel);
+		this._scratch.fire('selector:completed');
 	},
 	/*
 	 * For each object, create a button on the scratch space.
@@ -105,18 +117,19 @@ mod.MultipleObjectSelector = Class.create({
 		var action = node.hasClassName('selected') ? 'remove' : 'add';
 		node[action + 'ClassName']('selected');
 	},
-	release: function(event) {
-		var objectIDs = this._selectors.collect(function(node) {
+	selectAndRelease: function(event) {
+	    var objectIDs = this._selectors.collect(function(node) {
 			if (node.hasClassName('selected')) return node.getAttribute('objectID');
 		}).filter(function(x) {return x});
-		// Cleanup
-		this._doneButton.stopObserving();
-		this._selectors.invoke('stopObserving', 'click');
-		this._scratch.innerHTML = '';
-		$('scratch').hide()
-		// Do the callback
 		this._callback(objectIDs);
-		this._scratch.fire('selector:completed');
+		this.release();
+	},
+	cancel: function(event) {
+	    if (event.keyCode == Event.KEY_ESC) {
+	        event.stop();
+	        gs.games.messageBox.clear();
+	        this.release();
+	    }
 	}
 });
 gs.tracerize('MultipleObjectSelector', mod.MultipleObjectSelector);

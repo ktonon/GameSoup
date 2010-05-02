@@ -16,15 +16,19 @@ mod.Assembler = Class.create({
 		this._dialog = new gs.dialogs.Dialog('dialog', mod.dialogHandlers, this._options);
 		this._refresherNode = new Element('div', {id: 'refresher', style: 'display: block'});
 		this._node.insert({after: this._refresherNode});
+		
 		// Object creators
 		this._searchRequires = $('lookup_id_search_requires');
-		this._searchRequiredBy = $('lookup_id_search_required_by');
 		this._idDropboxes = $$('.id-dropbox');
+		
 		// Event handlers
-		this._searchRequires.observe('click', this.search.bind(this, gs.utils.makeURL('searchRequires'), 'Find objects that require all of the selected objects as parameters. Select one or more and click "Search".'));
-		this._searchRequiredBy.observe('click', this.search.bind(this, gs.utils.makeURL('searchRequiredBy'), 'Find objects that satisfy at least one parameter on all of the selected objects. Select one or more and click "Search"'));
+		this._watchSearchRequires = this.search.bind(this, gs.utils.makeURL('searchRequires'), 'Find objects that require all of the selected objects as parameters. Select one or more and click "Search".');
+		this._searchRequires.observe('click', this._watchSearchRequires);
 		this._node.observe('object:requestConfig', this.showObjectConfigDialog.bind(this));
 		this._node.observe('object:requestDeletion', this.deleteObject.bind(this));
+		this._watchKeyDown = this.onKeyDown.bind(this);
+		document.observe('keydown', this._watchKeyDown);
+		
 		// As the game configuration changes the Assembler will
 		// get out of sync with those changes. The easiest way to
 		// fix this is to completely reset it. Instead of doing
@@ -33,6 +37,7 @@ mod.Assembler = Class.create({
 		// and canvas, and then recreate the javascript wrappers from them.
 		$('content-main').observe('assembler:systemChanged', this.refresh.bind(this));
 		this._setupTransactionSupport();
+
 		// Assumes that all dropboxes are used for collecting
 		// type ids which need to be instantiated into objects
 		// When the object gets added to the game, addObjectToGame
@@ -51,6 +56,7 @@ mod.Assembler = Class.create({
 		this._canvas.release();
 		this._dialog.release();
 		this._node.stopObserving();
+		document.stopObserving('keydown', this._watchKeyDown);
 		$('content-main').stopObserving('assembler:refreshRequired');
 		$('content-main').stopObserving('assembler:transactionStarted');
 		$('content-main').stopObserving('assembler:transactionCompleted');
@@ -95,11 +101,9 @@ mod.Assembler = Class.create({
 	search: function(url, message, event) {
 		event.stop();
 		var button = event.target;
-		$('curtain').show();
 		mod.messageBox.post(message);
 		new gamesoup.games.selectors.MultipleObjectSelector($$('.object'), function(url, button, objectIDs) {
 			mod.messageBox.clear();
-			$('curtain').hide();
 			new Ajax.Request(url, {
 				method: 'post',
 				postBody: 'object_ids=' + objectIDs.join(','),
@@ -181,6 +185,21 @@ mod.Assembler = Class.create({
 	},
 	inTransaction: function() {
 	    return this._transactionCount > 0;
+	},
+	onKeyDown: function(event) {
+        // console.log(event.keyCode);
+        if (event.keyCode == 88 && event.altKey) { // x
+            event.stop();
+            var fakeEvent = {
+                stop: function() {},
+                target: this._searchRequires
+            };
+            this._watchSearchRequires.curry(fakeEvent).call();
+        }
+        else if (event.keyCode == 80 && event.altKey) { // p
+            event.stop();
+            showRelatedObjectLookupPopup($('lookup_id_browse'));
+        }
 	}
 });
 gs.tracerize('Assembler', mod.Assembler);

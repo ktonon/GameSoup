@@ -108,12 +108,13 @@ def game_code(request, game_id):
 
 ###############################################################################
 # SEARCH
-# In these methods we use "or [0]" because of the way the type ids are
-# used by the javascript client. Eventually, these types are used in a query
-# to a django change list view that takes the form "id__in=%s" % ','.join(type_ids)
-# If we use an empty list, this results in an invalid query, and django by default
-# will show all types, which is not what we want. If we use [0] instead,
-# then the query reads "id__in=0", which will not return any types.
+#
+# In these methods we use "or [0]" because of the way the type ids are used by
+# the javascript client. Eventually, these types are used in a query to a
+# django change list view that takes the form "id__in=%s" % ','.join(type_ids)
+# If we use an empty list, this results in an invalid query, and django by
+# default will show all types, which is not what we want. If we use [0]
+# instead, then the query reads "id__in=0", which will not return any types.
 
 @staff_member_required
 @require_post
@@ -123,31 +124,17 @@ def search_requires(request):
         qs = Type.objects.all()
         for obj_id in obj_ids:
             obj = Object.objects.get(pk=obj_id)
-            qs = qs.filter(parameters__interfaces__implemented_by=obj.type)
-        type_ids = [t.id for t in qs]
-    else:
-        type_ids = []
-    response = HttpResponse(mimetype='application/json')
-    response.write(json.dumps(type_ids or [0])) # See comment above
-    return response
-
-
-@staff_member_required
-@require_post
-def search_required_by(request):
-    from django.db.models import Q
-    obj_ids = map(int, filter(bool, request.POST['object_ids'].split(',')))
-    if obj_ids:
-        type_ids = set()
-        for obj_id in obj_ids:
-            obj = Object.objects.get(pk=obj_id)
-            for param in obj.type.parameters.all():
-                qs = Type.objects.all()
-                expr = Expr.parse(param.expression_text)
-                for interface in Interface.objects.for_expr(expr):
-                    qs = qs.filter(implements=interface)
-                type_ids |= set([t.id for t in qs])
-        type_ids = list(type_ids)
+            qs = qs.filter(parameters___interfaces__implemented_by=obj.type).distinct()
+        def d(t):
+            params = t.parameters.filter(_is_ref=True)
+            n = params.count()
+            params2 = params.exclude(_interfaces__implemented_by__instances__id__in=obj_ids).distinct()
+            # print params
+            # print params2
+            # print Type.objects.filter(instances__id__in=obj_ids)
+            # print ''
+            return params2.count() <= n - len(obj_ids)
+        type_ids = [t.id for t in qs if d(t)]
     else:
         type_ids = []
     response = HttpResponse(mimetype='application/json')

@@ -58,8 +58,7 @@ class TypeAdmin(admin.ModelAdmin):
         (None, {'fields': ('name', 'description', ('visible', 'has_state'),)}),
         ('Interfaces', {'fields': ('implements',), 'classes': ('collapse',)}),
         )
-    list_display = ('__unicode__', 'flat_expr', 'description', 'visible')
-    list_filter = ('visible',)
+    list_display = ('__unicode__', 'description')
     filter_horizontal = ('implements',)
     search_fields = ('name', 'description', 'implements__name')
     actions = None
