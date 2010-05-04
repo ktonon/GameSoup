@@ -13,190 +13,12 @@ from gamesoup.expressions.syntax import Expr
 from gamesoup.games.managers import *
 
 
-class Game(models.Model):
-    '''
-    A collection of modules and configuration that defines a Disposition game.
-    '''
-    name = models.CharField(max_length=50)
-    description = models.TextField(blank=True)
-
-    class Meta:
-        ordering = ['name']
-    
-    #--------------------------------------------------------------------------
-    # Representation
-    
-    def __unicode__(self):
-        return self.name
-
-    #--------------------------------------------------------------------------
-    # Links
-    
-    def get_assembler_link(self):
-        return '<a href="%s" title="Assemble this game">Objects: %d</a>' % (reverse('games:assemble_game', args=[self.id]), self.object_set.count())
-    get_assembler_link.short_description = 'Assembler'
-    get_assembler_link.allow_tags = True
-
-    def code_link(self):
-        return '<a href="%s" title="See the source code for this game">Code</a>' % reverse('games:game_code', args=[self.id])
-    code_link.short_description = 'Code'
-    code_link.allow_tags = True
-
-    #--------------------------------------------------------------------------
-    # Queries
-
-    # Are all the objects in the game satisfied?
-    is_satisfied = property(lambda self: all([obj.is_satisfied for obj in self.object_set.all()]))
-
-    def can_apply_resolvent(self, r):
-        '''
-        Can the resolvent r be applied to this game?
-        That is, if we apply r to this game, will it still be in
-        a consistent state?
-        '''
-        # To answer this question, we need to apply r to every object
-        # in the game and see if any existing connections break.
-        # TODO: implement me!
-        return True
-
-    #--------------------------------------------------------------------------
-    # Commands
-    
-    def apply_resolvent(self, r):
-        '''
-        Apply the resolvent r to this game.
-        
-        Assumes that Game#can_apply_resolvent has already been called
-        to see if r is even legal.
-        '''
-        for obj in self.object_set.all():
-            obj.apply_resolvent(r)
-        
-
-class Object(models.Model):
-    '''
-    An instance of a type.
-    '''
-    name = models.CharField(max_length=50, blank=True)
-    game = models.ForeignKey(Game, editable=False)
-    type = models.ForeignKey(Type, related_name='instances', editable=False)
-    x = models.IntegerField(default=0)
-    y = models.IntegerField(default=0)
-    width = models.IntegerField(default=5)
-    height = models.IntegerField(default=5)
-    per_player = models.BooleanField(default=False)
-
-    objects = GameObjectManager()
-    
-    class Meta:
-        ordering = ('name',)
-
-    #--------------------------------------------------------------------------
-    # Representation
-        
-    def __unicode__(self):
-        return u'%s' % (self.name or self.type)
-    
-    #--------------------------------------------------------------------------
-    # Queries
-
-    # Contexts for resolving variables in expressions
-    #   binding_context - replaces type variables with object variables
-    #   context         - replaces object variables with default values
-    #   final_context   - replaces object variables with bound expressions
-    #
-    binding_context = property(lambda self: self.template_bindings.get_context())
-    context = property(lambda self: self.template_parameters.get_context())
-    final_context = property(lambda self: self.final_bindings.get_context())
-
-    # Expressions representing this object
-    #   flat_expr       - an expression involving object variables
-    #   context         - an expression with default values applied
-    #   final_expr      - an expression with bound expressions applied
-    #
-    flat_expr = property(lambda self: self.type.flat_expr % self.binding_context)
-    expr = property(lambda self: self.flat_expr % self.context)
-    final_expr = property(lambda self: self.flat_expr % self.final_context)
-
-    # Are all the type parameters bound?
-    is_satisfied = property(lambda self: self.parameters.count() == self.bindings.count())
-
-    # Can all the object reference parameters be bound?
-    is_satisfiable = property(lambda self: all([p.is_satisfiable for p in self.parameters.all()]))
-
-    #--------------------------------------------------------------------------
-    # Commands
-
-    def apply_resolvent(self, r):
-        '''
-        Apply the resolvent r to this object.
-        '''
-        # Apply r to each object in the game.
-        # TODO: implement me!
-        for key, expr in r.items():
-            name = key.split('.')[1]
-            try:
-                param = self.template_parameters.get(name=name)
-                param.update(expr)
-            except ObjectTemplateParameter.DoesNotExist:
-                # Ok, not applicable to this object.
-                pass
-
-    #--------------------------------------------------------------------------
-    # Consistency
-
-    @staticmethod
-    def post_save(sender, instance, **kwargs):
-        obj = instance
-
-        # Make the default ObjectTemplateParamters and
-        # TypeTemplateParameterBindings
-        for tp in obj.type.template_parameters.all():
-            try:
-                obj.template_bindings.get(parameter=tp)
-            except TypeTemplateParameterBinding.DoesNotExist:
-                # Binding which replaces @Type.var with 1.var
-                obj.template_bindings.create(parameter=tp, expression_text='%d.%s' % (obj.id, tp.name))
-                # The parameter 1.var
-                obj.template_parameters.create(name=tp.name, expression_text=tp.expression_text)
-
-        # Make ObjectParameters
-        for tp in obj.type.parameters.all():
-            try:
-                obj.parameters.get(type_parameter=tp)
-            except ObjectParameter.DoesNotExist:
-                obj.parameters.create(type_parameter=tp)
-        
-        # Give the object a default name
-        if obj.name == '':
-            obj.name = obj.type.name
-            obj.save() # Since name is set, this should avoid infinite recursion
-
-    @staticmethod
-    def post_delete(sender, instance, **kwargs):
-        # Remove any bindings which this object is a part of
-        # Do this for both directions.
-        instance.bindings.all().delete()
-        instance.bound_to.all().delete()
-
-        # Remove object parameters
-        instance.parameters.all().delete()
-
-        # Remove template parameters and bindings
-        instance.final_bindings.all().delete()
-        instance.template_bindings.all().delete()
-        instance.template_parameters.all().delete()
-        
-post_save.connect(Object.post_save, sender=Object)
-post_delete.connect(Object.post_delete, sender=Object)
-
-
 ###############################################################################
 # PARAMETERS AND OBJECT CONNECTIONS
 
 
 class ObjectParameter(models.Model):
-    of_object = models.ForeignKey(Object, related_name='parameters')
+    of_object = models.ForeignKey('Object', related_name='parameters')
     type_parameter = models.ForeignKey(TypeParameter, related_name='object_parameters')
 
     #--------------------------------------------------------------------------
@@ -329,8 +151,8 @@ class ObjectParameterBinding(models.Model):
     '''
     A parameter setting on an object.
     '''
-    instance = models.ForeignKey(Object, related_name='bindings')
-    parameter = models.OneToOneField(ObjectParameter, related_name='_binding')
+    instance = models.ForeignKey('Object', related_name='bindings')
+    parameter = models.OneToOneField('ObjectParameter', related_name='_binding')
     # Only one of the following 3 fields will be set depending on the nature of parameter.
     built_in_argument = models.TextField(blank=True)
     type_argument = models.ForeignKey(Type, blank=True, null=True, related_name='bound_to')
@@ -378,7 +200,7 @@ post_delete.connect(ObjectParameterBinding.post_delete, sender=ObjectParameterBi
 
 
 class TypeTemplateParameterBinding(TemplateParameterBinding):
-    object = models.ForeignKey(Object, related_name='template_bindings')
+    object = models.ForeignKey('Object', related_name='template_bindings')
     parameter = models.ForeignKey(TypeTemplateParameter)
 
     def __unicode__(self):
@@ -386,7 +208,7 @@ class TypeTemplateParameterBinding(TemplateParameterBinding):
 
 
 class ObjectTemplateParameter(TemplateParameter):
-    of_object = models.ForeignKey(Object, related_name='template_parameters')
+    of_object = models.ForeignKey('Object', related_name='template_parameters')
     
     def __unicode__(self):
         return u'%d.%s' % (self.of_object.id, self.name)
@@ -436,8 +258,190 @@ class ObjectTemplateParameter(TemplateParameter):
 
 
 class ObjectTemplateParameterBinding(TemplateParameterBinding):
-    object = models.ForeignKey(Object, related_name='final_bindings')
-    parameter = models.OneToOneField(ObjectTemplateParameter, related_name='_binding')
+    object = models.ForeignKey('Object', related_name='final_bindings')
+    parameter = models.OneToOneField('ObjectTemplateParameter', related_name='_binding')
 
     def __unicode__(self):
         return unicode(self.parameter)
+
+
+###############################################################################
+# GAMES AND OBJECTS
+
+
+class Game(models.Model):
+    '''
+    A collection of modules and configuration that defines a Disposition game.
+    '''
+    name = models.CharField(max_length=50)
+    description = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['name']
+    
+    #--------------------------------------------------------------------------
+    # Representation
+    
+    def __unicode__(self):
+        return self.name
+
+    #--------------------------------------------------------------------------
+    # Links
+    
+    def get_assembler_link(self):
+        return '<a href="%s" title="Assemble this game">Objects: %d</a>' % (reverse('games:assemble_game', args=[self.id]), self.object_set.count())
+    get_assembler_link.short_description = 'Assembler'
+    get_assembler_link.allow_tags = True
+
+    def code_link(self):
+        return '<a href="%s" title="See the source code for this game">Code</a>' % reverse('games:game_code', args=[self.id])
+    code_link.short_description = 'Code'
+    code_link.allow_tags = True
+
+    #--------------------------------------------------------------------------
+    # Queries
+
+    # Are all the objects in the game satisfied?
+    is_satisfied = property(lambda self: all([obj.is_satisfied for obj in self.object_set.all()]))
+
+    def can_apply_resolvent(self, r):
+        '''
+        Can the resolvent r be applied to this game?
+        That is, if we apply r to this game, will it still be in
+        a consistent state?
+        '''
+        # To answer this question, we need to apply r to every object
+        # in the game and see if any existing connections break.
+        # TODO: implement me!
+        return True
+
+    #--------------------------------------------------------------------------
+    # Commands
+    
+    def apply_resolvent(self, r):
+        '''
+        Apply the resolvent r to this game.
+        
+        Assumes that Game#can_apply_resolvent has already been called
+        to see if r is even legal.
+        '''
+        for obj in self.object_set.all():
+            obj.apply_resolvent(r)
+        
+
+class Object(models.Model):
+    '''
+    An instance of a type.
+    '''
+    name = models.CharField(max_length=50, blank=True)
+    game = models.ForeignKey('Game', editable=False)
+    type = models.ForeignKey(Type, related_name='instances', editable=False)
+    x = models.IntegerField(default=0)
+    y = models.IntegerField(default=0)
+    width = models.IntegerField(default=5)
+    height = models.IntegerField(default=5)
+    per_player = models.BooleanField(default=False)
+
+    objects = GameObjectManager()
+    
+    class Meta:
+        ordering = ('name',)
+
+    #--------------------------------------------------------------------------
+    # Representation
+        
+    def __unicode__(self):
+        return u'%s' % (self.name or self.type)
+    
+    #--------------------------------------------------------------------------
+    # Queries
+
+    # Contexts for resolving variables in expressions
+    #   binding_context - replaces type variables with object variables
+    #   context         - replaces object variables with default values
+    #   final_context   - replaces object variables with bound expressions
+    #
+    binding_context = property(lambda self: self.template_bindings.get_context())
+    context = property(lambda self: self.template_parameters.get_context())
+    final_context = property(lambda self: self.final_bindings.get_context())
+
+    # Expressions representing this object
+    #   flat_expr       - an expression involving object variables
+    #   context         - an expression with default values applied
+    #   final_expr      - an expression with bound expressions applied
+    #
+    flat_expr = property(lambda self: self.type.flat_expr % self.binding_context)
+    expr = property(lambda self: self.flat_expr % self.context)
+    final_expr = property(lambda self: self.flat_expr % self.final_context)
+
+    # Are all the type parameters bound?
+    is_satisfied = property(lambda self: self.parameters.count() == self.bindings.count())
+
+    # Can all the object reference parameters be bound?
+    is_satisfiable = property(lambda self: all([p.is_satisfiable for p in self.parameters.all()]))
+
+    #--------------------------------------------------------------------------
+    # Commands
+
+    def apply_resolvent(self, r):
+        '''
+        Apply the resolvent r to this object.
+        '''
+        # Apply r to each object in the game.
+        # TODO: implement me!
+        for key, expr in r.items():
+            name = key.split('.')[1]
+            try:
+                param = self.template_parameters.get(name=name)
+                param.update(expr)
+            except ObjectTemplateParameter.DoesNotExist:
+                # Ok, not applicable to this object.
+                pass
+
+    #--------------------------------------------------------------------------
+    # Consistency
+
+    @staticmethod
+    def post_save(sender, instance, **kwargs):
+        obj = instance
+
+        # Make the default ObjectTemplateParamters and
+        # TypeTemplateParameterBindings
+        for tp in obj.type.template_parameters.all():
+            try:
+                obj.template_bindings.get(parameter=tp)
+            except TypeTemplateParameterBinding.DoesNotExist:
+                # Binding which replaces @Type.var with 1.var
+                obj.template_bindings.create(parameter=tp, expression_text='%d.%s' % (obj.id, tp.name))
+                # The parameter 1.var
+                obj.template_parameters.create(name=tp.name, expression_text=tp.expression_text)
+
+        # Make ObjectParameters
+        for tp in obj.type.parameters.all():
+            try:
+                obj.parameters.get(type_parameter=tp)
+            except ObjectParameter.DoesNotExist:
+                obj.parameters.create(type_parameter=tp)
+        
+        # Give the object a default name
+        if obj.name == '':
+            obj.name = obj.type.name
+            obj.save() # Since name is set, this should avoid infinite recursion
+
+    @staticmethod
+    def post_delete(sender, instance, **kwargs):
+        # Remove any bindings which this object is a part of
+        # Do this for both directions.
+        instance.bindings.all().delete()
+        instance.bound_to.all().delete()
+
+        # Remove object parameters
+        instance.parameters.all().delete()
+
+        # Remove template parameters and bindings
+        instance.final_bindings.all().delete()
+        instance.template_bindings.all().delete()
+        instance.template_parameters.all().delete()
+        
+post_save.connect(Object.post_save, sender=Object)
+post_delete.connect(Object.post_delete, sender=Object)

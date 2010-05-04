@@ -32,10 +32,6 @@ mod.Dialog = Class.create({
 	    }
 	},
 	update: function(html) {
-		if (this._currentHandler) {
-			this._currentHandler.release();
-			this._currentHandler = null;
-		}
 		this._contentNode.update(html);
 		var node = this._contentNode.down();
 		this._header.innerHTML = node.getAttribute('title');
@@ -43,6 +39,10 @@ mod.Dialog = Class.create({
 		this._currentHandler = new HandlerClass(node, this._options);
 	},
 	clear: function() {
+		if (this._currentHandler) {
+			this._currentHandler.release();
+			this._currentHandler = null;
+		}
 		this._contentNode.innerHTML = '';
 	},
 	/*

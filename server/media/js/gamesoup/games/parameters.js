@@ -123,26 +123,52 @@ gs.tracerize('Float', mod.Float);
 mod.Reference = Class.create(mod.Parameter, {
 	initialize: function($super, node, options) {
 		$super(node, options);
-		this.createWidget();
+        this._isSat = !this._node.hasClassName('unsatisfiable');
+		this._createWidget();
+		this._setupHandlers();
 		this._boundToDisclosure.update(this._node.getAttribute('boundTo'));
-		// Event handlers
-		this._widget.observe('click', this.bindRef.bind(this));			
+	},
+	_createWidget: function() {
+	    // Bind
+	    if (this._isSat) {
+    		this._node.insert({bottom: '<input type="button" class="bind" value="Bind" title="Bind this parameter to an object." />'});
+    		this._bindWidget = this._node.down('input.bind[type=button]');
+	    }
+		// Search
+		this._node.insert({bottom: '<input type="text" id="id_unsatref" style="display: none" />'});
+		this._node.insert({bottom: '<input type="button" class="search" id="lookup_id_unsatref" value="Search" title="None of the objects in your game can satisfy this parameter. Search the library for one that does." />'});
+        this._dropbox = this._node.down('input[type=text]');
+		this._searchWidget = this._node.down('input.search[type=button]');
+	    // Bound-to disclosure
+	    this._node.insert({bottom: '<span class="bound-to-disclosure"></span>'});
+		this._boundToDisclosure = this._node.down('.bound-to-disclosure');	        
+	},
+	_setupHandlers: function() {
+		if (this._isSat) this._bindWidget.observe('click', this.bindRef.bind(this));		    
+		this._searchWidget.observe('click', this.search.bind(this));
 	},
 	release: function() {
-		this._widget.stopObserving();
+	    if (this._isSat) this._bindWidget.stopObserving();
+	    this._searchWidget.stopObserving();
+	    $('assembler').stopObserving('assembler:objectAdded');
 	},
-	createWidget: function() {
-		this._node.insert({bottom: '<input type="button" value="Bind" title="Bind this parameter to an object." /> <span class="bound-to-disclosure"></span>'});
-		this._widget = this._node.down('input');
-		this._boundToDisclosure = this._node.down('.bound-to-disclosure');
-	},
-	setValue: function(value) {
-		this._node.setAttribute('boundTo', value);
-		this._boundToDisclosure.update(value);
-	},
+	/********************************************************/
+	/* Queries
+	/********************************************************/
 	getValue: function() {
 		return this._node.getAttribute('boundTo');
 	},
+	/********************************************************/
+	/* Commands
+	/********************************************************/
+	setValue: function(value) {
+		this._node.setAttribute('boundTo', value);
+		this._boundToDisclosure.update(value);
+	    this._node.fire('assembler:systemChanged')
+	},
+	/********************************************************/
+	/* Binding to existing objects
+	/********************************************************/
 	bindRef: function() {
 		var url = gs.utils.makeURL('candidateRefs', this._options);
 		new Ajax.Request(url, {
@@ -167,49 +193,26 @@ mod.Reference = Class.create(mod.Parameter, {
 			evalJS: true,
 			postBody: 'value=' + this.getValue(),
 			onSuccess: function(transport) {
-			    this._boundToDisclosure.update(transport.responseJSON.value);
-			    this._node.fire('assembler:systemChanged')
+			    this.setValue(transport.responseJSON.value);
 			}.bind(this)
 		});
-	}	
-});
-gs.tracerize('Reference', mod.Reference);
-
-
-// What this one does:
-//   * Query the server for types that can satisfy this reference
-//   * Let the user pick a type from the popup
-//   * Drop the chosen type id into a dropbox
-//   * Instantiate an object for that type
-//   * Bind the parameter to the newly instantiated object
-mod.UnsatisfiableReference = Class.create(mod.Parameter, {
-    initialize: function($super, node, options) {
-        $super(node, options);
-		this.createWidget();
-		// Event handlers
-		this._widget.observe('click', this.search.bind(this));
-		this._watchForNewObject = this.bindNewObject.bind(this);
-		$('assembler').observe('assembler:objectAdded', this._watchForNewObject);
 	},
-	release: function() {
-		this._widget.stopObserving('click');
-		$('assembler').stopObserving('assembler:objectAdded', this._watchForNewObject);
-	},
-	createWidget: function() {
-	    this._node.insert({bottom: '<input type="text" id="id_unsatref" style="display: none" />'});
-		this._node.insert({bottom: '<input type="button" id="lookup_id_unsatref" value="Search" title="None of the objects in your game can satisfy this parameter. Search the library for one that does." />'});
-        this._dropbox = this._node.down('input[type=text]');
-		this._widget = this._node.down('input[type=button]');
-	},
+	/********************************************************/
+	/* Searching through types for new instances
+	/********************************************************/
 	search: function() {
 		var url = gs.utils.makeURL('searchRequiredByParameter', this._options);
 		new Ajax.Request(url, {
 			method: 'get',
 			evalJS: true,
 			onSuccess: function(transport) {
+			    // Watch for the new object
+			    $('assembler').stopObserving('assembler:objectAdded');
+        		$('assembler').observe('assembler:objectAdded', this.bindNewObject.bind(this));
+        		// Display the possible types
 				var type_ids = transport.responseJSON;
-				this._widget.setAttribute('href', gs.utils.makeURL('browseTypes') + '?id__in=' + type_ids.join(','));
-				showRelatedObjectLookupPopup(this._widget);
+				this._searchWidget.setAttribute('href', gs.utils.makeURL('browseTypes') + '?id__in=' + type_ids.join(','));
+				showRelatedObjectLookupPopup(this._searchWidget);
 				// Now a popup appears with a list of possible types.
 				// When the user selects a type, its id will get put into the dropbox
 				// and 'dropbox:change' will fire.
@@ -224,14 +227,12 @@ mod.UnsatisfiableReference = Class.create(mod.Parameter, {
 			method: 'post',
 			postBody: 'value=' + event.memo.objectID,
 			onSuccess: function() {
-        	    this.release();
-        	    this._widget.replace(new Template('<span class="note">This parameter has been bound to the newly created #{typeName}.<span>').evaluate(event.memo));
-			    this._node.fire('assembler:systemChanged');
+			    this.setValue(event.memo.objectID);
 			}.bind(this)
 		});
-	}	
+	}
 });
-gs.tracerize('UnsatisfiableReference', mod.UnsatisfiableReference);
+gs.tracerize('Reference', mod.Reference);
 
 
 mod.FactoryReference = Class.create(mod.Parameter, {

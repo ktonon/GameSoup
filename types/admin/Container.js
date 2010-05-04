@@ -10,7 +10,7 @@ gamesoup.library.types.Container = Class.create(gamesoup.library.types.BaseType)
 gamesoup.library.types.Container.addMethods({
     
     /*---------------------------------------->                        Readable
-     * read() : Any
+     * read() : []
      * 
      * Read this content of this object.
      */                                                               /* vVv */
@@ -19,7 +19,7 @@ gamesoup.library.types.Container.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Writable
-     * write(item : Any)
+     * write(item : [])
      * 
      * Write a value to the content of this object.
      */                                                               /* vVv */

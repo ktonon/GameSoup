@@ -37,9 +37,8 @@ mod.ConfigureObject = Class.create({
 		var ParamClass = gamesoup.games.parameters[interfaceName];
 		return new ParamClass(node, this._options);
 	},
-	addRef: function(node) {
-	    var RefClass = gamesoup.games.parameters[node.hasClassName('unsatisfiable') ? 'UnsatisfiableReference' : 'Reference'];
-		return new RefClass(node, this._options);
+	addRef: function(node) {	    
+	    return new gamesoup.games.parameters.Reference(node, this._options);
 	},
 	addFactory: function(node) {
 	    return new gamesoup.games.parameters.FactoryReference(node, this._options);

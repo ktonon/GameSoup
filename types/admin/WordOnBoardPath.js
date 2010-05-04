@@ -8,8 +8,8 @@ gamesoup.library.types.WordOnBoardPath = Class.create(gamesoup.library.types.Bas
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._board                                               Board<item=String>
-// this._word                                             Readable<item=String>
+// this._board                           [Board<cell=[Readable<item=String!>]>]
+// this._word                                          [Readable<item=String!>]
 
 
 /*****************************************************************************/
@@ -18,7 +18,7 @@ gamesoup.library.types.WordOnBoardPath = Class.create(gamesoup.library.types.Bas
 gamesoup.library.types.WordOnBoardPath.addMethods({
     
     /*---------------------------------------->                       Predicate
-     * call() : Boolean
+     * call() : Boolean!
      * 
      * What is the truth value of this predicate object?
      */                                                               /* vVv */
@@ -27,6 +27,7 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
         c.word = this._word.read();
         if (c.word.length == 0) {
             this._lastReason = "Please type your word in.";
+            return false;
         } else {
             this._lastReason = this._failReason.evaluate(c);            
         }
@@ -34,7 +35,7 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                       Predicate
-     * reason() : String
+     * reason() : String!
      * 
      * What was the reason for the last answer this predicate gave?
      */                                                               /* vVv */

@@ -8,7 +8,7 @@ gamesoup.library.types.SayHello = Class.create(gamesoup.library.types.BaseType);
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 BUILT-INS                                 
-// this._message                                                         String
+// this._message                                                        String!
 
 /*****************************************************************************/
 /*                             Interface Methods                             */

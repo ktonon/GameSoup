@@ -28,7 +28,7 @@ gamesoup.library.types.TextInput.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Readable
-     * read() : String
+     * read() : String!
      * 
      * Read this content of this object.
      */                                                               /* vVv */
@@ -37,7 +37,7 @@ gamesoup.library.types.TextInput.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Writable
-     * write(item : String)
+     * write(item : [])
      * 
      * Write a value to the content of this object.
      */                                                               /* vVv */

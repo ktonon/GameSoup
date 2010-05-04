@@ -8,7 +8,7 @@ gamesoup.library.types.GiveFocus = Class.create(gamesoup.library.types.BaseType)
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._target                                                       Focusable
+// this._target                                                     [Focusable]
 
 
 /*****************************************************************************/

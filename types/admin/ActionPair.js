@@ -8,8 +8,8 @@ gamesoup.library.types.ActionPair = Class.create(gamesoup.library.types.BaseType
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._a                                                               Action
-// this._b                                                               Action
+// this._a                                                             [Action]
+// this._b                                                             [Action]
 
 
 /*****************************************************************************/

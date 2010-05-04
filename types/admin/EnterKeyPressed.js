@@ -8,8 +8,8 @@ gamesoup.library.types.EnterKeyPressed = Class.create(gamesoup.library.types.Bas
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._action                                                          Action
-// this._focus                                                              Any
+// this._action                                                        [Action]
+// this._focus                                                               []
 
 
 /*****************************************************************************/

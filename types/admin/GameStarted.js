@@ -8,7 +8,7 @@ gamesoup.library.types.GameStarted = Class.create(gamesoup.library.types.BaseTyp
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._action                                                          Action
+// this._action                                                        [Action]
 
 
 /*****************************************************************************/

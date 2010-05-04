@@ -8,7 +8,7 @@ gamesoup.library.types.Clear = Class.create(gamesoup.library.types.BaseType);
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._object                                                       Clearable
+// this._object                                                     [Clearable]
 
 
 /*****************************************************************************/

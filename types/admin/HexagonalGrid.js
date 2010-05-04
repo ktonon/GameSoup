@@ -8,9 +8,9 @@ gamesoup.library.types.HexagonalGrid = Class.create(gamesoup.library.types.BaseT
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 BUILT-INS                                 
-// this._radius                                                         Integer
+// this._radius                                                        Integer!
 //                                 FACTORIES                                 
-// this._cellType                   [Readable<item=item> + Writable<item=item>]
+// this._cellType                  [Readable<item=[@Hexagonal.item]> + Writable<item=[@Hexagonal.item]>]
 
 
 /*****************************************************************************/
@@ -19,7 +19,7 @@ gamesoup.library.types.HexagonalGrid = Class.create(gamesoup.library.types.BaseT
 gamesoup.library.types.HexagonalGrid.addMethods({
     
     /*---------------------------------------->                           Board
-     * areAdjacent(a : Any ; b : Any) : Boolean
+     * areAdjacent(a : [] ; b : []) : Boolean!
      * 
      * Are a and b adjacent?
      */                                                               /* vVv */
@@ -28,7 +28,7 @@ gamesoup.library.types.HexagonalGrid.addMethods({
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Iterable
-     * nextInIteration() : Any
+     * nextInIteration() : [@Hexagonal.item]
      * 
      * Get the next object in the sequence. When the sequence is over, this should return null.
      */                                                               /* vVv */

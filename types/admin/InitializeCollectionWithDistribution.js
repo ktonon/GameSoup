@@ -8,8 +8,8 @@ gamesoup.library.types.InitializeCollectionWithDistribution = Class.create(games
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._collection                          Iterable<item=Writable<item=item>>
-// this._distribution                                   Distribution<item=item>
+// this._collection                        [Iterable<item=[Writable<item=[]>]>]
+// this._distribution                                   [Distribution<over=[]>]
 
 
 /*****************************************************************************/

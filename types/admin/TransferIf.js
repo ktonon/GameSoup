@@ -8,9 +8,9 @@ gamesoup.library.types.TransferIf = Class.create(gamesoup.library.types.BaseType
 /*                                 Parameters                                */
 /*****************************************************************************/
 //                                 REFERENCES                                
-// this._destination                                        Writable<item=item>
-// this._source                                             Readable<item=item>
-// this._validator                                                    Predicate
+// this._destination                                        [Writable<item=[]>]
+// this._source                                             [Readable<item=[]>]
+// this._validator                                                  [Predicate]
 
 
 /*****************************************************************************/
