@@ -425,7 +425,7 @@ class Object(models.Model):
         
         # Give the object a default name
         if obj.name == '':
-            obj.name = obj.type.name
+            obj.name = obj.type.title or obj.type.name
             obj.save() # Since name is set, this should avoid infinite recursion
 
     @staticmethod

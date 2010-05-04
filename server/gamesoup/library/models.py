@@ -99,6 +99,7 @@ class Type(models.Model):
     Types can implement multiple interfaces.
     '''
     name = IdentifierField()
+    title = models.CharField(max_length=100, blank=True, help_text='Default name assigned to instances of this object. Should read like natural language.')
     description = models.TextField(blank=True)
     implements = models.ManyToManyField('Interface', limit_choices_to={'is_built_in': False}, blank=True, related_name='implemented_by', help_text='Interfaces implemented by this type.')
     visible = models.BooleanField(default=True)
@@ -106,14 +107,14 @@ class Type(models.Model):
     code = models.TextField(blank=True)
         
     class Meta:
-        ordering = ['name']
+        ordering = ['title']
 
     #--------------------------------------------------------------------------
     # Representation
 
     def __unicode__(self):
-        qs = self.template_parameters.all()
-        return self.name # + (qs and u'<%s>' % ','.join([u'%s=%s' % (tp.name, tp.expression_text) for tp in qs]) or u'')
+        # qs = self.template_parameters.all()
+        return self.title or self.name # + (qs and u'<%s>' % ','.join([u'%s=%s' % (tp.name, tp.expression_text) for tp in qs]) or u'')
 
     #--------------------------------------------------------------------------
     # Queries

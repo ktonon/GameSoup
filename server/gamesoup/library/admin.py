@@ -55,7 +55,7 @@ class TypeTemplateParameterInline(admin.TabularInline):
     extra = 1
 class TypeAdmin(admin.ModelAdmin):
     fieldsets = (
-        (None, {'fields': ('name', 'description', ('visible', 'has_state'),)}),
+        (None, {'fields': ('name', 'title', 'description', ('visible', 'has_state'),)}),
         ('Interfaces', {'fields': ('implements',), 'classes': ('collapse',)}),
         )
     list_display = ('__unicode__', 'description')
