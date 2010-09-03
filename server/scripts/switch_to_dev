@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-rm db/development.sqlite
-gamesoup/manage.py syncdb
-gamesoup/manage.py loaddata fixtures/dev-data.json
-gamesoup/manage.py loaddata gamesoup/library/fixtures/dev-library.json
-gamesoup/manage.py loaddata gamesoup/games/fixtures/dev-games.json
-gamesoup/manage.py loaddata gamesoup/matches/fixtures/dev-matches.json

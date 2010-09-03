@@ -2,8 +2,7 @@
 Storing collections of types and their configuration data to create compeleted games.
 '''
 
-
-import re
+import datetime, re
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
@@ -275,7 +274,9 @@ class Game(models.Model):
     '''
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
-
+    created_at = models.DateTimeField(default=datetime.datetime.now)
+    updated_at = models.DateTimeField(default=datetime.datetime.now)
+    
     class Meta:
         ordering = ['name']
     
@@ -327,6 +328,13 @@ class Game(models.Model):
         '''
         for obj in self.object_set.all():
             obj.apply_resolvent(r)
+    
+    def mark_as_updated(self):
+        '''
+        Set the update_at field to indicate that this game was changed recently.
+        '''
+        self.updated_at = datetime.datetime.now()
+        self.save()
         
 
 class Object(models.Model):

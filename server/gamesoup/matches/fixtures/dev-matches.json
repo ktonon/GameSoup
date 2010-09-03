@@ -1,18 +1,1 @@
-[
-    {
-        "pk": 1, 
-        "model": "matches.match", 
-        "fields": {
-            "game": 1, 
-            "state": ""
-        }
-    }, 
-    {
-        "pk": 2, 
-        "model": "matches.match", 
-        "fields": {
-            "game": 2, 
-            "state": ""
-        }
-    }
-]
+[]

@@ -559,6 +559,8 @@ class Atom(Cached):
         12.item : [Bar]
         >>> f2.resolvent_for(f3)
         <BLANKLINE>
+        >>> f1.resolvent_for(f3 + f2)
+        12.item : [Bar + Car]
         """
         c = TemplateContext({})
         if self.is_built_in:

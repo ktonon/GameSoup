@@ -1,0 +1,18 @@
+[
+    {
+        "pk": 2, 
+        "model": "matches.match", 
+        "fields": {
+            "game": 2, 
+            "state": ""
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "matches.match", 
+        "fields": {
+            "game": 3, 
+            "state": ""
+        }
+    }
+]
