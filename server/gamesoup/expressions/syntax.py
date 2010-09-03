@@ -291,7 +291,7 @@ class Expr(Cached):
     #--------------------------------------------------------------------------
     # Comparison
 
-    def super(self, other):
+    def is_super(self, other):
         """
         Is this expression a super expression of other?
         
@@ -299,38 +299,38 @@ class Expr(Cached):
         
         >>> r = Expr.parse('Readable')
         >>> w = Expr.parse('Writable')
-        >>> r.super(r)
+        >>> r.is_super(r)
         True
-        >>> r.super(w)
+        >>> r.is_super(w)
         False
-        >>> w.super(r)
+        >>> w.is_super(r)
         False
-        >>> (r + w).super(w)
+        >>> (r + w).is_super(w)
         True
-        >>> (r + w).super(r)
+        >>> (r + w).is_super(r)
         True
-        >>> (r + w).super(w + r)
+        >>> (r + w).is_super(w + r)
         True
 
         >>> rs = Expr.parse('Readable<item=String>')
-        >>> rs.super(r)
+        >>> rs.is_super(r)
         True
-        >>> r.super(rs)
+        >>> r.is_super(rs)
         False
-        >>> rs.super(r + w)
+        >>> rs.is_super(r + w)
         False
-        >>> (r + w).super(rs)
+        >>> (r + w).is_super(rs)
         False
 
         >>> c1 = Expr.parse('Foo<bar=[Bar<far=Far,where=[Where+There]>+Car]>')
         >>> c2 = Expr.parse('[Foo<bar=[Bar<far=[Far+War],where=[Here+There+Every+Where],at=Fat>+Car<item=Bitem>+Fat<hat=Cat>]>+Quick]')
-        >>> c2.super(c1)
+        >>> c2.is_super(c1)
         True
-        >>> c1.super(c2)
+        >>> c1.is_super(c2)
         False
         """
         for atom1, atom2 in self.join(other):
-            if atom1 and atom2 and not atom1.super(atom2):
+            if atom1 and atom2 and not atom1.is_super(atom2):
                 return False
             if not atom1 and atom2:
                 return False
@@ -339,7 +339,7 @@ class Expr(Cached):
     def resolvent_for(self, other):
         """
         Attempts to compute and return minimal resolvent that
-        will make (self % resolvent).super(other). If no such
+        will make (self % resolvent).is_super(other). If no such
         resolvent exists a resolvent will still be returned, but
         (self % resolvent) will not be super to other.
         
@@ -538,9 +538,9 @@ class Atom(Cached):
     #--------------------------------------------------------------------------
     # Comparison
 
-    def super(self, other):
+    def is_super(self, other):
         for arg1, arg2 in self.join(other):
-            if arg1 and arg2 and not arg1.expr.super(arg2.expr):
+            if arg1 and arg2 and not arg1.expr.is_super(arg2.expr):
                 return False
             if not arg1 and arg2:
                 return False
@@ -677,14 +677,14 @@ Now say we lookup the minimum interface required by the type template
 parameter "over" and find it to be "[Drivable]". That's is no good,
 because:
 
-#     >>> Expr.parse('Clearable').super(Expr.parse('Drivable'))
+#     >>> Expr.parse('Clearable').is_super(Expr.parse('Drivable'))
 #     False
 
 
 because after applying the resolvent:
 
 #     >>> obj_after = obj.apply_resolvent(resolvent)
-#     >>> obj_after.super(param)
+#     >>> obj_after.is_super(param)
 #     True
     
 In order to get this algorithm implemented. I need to do the following:
@@ -715,24 +715,24 @@ and a @Copier object
         dest:   [Stack<item=@Copier.item[]>]
 
 Note that
-    1.expr.super(2.dest)
+    1.expr.is_super(2.dest)
 because
 
-    >>> Expr.parse('[Iterable<item=[]> + Stack<item=[]>]').super(Expr.parse('[Stack<item=[]>]'))
+    >>> Expr.parse('[Iterable<item=[]> + Stack<item=[]>]').is_super(Expr.parse('[Stack<item=[]>]'))
     True
 
 and that although
-    not 1.expr.super(2.src)
+    not 1.expr.is_super(2.src)
 because
 
-    >>> Expr.parse('[Iterable<item=[]> + Stack<item=[]>]').super(Expr.parse('[Iterable<item=Readable<item=[]>>]'))
+    >>> Expr.parse('[Iterable<item=[]> + Stack<item=[]>]').is_super(Expr.parse('[Iterable<item=Readable<item=[]>>]'))
     False
 
 if we bind
     1.item from [] to [Readable<item=2.item[]>]
 then
 
-    >>> Expr.parse('[Iterable<item=Readable<item=[]>> + Stack<item=Readable<item=[]>>]').super(Expr.parse('[Iterable<item=Readable<item=[]>>]'))
+    >>> Expr.parse('[Iterable<item=Readable<item=[]>> + Stack<item=Readable<item=[]>>]').is_super(Expr.parse('[Iterable<item=Readable<item=[]>>]'))
     True
 
 Now the expression for 1 is

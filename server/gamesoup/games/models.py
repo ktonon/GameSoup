@@ -76,10 +76,10 @@ class ObjectParameter(models.Model):
             print a, b
             print r
             print a % r
-            print (a % r).super(b)
+            print (a % r).is_super(b)
 
         # Does r work for obj?
-        if not (a % r).super(b): return None
+        if not (a % r).is_super(b): return None
         # It does!
         # However, will the game as a whole be happy about it?
         if not self.game.can_apply_resolvent(r): return None
@@ -237,7 +237,7 @@ class ObjectTemplateParameter(TemplateParameter):
             return True
         else:
             # print expr, self.final_expr
-            return expr.super(self.final_expr)
+            return expr.is_super(self.final_expr)
         
     def update(self, expr):
         '''
