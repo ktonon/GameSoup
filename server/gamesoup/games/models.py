@@ -410,6 +410,10 @@ class Object(models.Model):
     # Consistency
 
     @staticmethod
+    def mark_game_as_updated(sender, instance, **kwargs):
+        instance.game.mark_as_updated()
+
+    @staticmethod
     def post_save(sender, instance, **kwargs):
         obj = instance
 
@@ -451,5 +455,7 @@ class Object(models.Model):
         instance.template_bindings.all().delete()
         instance.template_parameters.all().delete()
         
+pre_save.connect(Object.mark_game_as_updated, sender=Object)
+pre_delete.connect(Object.mark_game_as_updated, sender=Object)
 post_save.connect(Object.post_save, sender=Object)
 post_delete.connect(Object.post_delete, sender=Object)
