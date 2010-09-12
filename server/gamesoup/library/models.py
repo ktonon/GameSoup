@@ -132,7 +132,17 @@ class Type(models.Model):
         return Expr.reduce([(i.expr % bc) % c for i in self.implements.all()])
     expr = property(_get_expr)
     
-    final_expr = property(lambda self: self.expr)
+    # The final expression is used by objects when searching
+    # for types that are compatible with a particular factory
+    # parameter. We should have the final expression include
+    # type template parameters so that resolve_to works properly.
+    final_expr = property(lambda self: self.flat_expr)
+    
+    def show_all_expressions(self):
+        s = lambda w: w.replace('<', '&lt;').replace('>', '&gt;')
+        return '%s<br/>%s<br/>%s' % (s(`self.flat_expr`), s(`self.expr`), s(`self.final_expr`))
+    show_all_expressions.short_description = 'Expressions'
+    show_all_expressions.allow_tags = True
     
     def is_conflicted(self):
         '''

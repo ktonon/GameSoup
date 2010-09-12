@@ -227,8 +227,15 @@ mod.Reference = Class.create(mod.Parameter, {
 			method: 'post',
 			postBody: 'value=' + event.memo.objectID,
 			onSuccess: function() {
+			    $('assembler').stopObserving('assembler:objectAdded');
 			    this.setValue(event.memo.objectID);
-			}.bind(this)
+			}.bind(this),
+			onFailure: function() {
+			    $('assembler').stopObserving('assembler:objectAdded');
+			},
+			onException: function() {
+			    $('assembler').stopObserving('assembler:objectAdded');
+			}
 		});
 	}
 });

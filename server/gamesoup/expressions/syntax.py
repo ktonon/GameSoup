@@ -208,7 +208,7 @@ class Expr(Cached):
         So that expressions are always evaluated as True. This is useful
         in short-circuited boolean python expressions which first check
         that an expression is not None and then use some property.
-        
+
         For example:
         
             >>> e = Expr.parse('[A]')
@@ -280,6 +280,27 @@ class Expr(Cached):
 
     @staticmethod
     def reduce(list_of_exprs):
+        '''
+        Reduces a list of expressions to a single expression by
+        repeatedly taking the union of the result with the first
+        expression in the list, until the list is empty.
+        
+        Reducing an empty list returns the empty expression.
+        
+            >>> Expr.reduce([])
+            []
+        
+        Reducing a list with a single expressions returns just that
+        expression.
+        
+            >>> Expr.reduce([ Expr.parse('[A+B]') ])
+            [A + B]
+        
+        More complicated examples:
+        
+            >>> Expr.reduce([ Expr.parse('[A<item=C>]'), Expr.parse('[A<item=D>]'), Expr.parse('B')])
+            [A<item=[C + D]> + B]
+        '''
         l = len(list_of_exprs)
         if l == 0:
             return Expr.parse('[]')
@@ -290,13 +311,23 @@ class Expr(Cached):
     
     #--------------------------------------------------------------------------
     # Comparison
+    
+    def __gt__(self, other):
+        return self.is_super(other)
+
+    def __lt__(self, other):
+        return other.is_super(self)
+
+    def __eq__(self, other):
+        return `self` == `other`
 
     def is_super(self, other):
         """
         Is this expression a super expression of other?
         
         If so, any place other is required, this one will work too.
-        
+        >>> 1
+        2
         >>> r = Expr.parse('Readable')
         >>> w = Expr.parse('Writable')
         >>> r.is_super(r)
@@ -342,7 +373,7 @@ class Expr(Cached):
         will make (self % resolvent).is_super(other). If no such
         resolvent exists a resolvent will still be returned, but
         (self % resolvent) will not be super to other.
-        
+
         >>> f1 = Expr.parse('Foo<item=[@T.a]>')
         >>> f2 = Expr.parse('Foo<item=[Bar]>')
         >>> f3 = Expr.parse('Bar<item=[]>')
@@ -373,7 +404,7 @@ class Expr(Cached):
         ...     '[A<x=[Q+R]> + C<x=D<x=Q>> + B<x=S!>]'
         ... ))
         12.foo : [Q]
-        @T.pain : [Q + R]
+        @T.pain : [Q + R]        
         """
         c = TemplateContext({})
         if self.is_var:
@@ -457,7 +488,7 @@ class Atom(Cached):
     
     #--------------------------------------------------------------------------
     # Composition
-    
+
     def __add__(self, other):
         assert self.id == other.id
         assert self.var_type == other.var_type
@@ -468,7 +499,7 @@ class Atom(Cached):
             else:
                 union.append(arg1 or arg2)
         return Atom.from_args(union, id=self.id, var_type=self.var_type)
-
+    
     def __mod__(self, c):
         """
         Resolve this atom with the template context c.
@@ -516,7 +547,7 @@ class Atom(Cached):
         
         >>> Expr.parse('[@T.a]').atoms[0] % C({})
         [@T.a]
-        """        
+        """
         if self.is_built_in:
             # Can't resolve a built-in 
             return Expr.from_atoms([self])
@@ -549,7 +580,7 @@ class Atom(Cached):
     def resolvent_for(self, other):
         """
         Resolve self to other.
-        
+
         >>> f1 = Expr.parse('Foo<item=12.item>').atoms[0]
         >>> f2 = Expr.parse('Foo<item=Bar>').atoms[0]
         >>> f3 = Expr.parse('Foo<item=Car>').atoms[0]
@@ -574,8 +605,8 @@ class Atom(Cached):
         return c
 
     def join(self, other):
-        return _join(self, other, '_arg', 'param_ids')
-
+        return _join(self, other, '_arg', 'param_ids')        
+    
 
 class Arg(Cached):
     
@@ -669,29 +700,28 @@ __test__ = {'doctest': """
 
 Here is an example:
 
-#     >>> obj = Expr.parse('Iterable<item=Readable<item=over>>')
-#     >>> param = Expr.parse('Iterable<item=Readable<item=Clearable>>')
-#     >>> resolvent = obj.resolvent_for(param)
-#     >>> resolvent
-#     {'over': [Clearable]}
+    >>> obj = Expr.parse('Iterable<item=Readable<item=1.over>>')
+    >>> param = Expr.parse('Iterable<item=Readable<item=Clearable>>')
+    >>> resolvent = obj.resolvent_for(param)
+    >>> resolvent
+    1.over : [Clearable]
 
 Now say we lookup the minimum interface required by the type template
 parameter "over" and find it to be "[Drivable]". That's is no good,
 because:
 
-#     >>> Expr.parse('Clearable').is_super(Expr.parse('Drivable'))
-#     False
-
+    >>> Expr.parse('Clearable') > Expr.parse('Drivable')
+    False
 
 because after applying the resolvent:
 
-#     >>> obj_after = obj.apply_resolvent(resolvent)
-#     >>> obj_after.is_super(param)
-#     True
+    >>> obj_after = obj % resolvent
+    >>> obj_after > param
+    True
     
 In order to get this algorithm implemented. I need to do the following:
 
-#     1)
+    1)
 
 I have a general purpose type called
     @List<item=[]>

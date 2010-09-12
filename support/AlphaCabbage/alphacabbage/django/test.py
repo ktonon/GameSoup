@@ -94,6 +94,11 @@ def run_tests(test_labels, verbosity=1, interactive=True, extra_tests=[]):
     inject_dummy_get_tests()
     
     setup_test_environment()
+
+    # Custom setup
+    from alphacabbage.tracer import Tracer
+    tracer = Tracer()
+    tracer.tracerize_package('gamesoup')
     
     settings.DEBUG = False    
     suite = unittest.TestSuite()
@@ -104,10 +109,12 @@ def run_tests(test_labels, verbosity=1, interactive=True, extra_tests=[]):
                 suite.addTest(build_test(label))
             else:
                 for mod in _find_app_modules_given_label(label):
+                    print 'Building test suite for %s' % mod.__name__
                     t = build_suite(mod)
                     suite.addTest(t)
     else:
         for mod in _find_all_app_modules():
+            print 'Building test suite for %s' % mod.__name__
             suite.addTest(build_suite(mod))
     
     for test in extra_tests:
@@ -120,6 +127,11 @@ def run_tests(test_labels, verbosity=1, interactive=True, extra_tests=[]):
     connection.creation.create_test_db(verbosity, autoclobber=not interactive)
     result = unittest.TextTestRunner(verbosity=verbosity).run(suite)
     connection.creation.destroy_test_db(old_name, verbosity)
+
+    # Custom take down
+    from django.template import Context
+    from django.template.loader import get_template
+    tracer.close(Context, get_template)
     
     teardown_test_environment()
     

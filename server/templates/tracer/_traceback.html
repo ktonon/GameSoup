@@ -1,0 +1,11 @@
+<div class="tb" style="display: none">
+  <div class="inner-container">
+    <div class="close-button">x</div>
+    <a href="{{ method_call.url }}">{{ method_call.method }}</a>
+    <ul>
+      {% for stack in stacks %}
+        <li><a href="txmt://open/?url=file://{{ stack.0 }}&line={{ stack.1 }}">{{ stack.3 }}</a></li>
+      {% endfor %}      
+    </ul>
+  </div>
+</div>

@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     
     'alphacabbage.django.helpers',
     'alphacabbage.django.graphs',
+    'alphacabbage.django.tracer',
     # 'studyplay.people',
     # 'gamesoup.library',
     # 'studyplay.play',

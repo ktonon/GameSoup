@@ -47,6 +47,18 @@
         }
     }, 
     {
+        "pk": 3, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [], 
+            "code": "", 
+            "name": "IntegerPusher", 
+            "visible": false, 
+            "has_state": false, 
+            "description": "Push integers onto a stack."
+        }
+    }, 
+    {
         "pk": 1, 
         "model": "library.type", 
         "fields": {
@@ -54,11 +66,10 @@
                 1
             ], 
             "code": "", 
-            "description": "", 
-            "title": "", 
+            "name": "List", 
             "visible": true, 
             "has_state": true, 
-            "name": "List"
+            "description": ""
         }
     }, 
     {
@@ -67,63 +78,37 @@
         "fields": {
             "implements": [], 
             "code": "", 
-            "description": "Push strings onto a stack.", 
-            "title": "", 
+            "name": "StringPusher", 
             "visible": false, 
             "has_state": false, 
-            "name": "StringPusher"
-        }
-    }, 
-    {
-        "pk": 3, 
-        "model": "library.type", 
-        "fields": {
-            "implements": [], 
-            "code": "", 
-            "description": "Push integers onto a stack.", 
-            "title": "", 
-            "visible": false, 
-            "has_state": false, 
-            "name": "IntegerPusher"
+            "description": "Push strings onto a stack."
         }
     }, 
     {
         "pk": 1, 
         "model": "library.typeparameter", 
         "fields": {
-            "_interfaces": [
-                1
-            ], 
             "name": "stack", 
-            "_is_built_in": false, 
             "expression_text": "[Stack<item=[@StringPusher.item]>]", 
             "is_factory": false, 
-            "of_type": 2, 
-            "_is_ref": true
+            "of_type": 2
         }
     }, 
     {
         "pk": 2, 
         "model": "library.typeparameter", 
         "fields": {
-            "_interfaces": [
-                1
-            ], 
             "name": "stack", 
-            "_is_built_in": false, 
             "expression_text": "[Stack<item=Integer!>]", 
             "is_factory": false, 
-            "of_type": 3, 
-            "_is_ref": true
+            "of_type": 3
         }
     }, 
     {
         "pk": 1, 
         "model": "library.methodparameter", 
         "fields": {
-            "_interfaces": [], 
             "of_method": 1, 
-            "_is_built_in": false, 
             "name": "item", 
             "expression_text": "[Stack.item]"
         }

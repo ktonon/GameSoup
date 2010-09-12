@@ -1,0 +1,10 @@
+[
+    {
+        "pk": 1, 
+        "model": "games.game", 
+        "fields": {
+            "name": "Foggle", 
+            "description": ""
+        }
+    }
+]

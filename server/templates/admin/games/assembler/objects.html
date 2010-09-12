@@ -7,6 +7,7 @@
                 <th id="delete-link">&nbsp;</th>
                 <th id="ownership" title="Is it common to all players, or do each get their own copy?">Ownership</th>
                 <th id="parameters" title="Parameters in red still need to be set.">Parameters</th>
+                <th id="expressions">Expressions</th>
             </tr>
         </thead>
         {% if objects %}
@@ -25,6 +26,11 @@
                     {{ param.name }}{% if param.binding %}:<span class="note">{{ param.binding.get_argument_link|safe }}</span>{% endif %}
                 </span> {% if not forloop.last %}&bull;{% endif %}
                 {% endfor %}
+            </td>
+            <td class="expressions">
+              {{ obj.flat_expr }}<br/>
+              {{ obj.expr }}<br/>
+              {{ obj.final_expr }}
             </td>
         </tr>
         {% endfor %}

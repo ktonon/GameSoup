@@ -68,15 +68,6 @@ class ObjectParameter(models.Model):
         b = self.final_expr
         r = a.resolvent_for(b)
 
-        if self.of_object.name == 'Word on board?' and self.name == 'board':
-            print '---\n', self.flat_expr
-            print self.of_object.final_context
-            print self.of_object.context
-            print a, b
-            print r
-            print a % r
-            print (a % r).is_super(b)
-
         # Does r work for obj?
         if not (a % r).is_super(b): return None
         # It does!
@@ -108,7 +99,11 @@ class ObjectParameter(models.Model):
             qs = qs.filter(implements=interface)
         if self.is_factory:
             qs = qs.filter(parameters__isnull=True).distinct()
-        return [t for t in qs if self.resolvent_for(t) is not None]
+        def has_resolvent(t):
+            resolvent = self.resolvent_for(t)
+            return resolvent is not None
+        return filter(has_resolvent, qs)
+        # return [t for t in qs if self.resolvent_for(t) is not None]
     candidate_types = property(_candidate_types)
 
     # For parameters which refer to other objects, are there any objects
@@ -125,19 +120,19 @@ class ObjectParameter(models.Model):
         '''
         # Remove the old binding.
         self.binding and self.binding.delete()
-        
+                
         # Add the new binding
         binding = ObjectParameterBinding(instance=self.of_object, parameter=self)
         if self.is_built_in:
             binding.built_in_argument = value
         elif self.is_factory:
-            type = Type.objects.get(pk=value)
+            type = Type.objects.get(pk=getattr(value, 'id', value))
             r = self.resolvent_for(type)
             assert r is not None
             binding.type_argument = type
             self.game.apply_resolvent(r)
         else:
-            obj = Object.objects.get(pk=value)
+            obj = Object.objects.get(pk=getattr(value, 'id', value))
             r = self.resolvent_for(obj)
             assert r is not None
             binding.object_argument = obj
@@ -235,9 +230,8 @@ class ObjectTemplateParameter(TemplateParameter):
         if e.is_var:
             return True
         else:
-            # print expr, self.final_expr
-            return expr.is_super(self.final_expr)
-        
+            return expr.is_super(e)
+
     def update(self, expr):
         '''
         Update the binding for this template parameter with expr.
@@ -310,7 +304,7 @@ class Game(models.Model):
         Can the resolvent r be applied to this game?
         That is, if we apply r to this game, will it still be in
         a consistent state?
-        '''
+        '''            
         # To answer this question, we need to apply r to every object
         # in the game and see if any existing connections break.
         # TODO: implement me!
@@ -375,7 +369,7 @@ class Object(models.Model):
 
     # Expressions representing this object
     #   flat_expr       - an expression involving object variables
-    #   context         - an expression with default values applied
+    #   expr            - an expression with default values applied
     #   final_expr      - an expression with bound expressions applied
     #
     flat_expr = property(lambda self: self.type.flat_expr % self.binding_context)
@@ -388,8 +382,14 @@ class Object(models.Model):
     # Can all the object reference parameters be bound?
     is_satisfiable = property(lambda self: all([p.is_satisfiable for p in self.parameters.all()]))
 
+    def get_parameter(self, name):
+        return self.parameters.get(type_parameter__name=name)
+    
     #--------------------------------------------------------------------------
     # Commands
+
+    def bind_parameter(self, name, value):
+        self.get_parameter(name).bind(value)
 
     def apply_resolvent(self, r):
         '''
@@ -398,7 +398,10 @@ class Object(models.Model):
         # Apply r to each object in the game.
         # TODO: implement me!
         for key, expr in r.items():
-            name = key.split('.')[1]
+            qualifier, name = key.split('.')
+            if str(self.id) != qualifier: 
+                # Only apply resolvents that target this object.
+                continue
             try:
                 param = self.template_parameters.get(name=name)
                 param.update(expr)
@@ -459,3 +462,7 @@ pre_save.connect(Object.mark_game_as_updated, sender=Object)
 pre_delete.connect(Object.mark_game_as_updated, sender=Object)
 post_save.connect(Object.post_save, sender=Object)
 post_delete.connect(Object.post_delete, sender=Object)
+
+
+# from alphacabbage.tracer import Tracer
+# tracer = Tracer(ObjectParameter, ObjectTemplateParameter)
