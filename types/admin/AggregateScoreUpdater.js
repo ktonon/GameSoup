@@ -25,9 +25,17 @@ gamesoup.library.types.AggregateScoreUpdater.addMethods({
      * Perform custom initialization.
      */                                                               /* vVv */
     register: function() {
-        this._scorables.observe('gs:changed', this.updateScore.bind(this));
-    }                                                                 /* ^A^ */
-    
+        this._scorablesObserver = this.updateScore.bind(this);
+        this._scorables.observe('gs:changed', this._scorablesObserver);
+    },                                                                /* ^A^ */
+
+    /*
+     * Perform custom take-down.
+     */                                                               /* vVv */
+    unregister: function() {
+        this._scorables.stopObserving('gs:changed', this._scorablesObserver);
+        this._scorablesObserver = null;
+    }                                                                 /* ^A^ */    
 });
 
 /*****************************************************************************/

@@ -1,4 +1,4 @@
-#gamesoup-engine {position: relative;}
+#gamesoup-engine {position: relative; padding: 20px; border: dotted 1px #ccc;}
 #gamesoup-canvas {
     position: relative;
     margin: 20px 0;
@@ -20,3 +20,6 @@ ul.list li {list-style: none; padding: 0; margin: 10px; font-size: 12pt;}
 /* Message board */
 #message-board ul {position: absolute; left: 100px; top: 50px; right: 100px; padding: 0; text-align: center; z-index: 10000; opacity: 0.6;}
 #message-board li {list-style: none; margin: 0; padding: 1em; font-size: 18pt; background: #330; color: white; border: solid 1px white;}
+
+/* Curtain */
+.curtain {position: absolute; left: 0; right: 0; top: 0; bottom: 0; z-index: 10000; background: black; color: white; padding: 20px; opacity: 0.8; text-align: center; font-size: 24pt;}

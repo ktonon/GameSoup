@@ -72,8 +72,14 @@ gamesoup.library.types.{{ type.name }}.addMethods({ {% if type.visible %}
      */{{ "/* vVv */"|rjust:"72" }}
     register: function() {
         {% engine_hook parsed "register" %}
-    } {{ "/* ^A^ */"|rjust:"73" }}
-    
+    },{{ "/* ^A^ */"|rjust:"73" }}
+
+    /*
+     * Perform custom take-down.
+     */{{ "/* vVv */"|rjust:"72" }}
+    unregister: function() {
+        {% engine_hook parsed "unregister" %}
+    } {{ "/* ^A^ */"|rjust:"73" }}    
 });
 
 /*****************************************************************************/

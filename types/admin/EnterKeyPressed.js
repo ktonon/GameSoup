@@ -24,13 +24,21 @@ gamesoup.library.types.EnterKeyPressed.addMethods({
      * Perform custom initialization.
      */                                                               /* vVv */
     register: function() {
-        this._focus.observe('keydown', function(event) {
+        this._keyObserver = function(event) {
             if (event.keyCode == Event.KEY_RETURN) {
                 this._action.doAction();
             }
-        }.bind(this));
-    }                                                                 /* ^A^ */
-    
+        }.bind(this);
+        this._focus.observe('keydown', this._keyObserver);
+    },                                                                /* ^A^ */
+
+    /*
+     * Perform custom take-down.
+     */                                                               /* vVv */
+    unregister: function() {
+        this._focus.stopObserving('keydown', this._keyObserver);
+        this._keyObserver = null;
+    }                                                                 /* ^A^ */    
 });
 
 /*****************************************************************************/

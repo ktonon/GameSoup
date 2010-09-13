@@ -192,6 +192,46 @@
         }
     }, 
     {
+        "pk": 28, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 19, 
+            "type_parameter": 1
+        }
+    }, 
+    {
+        "pk": 29, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 19, 
+            "type_parameter": 2
+        }
+    }, 
+    {
+        "pk": 30, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 20, 
+            "type_parameter": 28
+        }
+    }, 
+    {
+        "pk": 31, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 20, 
+            "type_parameter": 27
+        }
+    }, 
+    {
+        "pk": 32, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 22, 
+            "type_parameter": 12
+        }
+    }, 
+    {
         "pk": 16, 
         "model": "games.objectparameterbinding", 
         "fields": {
@@ -214,11 +254,11 @@
         }
     }, 
     {
-        "pk": 6, 
+        "pk": 33, 
         "model": "games.objectparameterbinding", 
         "fields": {
             "instance": 4, 
-            "object_argument": 2, 
+            "object_argument": 19, 
             "type_argument": null, 
             "parameter": 6, 
             "built_in_argument": ""
@@ -456,6 +496,61 @@
         }
     }, 
     {
+        "pk": 34, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 19, 
+            "object_argument": 2, 
+            "type_argument": null, 
+            "parameter": 28, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 35, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 19, 
+            "object_argument": 20, 
+            "type_argument": null, 
+            "parameter": 29, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 39, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 20, 
+            "object_argument": null, 
+            "type_argument": null, 
+            "parameter": 30, 
+            "built_in_argument": "180"
+        }
+    }, 
+    {
+        "pk": 37, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 20, 
+            "object_argument": 21, 
+            "type_argument": null, 
+            "parameter": 31, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 38, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 22, 
+            "object_argument": null, 
+            "type_argument": null, 
+            "parameter": 32, 
+            "built_in_argument": "Time left"
+        }
+    }, 
+    {
         "pk": 2, 
         "model": "games.typetemplateparameterbinding", 
         "fields": {
@@ -594,7 +689,7 @@
         "pk": 1, 
         "model": "games.game", 
         "fields": {
-            "updated_at": "2010-09-13 10:36:44", 
+            "updated_at": "2010-09-13 11:38:57", 
             "created_at": "2010-09-12 06:03:54", 
             "name": "Boggle", 
             "description": ""
@@ -608,7 +703,7 @@
             "height": 2, 
             "width": 7, 
             "game": 1, 
-            "y": 16, 
+            "y": 18, 
             "x": 16, 
             "type": 5, 
             "per_player": false
@@ -699,6 +794,20 @@
         }
     }, 
     {
+        "pk": 21, 
+        "model": "games.object", 
+        "fields": {
+            "name": "End the game", 
+            "height": 5, 
+            "width": 5, 
+            "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 22, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 3, 
         "model": "games.object", 
         "fields": {
@@ -755,6 +864,20 @@
         }
     }, 
     {
+        "pk": 19, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Shuffle and start.", 
+            "height": 5, 
+            "width": 5, 
+            "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 18, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 5, 
         "model": "games.object", 
         "fields": {
@@ -765,6 +888,34 @@
             "y": 0, 
             "x": 24, 
             "type": 5, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 22, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Time left label", 
+            "height": 2, 
+            "width": 5, 
+            "game": 1, 
+            "y": 16, 
+            "x": 3, 
+            "type": 2, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Timer", 
+            "height": 2, 
+            "width": 3, 
+            "game": 1, 
+            "y": 16, 
+            "x": 8, 
+            "type": 23, 
             "per_player": false
         }
     }, 
@@ -804,7 +955,7 @@
             "height": 2, 
             "width": 15, 
             "game": 1, 
-            "y": 16, 
+            "y": 18, 
             "x": 0, 
             "type": 1, 
             "per_player": false
@@ -829,7 +980,7 @@
         "model": "games.object", 
         "fields": {
             "name": "Words", 
-            "height": 13, 
+            "height": 15, 
             "width": 7, 
             "game": 1, 
             "y": 2, 

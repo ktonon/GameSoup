@@ -70,8 +70,14 @@ gamesoup.library.types.TextInput.addMethods({
      */                                                               /* vVv */
     register: function() {
         
-    }                                                                 /* ^A^ */
-    
+    },                                                                /* ^A^ */
+
+    /*
+     * Perform custom take-down.
+     */                                                               /* vVv */
+    unregister: function() {
+        this._inputNode.disable();
+    }                                                                 /* ^A^ */    
 });
 
 /*****************************************************************************/

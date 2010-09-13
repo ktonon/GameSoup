@@ -10,7 +10,9 @@ mod.Engine = Class.create({
         this.createObjectLists();
         this.createDOM();
         this.createMessageBoard();
+        // Register handles
         this._objects.invoke('register');
+        this._node.observe('game:end', this.endGame.bind(this));
         // Start the game
         this._node.fire('game:start');
     },
@@ -37,6 +39,15 @@ mod.Engine = Class.create({
     createMessageBoard: function() {
         this._node.insert({top: '<div id="message-board"></div>'});
         gamesoup.matches.messageBoard = new gamesoup.matches.MessageBoard('message-board');
+    },
+    endGame: function() {
+        this._objects.invoke('unregister');
+        var curtain = new Element('div', {'class': 'curtain'});
+        curtain.innerHTML = 'Game over!'
+        curtain.setStyle({opacity: 0});
+        this._node.insert({bottom: curtain});
+        curtain.morph('opacity: 0.8');
+        
     }
 });
 gs.tracerize('Engine', mod.Engine);

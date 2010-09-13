@@ -37,8 +37,14 @@ gamesoup.library.types.Button.addMethods({
      */                                                               /* vVv */
     register: function() {
         this._buttonNode.observe('click', this._action.doAction.bind(this._action));
-    }                                                                 /* ^A^ */
-    
+    },                                                                /* ^A^ */
+
+    /*
+     * Perform custom take-down.
+     */                                                               /* vVv */
+    unregister: function() {
+        this._buttonNode.stopObserving('click');
+    }                                                                 /* ^A^ */    
 });
 
 /*****************************************************************************/

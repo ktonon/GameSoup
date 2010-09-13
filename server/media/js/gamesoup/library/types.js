@@ -18,8 +18,17 @@ mod.BaseType = Class.create({
     isStateful: function() {
         return false;
     },
+    register: function() {
+        // Does nothing. Override to provide custom registration.
+    },
+    unregister: function() {
+        // Does nothing. Override to provide custom take-down.
+    },
     observe: function(eventName, action) {
         this._node.observe(eventName, action);
+    },
+    stopObserving: function(eventName, action) {
+        this._node.stopObserving(eventName, action);
     },
     getNode: function() {
         return this._node;
