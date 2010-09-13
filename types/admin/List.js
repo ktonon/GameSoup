@@ -38,6 +38,7 @@ gamesoup.library.types.List.addMethods({
     push: function(item) {
         this._listNode.insert(this._listItemTemplate.evaluate({item: item}));
         this._items.push(item);
+        this._node.fire('gs:changed');
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Readable
@@ -65,6 +66,7 @@ gamesoup.library.types.List.addMethods({
      */                                                               /* vVv */
     write: function(item) {
         this.push(item);
+        this._node.fire('gs:changed');
     }                                                                 /* ^A^ */
 
 });

@@ -70,6 +70,16 @@
         }
     }, 
     {
+        "pk": 16, 
+        "model": "library.method", 
+        "fields": {
+            "interface": 25, 
+            "return_expression_text": "[Mutator.range]", 
+            "name": "mutate", 
+            "description": "Mutate objects of type domain into objects of type range."
+        }
+    }, 
+    {
         "pk": 3, 
         "model": "library.method", 
         "fields": {
@@ -230,6 +240,15 @@
         }
     }, 
     {
+        "pk": 25, 
+        "model": "library.interface", 
+        "fields": {
+            "is_built_in": false, 
+            "name": "Mutator", 
+            "description": "Function which can be used to mutate one type of object into another."
+        }
+    }, 
+    {
         "pk": 17, 
         "model": "library.interface", 
         "fields": {
@@ -272,6 +291,34 @@
             "is_built_in": false, 
             "name": "Writable", 
             "description": "Can be updated by writing a string."
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [], 
+            "code": "/*\r\n * Type: AggregateScoreUpdater\r\n * Maintains a score field by applying a scoring function to a collection and summing the results.\r\n */\r\ngamesoup.library.types.AggregateScoreUpdater = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 REFERENCES                                \r\n// this._scorables                                          [Iterable<item=[]>]\r\n// this._scoreField                                   [Writable<item=Integer!>]\r\n// this._scoreFunction                     [Mutator<domain=[], range=Integer!>]\r\n\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.AggregateScoreUpdater.addMethods({ \r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        this._scorables.observe('gs:changed', this.updateScore.bind(this));\r\n    }                                                                 /* ^A^ */\r\n    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.AggregateScoreUpdater.addMethods({\r\n    updateScore: function(event) {\r\n        this._scorables.resetIteration();\r\n        var item;\r\n        var sum = 0;\r\n        while((item = this._scorables.nextInIteration()) != null) {\r\n            sum += this._scoreFunction.mutate(item);\r\n        }\r\n        this._scoreField.write(sum);\r\n    }\r\n});", 
+            "description": "Maintains a score field by applying a scoring function to a collection and summing the results.", 
+            "title": "Aggregate Score updater", 
+            "visible": false, 
+            "has_state": false, 
+            "name": "AggregateScoreUpdater"
+        }
+    }, 
+    {
+        "pk": 21, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                25
+            ], 
+            "code": "/*\r\n * Type: BoggleWordScoring\r\n * A mutator that takes a word and computes a boggle score.\r\n */\r\ngamesoup.library.types.BoggleWordScoring = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.BoggleWordScoring.addMethods({\r\n    \r\n    /*---------------------------------------->                         Mutator\r\n     * mutate(x : []) : Integer!\r\n     * \r\n     * Mutate objects of type domain into objects of type range.\r\n     */                                                               /* vVv */\r\n    mutate: function(x) {\r\n        switch(x.length) {\r\n            case 3:\r\n            case 4:\r\n                return 1;\r\n            case 5:\r\n                return 2;\r\n            case 6:\r\n                return 3;\r\n            case 7:\r\n                return 5;\r\n            default:\r\n                return x.length > 7 ? 11 : 0;\r\n        }\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.BoggleWordScoring.addMethods({ \r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        \r\n    }                                                                 /* ^A^ */\r\n    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.BoggleWordScoring.addMethods({\r\n    // Helper methods go here...\r\n});", 
+            "description": "A mutator that takes a word and computes a boggle score.", 
+            "title": "Boggle word scoring", 
+            "visible": false, 
+            "has_state": false, 
+            "name": "BoggleWordScoring"
         }
     }, 
     {
@@ -417,7 +464,7 @@
                 3, 
                 12
             ], 
-            "code": "/*\n * Type: List\n * A vertical sequence of items that can be updated during the game.\n */\ngamesoup.library.types.List = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.List.addMethods({\n    \n    /*---------------------------------------->                        Iterable\n     * nextInIteration() : []\n     * \n     * Get the next object in the sequence. When the sequence is over, this should return null.\n     */                                                               /* vVv */\n    nextInIteration: function() {\n        var item = this._items[this._iteratorIndex];\r\n        this._iteratorIndex++;\r\n        return item;\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                           Stack\n     * pop() : []\n     * \n     * Remove the object at the top of the stack and return it.\n     */                                                               /* vVv */\n    pop: function() {\n        this._listNode.select('li').first().remove();\r\n        return this._items.pop();\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                           Stack\n     * push(item : [])\n     * \n     * Push an object on top of the stack.\n     */                                                               /* vVv */\n    push: function(item) {\n        this._listNode.insert(this._listItemTemplate.evaluate({item: item}));\r\n        this._items.push(item);\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                        Readable\n     * read() : []\n     * \n     * Read this content of this object.\n     */                                                               /* vVv */\n    read: function() {\n        return this._items.first();\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                        Iterable\n     * resetIteration()\n     * \n     * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.\n     */                                                               /* vVv */\n    resetIteration: function() {\n        this._iteratorIndex = 0;\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                        Writable\n     * write(item : [])\n     * \n     * Write a value to the content of this object.\n     */                                                               /* vVv */\n    write: function(item) {\n        this.push(item);\n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.List.addMethods({ \n    \n    /*\n     * Extend the DOM and apply styling.\n     */                                                               /* vVv */\n    render: function() {\n        this._node.insert({bottom: '<ul class=\"box list inner-container\"></ul>'});\r\n        this._listNode = this._node.down('.list');\n    },                                                                /* ^A^ */\n    \n    /*\n     *\n     */                                                               /* vVv */\n    stateSchema: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     *\n     */                                                               /* vVv */\n    initialState: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        this._listItemTemplate = new Template('<li>#{item}</li>');\r\n        this._items = $A();\r\n        this.resetIteration();\n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.List.addMethods({\n    // Helper methods go here...\n});", 
+            "code": "/*\n * Type: List\n * A vertical sequence of items that can be updated during the game.\n */\ngamesoup.library.types.List = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.List.addMethods({\n    \n    /*---------------------------------------->                        Iterable\n     * nextInIteration() : []\n     * \n     * Get the next object in the sequence. When the sequence is over, this should return null.\n     */                                                               /* vVv */\n    nextInIteration: function() {\n        var item = this._items[this._iteratorIndex];\n        this._iteratorIndex++;\n        return item;\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                           Stack\n     * pop() : []\n     * \n     * Remove the object at the top of the stack and return it.\n     */                                                               /* vVv */\n    pop: function() {\n        this._listNode.select('li').first().remove();\n        return this._items.pop();\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                           Stack\n     * push(item : [])\n     * \n     * Push an object on top of the stack.\n     */                                                               /* vVv */\n    push: function(item) {\n        this._listNode.insert(this._listItemTemplate.evaluate({item: item}));\n        this._items.push(item);\n        this._node.fire('gs:changed');\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                        Readable\n     * read() : []\n     * \n     * Read this content of this object.\n     */                                                               /* vVv */\n    read: function() {\n        return this._items.first();\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                        Iterable\n     * resetIteration()\n     * \n     * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.\n     */                                                               /* vVv */\n    resetIteration: function() {\n        this._iteratorIndex = 0;\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                        Writable\n     * write(item : [])\n     * \n     * Write a value to the content of this object.\n     */                                                               /* vVv */\n    write: function(item) {\n        this.push(item);\n        this._node.fire('gs:changed');\n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.List.addMethods({ \n    \n    /*\n     * Extend the DOM and apply styling.\n     */                                                               /* vVv */\n    render: function() {\n        this._node.insert({bottom: '<ul class=\"box list inner-container\"></ul>'});\n        this._listNode = this._node.down('.list');\n    },                                                                /* ^A^ */\n    \n    /*\n     *\n     */                                                               /* vVv */\n    stateSchema: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     *\n     */                                                               /* vVv */\n    initialState: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        this._listItemTemplate = new Template('<li>#{item}</li>');\n        this._items = $A();\n        this.resetIteration();\n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.List.addMethods({\n    // Helper methods go here...\n});", 
             "description": "A vertical sequence of items that can be updated during the game.", 
             "title": "List", 
             "visible": true, 
@@ -801,6 +848,51 @@
         }
     }, 
     {
+        "pk": 26, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                15
+            ], 
+            "name": "scorables", 
+            "_is_built_in": false, 
+            "expression_text": "[Iterable<item=[@AggregateScoreUpdater.item]>]", 
+            "is_factory": false, 
+            "of_type": 20, 
+            "_is_ref": true
+        }
+    }, 
+    {
+        "pk": 24, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                12
+            ], 
+            "name": "scoreField", 
+            "_is_built_in": false, 
+            "expression_text": "[Writable<item=Integer!>]", 
+            "is_factory": false, 
+            "of_type": 20, 
+            "_is_ref": true
+        }
+    }, 
+    {
+        "pk": 25, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                25
+            ], 
+            "name": "scoreFunction", 
+            "_is_built_in": false, 
+            "expression_text": "[Mutator<domain=[@AggregateScoreUpdater.item], range=Integer!>]", 
+            "is_factory": false, 
+            "of_type": 20, 
+            "_is_ref": true
+        }
+    }, 
+    {
         "pk": 17, 
         "model": "library.typeparameter", 
         "fields": {
@@ -920,11 +1012,31 @@
         }
     }, 
     {
+        "pk": 5, 
+        "model": "library.methodparameter", 
+        "fields": {
+            "_interfaces": [], 
+            "of_method": 16, 
+            "_is_built_in": false, 
+            "name": "x", 
+            "expression_text": "[Mutator.domain]"
+        }
+    }, 
+    {
         "pk": 7, 
         "model": "library.interfacetemplateparameter", 
         "fields": {
             "of_interface": 7, 
             "name": "cell", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "library.interfacetemplateparameter", 
+        "fields": {
+            "of_interface": 25, 
+            "name": "domain", 
             "expression_text": "[]"
         }
     }, 
@@ -983,6 +1095,15 @@
         }
     }, 
     {
+        "pk": 10, 
+        "model": "library.interfacetemplateparameter", 
+        "fields": {
+            "of_interface": 25, 
+            "name": "range", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
         "pk": 2, 
         "model": "library.typetemplateparameter", 
         "fields": {
@@ -1032,6 +1153,15 @@
         "model": "library.typetemplateparameter", 
         "fields": {
             "of_type": 12, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "library.typetemplateparameter", 
+        "fields": {
+            "of_type": 20, 
             "name": "item", 
             "expression_text": "[]"
         }
@@ -1142,6 +1272,24 @@
             "parameter": 7, 
             "type": 7, 
             "expression_text": "[Readable<item=[@SquareGrid.item]> + Writable<item=[@SquareGrid.item]>]"
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "library.interfacetemplateparameterbinding", 
+        "fields": {
+            "parameter": 9, 
+            "type": 21, 
+            "expression_text": "String!"
+        }
+    }, 
+    {
+        "pk": 21, 
+        "model": "library.interfacetemplateparameterbinding", 
+        "fields": {
+            "parameter": 10, 
+            "type": 21, 
+            "expression_text": "Integer!"
         }
     }
 ]
