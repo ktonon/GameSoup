@@ -14,7 +14,7 @@ Dir.chdir('gamesoup')
   dumpdest = "#{app}/fixtures/#{type}-#{app}.json"
   if File.exists? dumpdest
     puts "Backing up #{dumpdest}"
-    `cp #{dumpdest} #{app}/fixtures/#{type}-#{app}_#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}.json`
+    `cp #{dumpdest} #{app}/fixtures/#{type}-#{app}_#{Time.now.strftime '%Y-%m-%d_%H:%M:%S'}_backup.json`
   end
   puts "Dumping to #{dumpdest}"
   `./manage.py dumpdata --indent=4 #{app} > #{dumpdest}`
