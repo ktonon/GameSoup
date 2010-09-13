@@ -30,6 +30,9 @@ body {background: #e8e8e8;}
 .parameters .unbound {font-weight: bold; color: red;}
 #delete-link {width: 20px;}
 .delete-link {font-size: 14pt; color: #999; cursor: pointer;}
+#object-list .expressions th {width: 100px; text-align: right; border: none;}
+#object-list .expressions td {text-align: left; border: none;}
+.wide {width: 1000px;}
 
 /* Canvas */
 #canvas .content {background-repeat: repeat}

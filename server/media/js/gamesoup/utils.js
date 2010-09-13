@@ -15,7 +15,13 @@ gs.assert = function(passCondition, errorMessage) {
 var _cssNumberPattern = /^(\-?\s*\d+(?:\.\d+)?)\s*([A-Za-z]+)$/; 
 mod.cssNumber = function(node, style) {
 	node = $(node);
-	return new Number(node.getStyle(style).match(_cssNumberPattern)[1]);
+	if (style == 'left') {
+    	return node.positionedOffset()[0];
+	} else if (style == 'top') {
+    	return node.positionedOffset()[1];	    
+	} else {
+    	return new Number(node.getStyle(style).match(_cssNumberPattern)[1]);	    
+	}
 }
 
 })();

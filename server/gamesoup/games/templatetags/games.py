@@ -33,7 +33,7 @@ def assembler_canvas(game):
     '''
     return {
         'game': game,
-        'objects': game.object_set.filter(type__visible=True),
+        'objects': game.object_set.filter(type__visible=True).order_by('id'),
     }
 
 

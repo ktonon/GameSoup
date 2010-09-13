@@ -7,7 +7,7 @@
                 <th id="delete-link">&nbsp;</th>
                 <th id="ownership" title="Is it common to all players, or do each get their own copy?">Ownership</th>
                 <th id="parameters" title="Parameters in red still need to be set.">Parameters</th>
-                <th id="expressions">Expressions</th>
+                <th id="expressions" class="expressions" style="display: none">Expressions</th>
             </tr>
         </thead>
         {% if objects %}
@@ -27,10 +27,35 @@
                 </span> {% if not forloop.last %}&bull;{% endif %}
                 {% endfor %}
             </td>
-            <td class="expressions">
-              {{ obj.flat_expr }}<br/>
-              {{ obj.expr }}<br/>
-              {{ obj.final_expr }}
+            <td class="expressions" style="display: none">
+              <div class="wide">
+                <table>
+                  <tr>
+                    <th>Flat</th>
+                    <td>{{ obj.flat_expr }}</td>
+                  </tr>
+                  <tr>
+                    <th>Expr</th>
+                    <td>{{ obj.expr }}</td>
+                  </tr>
+                  <tr>
+                    <th>Final</th>
+                    <td>{{ obj.final_expr }}</td>
+                  </tr>
+                  {% for tparam in obj.template_parameters.all %}
+                  <tr>
+                    <th>{{ tparam }}</th>
+                    <td>{{ tparam.binding.expr }}</td>
+                  </tr>
+                  {% endfor %}
+                  {% for param in obj.parameters.all %}
+                  <tr>
+                    <th>{{ param }}</th>
+                    <td>{{ param.flat_expr }}</td>
+                  </tr>
+                  {% endfor %}
+                </table>                
+              </div>
             </td>
         </tr>
         {% endfor %}

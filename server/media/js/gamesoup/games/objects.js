@@ -48,6 +48,12 @@ mod.Object.addMethods({
 	    }.bind(this));
 	    this._node.observe('mouseover', this.showShaper.bind(this, 'add'));
 	    this._node.observe('mouseout', this.showShaper.bind(this, 'remove'));
+	    $('assembler').observe('assembler:debugModeOn', function() {
+            this._node.select('.expressions').invoke('show');
+	    }.bind(this));
+	    $('assembler').observe('assembler:debugModeOff', function() {
+            this._node.select('.expressions').invoke('hide');
+	    }.bind(this));
 	},
 	release: function() {
 	    this._node.stopObserving('mouseover');

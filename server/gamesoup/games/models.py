@@ -67,7 +67,7 @@ class ObjectParameter(models.Model):
         a = component.final_expr
         b = self.final_expr
         r = a.resolvent_for(b)
-
+        print '   %r, %r, %r' % (a, b, r)
         # Does r work for obj?
         if not (a % r).is_super(b): return None
         # It does!
@@ -84,8 +84,7 @@ class ObjectParameter(models.Model):
         qs = Object.objects.filter(game=self.of_object.game)
         for interface in self.interfaces:
             qs = qs.filter(type__implements=interface)
-        if self.of_object.name == 'Word on board?' and self.name == 'board':
-            print qs
+        print qs
         return [obj for obj in qs if self.resolvent_for(obj) is not None]
     candidate_objects = property(_candidate_objects)
 

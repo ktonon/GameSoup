@@ -200,6 +200,11 @@ mod.Assembler = Class.create({
             event.stop();
             showRelatedObjectLookupPopup($('lookup_id_browse'));
         }
+        else if (event.keyCode == 68 && event.altKey) { // d
+            this._debugMode = !this['_debugMode']
+            var eventName = 'assembler:debugMode' + (this._debugMode ? 'On' : 'Off');
+            this._node.fire(eventName);
+        }
 	}
 });
 gs.tracerize('Assembler', mod.Assembler);
