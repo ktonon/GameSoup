@@ -37,7 +37,13 @@ class Method(models.Model):
         type = as_implemented_by_type
         bc = type and type.binding_context or None
         c = type and type.context or None
-        resolve = lambda expr: type and ((expr % bc) % c) or expr
+        def resolve(expr):
+            if bc:
+                expr = expr % bc
+            if c:
+                expr = expr % c
+            return expr
+        # resolve = lambda expr: type and ((expr % bc) % c) or expr
         w = u'%s(%s)' % (self.name, ' ; '.join([
             '%s : %r' % (p.name, resolve(p.expr))
             for p in self.parameters.all()]))            

@@ -9,7 +9,7 @@ gamesoup.library.types.EnterKeyPressed = Class.create(gamesoup.library.types.Bas
 /*****************************************************************************/
 //                                 REFERENCES                                
 // this._action                                                        [Action]
-// this._focus                                                               []
+// this._focus                                                      [Focusable]
 
 
 /*****************************************************************************/

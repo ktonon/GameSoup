@@ -24,22 +24,6 @@
         }
     }, 
     {
-        "pk": 7, 
-        "model": "games.objectparameter", 
-        "fields": {
-            "of_object": 5, 
-            "type_parameter": 3
-        }
-    }, 
-    {
-        "pk": 8, 
-        "model": "games.objectparameter", 
-        "fields": {
-            "of_object": 5, 
-            "type_parameter": 4
-        }
-    }, 
-    {
         "pk": 9, 
         "model": "games.objectparameter", 
         "fields": {
@@ -232,6 +216,46 @@
         }
     }, 
     {
+        "pk": 33, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 23, 
+            "type_parameter": 1
+        }
+    }, 
+    {
+        "pk": 34, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 23, 
+            "type_parameter": 2
+        }
+    }, 
+    {
+        "pk": 35, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 24, 
+            "type_parameter": 8
+        }
+    }, 
+    {
+        "pk": 36, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 25, 
+            "type_parameter": 3
+        }
+    }, 
+    {
+        "pk": 37, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 25, 
+            "type_parameter": 4
+        }
+    }, 
+    {
         "pk": 16, 
         "model": "games.objectparameterbinding", 
         "fields": {
@@ -262,28 +286,6 @@
             "type_argument": null, 
             "parameter": 6, 
             "built_in_argument": ""
-        }
-    }, 
-    {
-        "pk": 8, 
-        "model": "games.objectparameterbinding", 
-        "fields": {
-            "instance": 5, 
-            "object_argument": 2, 
-            "type_argument": null, 
-            "parameter": 7, 
-            "built_in_argument": ""
-        }
-    }, 
-    {
-        "pk": 11, 
-        "model": "games.objectparameterbinding", 
-        "fields": {
-            "instance": 5, 
-            "object_argument": null, 
-            "type_argument": null, 
-            "parameter": 8, 
-            "built_in_argument": "Shuffle"
         }
     }, 
     {
@@ -386,7 +388,7 @@
         }
     }, 
     {
-        "pk": 22, 
+        "pk": 40, 
         "model": "games.objectparameterbinding", 
         "fields": {
             "instance": 11, 
@@ -507,11 +509,11 @@
         }
     }, 
     {
-        "pk": 35, 
+        "pk": 41, 
         "model": "games.objectparameterbinding", 
         "fields": {
             "instance": 19, 
-            "object_argument": 20, 
+            "object_argument": 23, 
             "type_argument": null, 
             "parameter": 29, 
             "built_in_argument": ""
@@ -548,6 +550,61 @@
             "type_argument": null, 
             "parameter": 32, 
             "built_in_argument": "Time left"
+        }
+    }, 
+    {
+        "pk": 42, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 23, 
+            "object_argument": 24, 
+            "type_argument": null, 
+            "parameter": 33, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 43, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 23, 
+            "object_argument": 20, 
+            "type_argument": null, 
+            "parameter": 34, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 44, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 24, 
+            "object_argument": 8, 
+            "type_argument": null, 
+            "parameter": 35, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 46, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 25, 
+            "object_argument": 2, 
+            "type_argument": null, 
+            "parameter": 36, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 45, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 25, 
+            "object_argument": null, 
+            "type_argument": null, 
+            "parameter": 37, 
+            "built_in_argument": "Shuffle"
         }
     }, 
     {
@@ -689,7 +746,7 @@
         "pk": 1, 
         "model": "games.game", 
         "fields": {
-            "updated_at": "2010-09-13 11:38:57", 
+            "updated_at": "2010-09-14 09:20:08", 
             "created_at": "2010-09-12 06:03:54", 
             "name": "Boggle", 
             "description": ""
@@ -822,6 +879,34 @@
         }
     }, 
     {
+        "pk": 23, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Focus and start", 
+            "height": 5, 
+            "width": 5, 
+            "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 18, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 24, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Focus on", 
+            "height": 5, 
+            "width": 5, 
+            "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 17, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 2, 
         "model": "games.object", 
         "fields": {
@@ -878,12 +963,12 @@
         }
     }, 
     {
-        "pk": 5, 
+        "pk": 25, 
         "model": "games.object", 
         "fields": {
             "name": "Shuffle button", 
             "height": 2, 
-            "width": 4, 
+            "width": 5, 
             "game": 1, 
             "y": 0, 
             "x": 24, 
@@ -980,10 +1065,10 @@
         "model": "games.object", 
         "fields": {
             "name": "Words", 
-            "height": 15, 
+            "height": 14, 
             "width": 7, 
             "game": 1, 
-            "y": 2, 
+            "y": 3, 
             "x": 16, 
             "type": 4, 
             "per_player": true
