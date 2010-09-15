@@ -240,18 +240,138 @@
         }
     }, 
     {
-        "pk": 36, 
+        "pk": 38, 
         "model": "games.objectparameter", 
         "fields": {
-            "of_object": 25, 
+            "of_object": 27, 
+            "type_parameter": 8
+        }
+    }, 
+    {
+        "pk": 39, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 28, 
+            "type_parameter": 7
+        }
+    }, 
+    {
+        "pk": 40, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 30, 
+            "type_parameter": 26
+        }
+    }, 
+    {
+        "pk": 41, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 30, 
+            "type_parameter": 24
+        }
+    }, 
+    {
+        "pk": 42, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 30, 
+            "type_parameter": 25
+        }
+    }, 
+    {
+        "pk": 43, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 33, 
+            "type_parameter": 16
+        }
+    }, 
+    {
+        "pk": 44, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 33, 
+            "type_parameter": 17
+        }
+    }, 
+    {
+        "pk": 45, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 33, 
+            "type_parameter": 18
+        }
+    }, 
+    {
+        "pk": 46, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 34, 
+            "type_parameter": 19
+        }
+    }, 
+    {
+        "pk": 47, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 34, 
+            "type_parameter": 20
+        }
+    }, 
+    {
+        "pk": 48, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 35, 
+            "type_parameter": 22
+        }
+    }, 
+    {
+        "pk": 49, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 35, 
+            "type_parameter": 14
+        }
+    }, 
+    {
+        "pk": 50, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 35, 
+            "type_parameter": 15
+        }
+    }, 
+    {
+        "pk": 51, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 36, 
+            "type_parameter": 5
+        }
+    }, 
+    {
+        "pk": 52, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 36, 
+            "type_parameter": 6
+        }
+    }, 
+    {
+        "pk": 53, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 37, 
             "type_parameter": 3
         }
     }, 
     {
-        "pk": 37, 
+        "pk": 54, 
         "model": "games.objectparameter", 
         "fields": {
-            "of_object": 25, 
+            "of_object": 37, 
             "type_parameter": 4
         }
     }, 
@@ -586,24 +706,189 @@
         }
     }, 
     {
-        "pk": 46, 
+        "pk": 47, 
         "model": "games.objectparameterbinding", 
         "fields": {
-            "instance": 25, 
-            "object_argument": 2, 
+            "instance": 27, 
+            "object_argument": 26, 
             "type_argument": null, 
-            "parameter": 36, 
+            "parameter": 38, 
             "built_in_argument": ""
         }
     }, 
     {
-        "pk": 45, 
+        "pk": 48, 
         "model": "games.objectparameterbinding", 
         "fields": {
-            "instance": 25, 
+            "instance": 28, 
+            "object_argument": 27, 
+            "type_argument": null, 
+            "parameter": 39, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 49, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 30, 
+            "object_argument": 29, 
+            "type_argument": null, 
+            "parameter": 40, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 50, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 30, 
+            "object_argument": 31, 
+            "type_argument": null, 
+            "parameter": 41, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 51, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 30, 
+            "object_argument": 32, 
+            "type_argument": null, 
+            "parameter": 42, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 52, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 33, 
+            "object_argument": 29, 
+            "type_argument": null, 
+            "parameter": 43, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 53, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 33, 
+            "object_argument": 26, 
+            "type_argument": null, 
+            "parameter": 44, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 54, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 33, 
+            "object_argument": 34, 
+            "type_argument": null, 
+            "parameter": 45, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 55, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 34, 
+            "object_argument": 35, 
+            "type_argument": null, 
+            "parameter": 46, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 56, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 34, 
+            "object_argument": 26, 
+            "type_argument": null, 
+            "parameter": 47, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 59, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 35, 
+            "object_argument": null, 
+            "type_argument": 1, 
+            "parameter": 48, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 57, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 35, 
             "object_argument": null, 
             "type_argument": null, 
-            "parameter": 37, 
+            "parameter": 49, 
+            "built_in_argument": "4"
+        }
+    }, 
+    {
+        "pk": 58, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 35, 
+            "object_argument": null, 
+            "type_argument": null, 
+            "parameter": 50, 
+            "built_in_argument": "4"
+        }
+    }, 
+    {
+        "pk": 60, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 36, 
+            "object_argument": 33, 
+            "type_argument": null, 
+            "parameter": 51, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 61, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 36, 
+            "object_argument": 26, 
+            "type_argument": null, 
+            "parameter": 52, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 63, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 37, 
+            "object_argument": 2, 
+            "type_argument": null, 
+            "parameter": 53, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 62, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 37, 
+            "object_argument": null, 
+            "type_argument": null, 
+            "parameter": 54, 
             "built_in_argument": "Shuffle"
         }
     }, 
@@ -662,6 +947,51 @@
         }
     }, 
     {
+        "pk": 8, 
+        "model": "games.typetemplateparameterbinding", 
+        "fields": {
+            "object": 29, 
+            "parameter": 2, 
+            "expression_text": "29.item"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "games.typetemplateparameterbinding", 
+        "fields": {
+            "object": 30, 
+            "parameter": 10, 
+            "expression_text": "30.item"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "games.typetemplateparameterbinding", 
+        "fields": {
+            "object": 31, 
+            "parameter": 5, 
+            "expression_text": "31.item"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "games.typetemplateparameterbinding", 
+        "fields": {
+            "object": 33, 
+            "parameter": 8, 
+            "expression_text": "33.item"
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "games.typetemplateparameterbinding", 
+        "fields": {
+            "object": 35, 
+            "parameter": 7, 
+            "expression_text": "35.item"
+        }
+    }, 
+    {
         "pk": 2, 
         "model": "games.objecttemplateparameter", 
         "fields": {
@@ -716,6 +1046,51 @@
         }
     }, 
     {
+        "pk": 8, 
+        "model": "games.objecttemplateparameter", 
+        "fields": {
+            "of_object": 29, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "games.objecttemplateparameter", 
+        "fields": {
+            "of_object": 30, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "games.objecttemplateparameter", 
+        "fields": {
+            "of_object": 31, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "games.objecttemplateparameter", 
+        "fields": {
+            "of_object": 33, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "games.objecttemplateparameter", 
+        "fields": {
+            "of_object": 35, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
         "pk": 2, 
         "model": "games.objecttemplateparameterbinding", 
         "fields": {
@@ -743,12 +1118,49 @@
         }
     }, 
     {
+        "pk": 5, 
+        "model": "games.objecttemplateparameterbinding", 
+        "fields": {
+            "object": 29, 
+            "parameter": 8, 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "games.objecttemplateparameterbinding", 
+        "fields": {
+            "object": 31, 
+            "parameter": 10, 
+            "expression_text": "Integer!"
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "games.objecttemplateparameterbinding", 
+        "fields": {
+            "object": 35, 
+            "parameter": 12, 
+            "expression_text": "String!"
+        }
+    }, 
+    {
         "pk": 1, 
         "model": "games.game", 
         "fields": {
-            "updated_at": "2010-09-14 09:20:08", 
+            "updated_at": "2010-09-15 12:47:18", 
             "created_at": "2010-09-12 06:03:54", 
             "name": "Boggle", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "games.game", 
+        "fields": {
+            "updated_at": "2010-09-14 13:56:10", 
+            "created_at": "2010-09-14 13:49:15", 
+            "name": "Foggle", 
             "description": ""
         }
     }, 
@@ -774,6 +1186,20 @@
             "height": 5, 
             "width": 5, 
             "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 20, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 30, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Aggregate Score updater", 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
             "y": 0, 
             "x": 0, 
             "type": 20, 
@@ -809,6 +1235,20 @@
         }
     }, 
     {
+        "pk": 32, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Boggle word scoring", 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
+            "y": 0, 
+            "x": 0, 
+            "type": 21, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 14, 
         "model": "games.object", 
         "fields": {
@@ -823,6 +1263,20 @@
         }
     }, 
     {
+        "pk": 31, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Container", 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
+            "y": 5, 
+            "x": 3, 
+            "type": 3, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 9, 
         "model": "games.object", 
         "fields": {
@@ -830,6 +1284,20 @@
             "height": 5, 
             "width": 5, 
             "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 6, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 33, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Copy if valid", 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
             "y": 0, 
             "x": 0, 
             "type": 6, 
@@ -907,16 +1375,30 @@
         }
     }, 
     {
-        "pk": 2, 
+        "pk": 27, 
         "model": "games.object", 
         "fields": {
-            "name": "Randomize collection", 
+            "name": "Focus on", 
             "height": 5, 
             "width": 5, 
-            "game": 1, 
+            "game": 2, 
             "y": 0, 
             "x": 0, 
-            "type": 12, 
+            "type": 17, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 29, 
+        "model": "games.object", 
+        "fields": {
+            "name": "List", 
+            "height": 9, 
+            "width": 10, 
+            "game": 2, 
+            "y": 0, 
+            "x": 16, 
+            "type": 4, 
             "per_player": false
         }
     }, 
@@ -949,6 +1431,20 @@
         }
     }, 
     {
+        "pk": 2, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Shuffle", 
+            "height": 5, 
+            "width": 5, 
+            "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 12, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 19, 
         "model": "games.object", 
         "fields": {
@@ -963,16 +1459,44 @@
         }
     }, 
     {
-        "pk": 25, 
+        "pk": 37, 
         "model": "games.object", 
         "fields": {
             "name": "Shuffle button", 
             "height": 2, 
-            "width": 5, 
+            "width": 4, 
             "game": 1, 
             "y": 0, 
             "x": 24, 
             "type": 5, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 35, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Square grid", 
+            "height": 12, 
+            "width": 15, 
+            "game": 2, 
+            "y": 13, 
+            "x": 3, 
+            "type": 7, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 26, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Text input", 
+            "height": 3, 
+            "width": 14, 
+            "game": 2, 
+            "y": 0, 
+            "x": 0, 
+            "type": 1, 
             "per_player": false
         }
     }, 
@@ -1019,6 +1543,20 @@
         }
     }, 
     {
+        "pk": 36, 
+        "model": "games.object", 
+        "fields": {
+            "name": "When ENTER is pressed...", 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
+            "y": 0, 
+            "x": 0, 
+            "type": 16, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 4, 
         "model": "games.object", 
         "fields": {
@@ -1026,6 +1564,20 @@
             "height": 5, 
             "width": 5, 
             "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 11, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 28, 
+        "model": "games.object", 
+        "fields": {
+            "name": "When game begins...", 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
             "y": 0, 
             "x": 0, 
             "type": 11, 
@@ -1054,6 +1606,20 @@
             "height": 5, 
             "width": 5, 
             "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 9, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 34, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Word on board?", 
+            "height": 5, 
+            "width": 5, 
+            "game": 2, 
             "y": 0, 
             "x": 0, 
             "type": 9, 

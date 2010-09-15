@@ -129,10 +129,6 @@ def search_requires(request):
             params = t.parameters.filter(_is_ref=True)
             n = params.count()
             params2 = params.exclude(_interfaces__implemented_by__instances__id__in=obj_ids).distinct()
-            # print params
-            # print params2
-            # print Type.objects.filter(instances__id__in=obj_ids)
-            # print ''
             return params2.count() <= n - len(obj_ids)
         type_ids = [t.id for t in qs if d(t)]
     else:

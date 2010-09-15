@@ -99,7 +99,6 @@ class Renderer(object):
     def add_arg(self, arg, g, depth, indices):
         id = 'node_%d_%s' % (depth, '_'.join(map(str, indices)))
         label = arg.id
-        print dir(arg)
         node = g.add_node(id, label=label)
         node.shape = 'invhouse'
         node.height = '0.5'

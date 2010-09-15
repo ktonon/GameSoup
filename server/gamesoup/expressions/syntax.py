@@ -2,8 +2,7 @@
 For parsing interface expressions.
 '''
 
-import re
-import sys
+import memcache, re, sys
 from gamesoup.expressions.context import TemplateContext
 from gamesoup.expressions.grammar import Rule
 
@@ -14,17 +13,25 @@ __all__ = (
 
 
 class Cached(object):
+
+    @classmethod
+    def _clean_key(cls, key):
+        if not hasattr(cls, '_mc'):
+            cls._mc = memcache.Client(['127.0.0.1:11211'])
+        key = key.replace('@', '__at__').replace('+', '__plus__').replace(' ', '')
+        if isinstance(key, unicode):
+            key = key.encode('utf-8')
+        return key
+
+    @classmethod
+    def get(cls, key):
+        key = cls._clean_key(key)
+        return cls._mc.get(key)
     
     @classmethod
-    def unique(cls, obj):
-        if not hasattr(cls, '_cache'): cls._cache = {}
-        rep = `obj`
-        cached_obj = cls._cache.get(rep, None)
-        if cached_obj is None:
-            cached_obj = obj
-            cls._cache[rep] = cached_obj
-        return cached_obj
-
+    def set(cls, key, value):
+        key = cls._clean_key(key)
+        return cls._mc.set(key, value)
 
 
 class Expr(Cached):
@@ -58,9 +65,14 @@ class Expr(Cached):
             >>> nothing.__class__.__name__
             'int'
         """
+        if isinstance(w, Expr): return w
         if re.match(r'^\s*(?:0)?\s*$', w): return 0
-        tree = Rule.expr(w)
-        return cls.from_tree(tree)
+        expr = cls.get(w)
+        if expr is None:
+            tree = Rule.expr(w)
+            expr = cls.from_tree(tree)
+            cls.set(w, expr)
+        return expr
         
     @classmethod
     def from_tree(cls, tree):
@@ -84,7 +96,7 @@ class Expr(Cached):
         '''
         expr = cls()
         expr._child = dict([(atom.id, atom) for atom in atoms])
-        return cls.unique(expr)
+        return expr #cls.unique(expr)
     
     #--------------------------------------------------------------------------
     # Queries
@@ -453,7 +465,7 @@ class Atom(Cached):
         atom._var_type = var_type
         atom._is_built_in = is_built_in
         atom._arg = dict([(arg.id, arg) for arg in args])
-        return cls.unique(atom)
+        return atom #cls.unique(atom)
 
     #--------------------------------------------------------------------------
     # Queries
@@ -626,7 +638,7 @@ class Arg(Cached):
         arg = cls()
         arg._id = id
         arg._expr = expr
-        return cls.unique(arg)
+        return arg #cls.unique(arg)
     
     #--------------------------------------------------------------------------
     # Queries
