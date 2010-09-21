@@ -23,15 +23,18 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
      * What is the truth value of this predicate object?
      */                                                               /* vVv */
     call: function() {
-        var c = {};
-        c.word = this._word.read();
-        if (c.word.length == 0) {
+        var word = this._word.read();
+        if (word.length == 0) {
             this._lastReason = "Please type your word in.";
             return false;
-        } else {
-            this._lastReason = this._failReason.evaluate(c);            
         }
-        return true;
+        var solutions = this._getSolutions(word);
+        var status = solutions.length != 0;
+        if(status) {
+            this._board.highlightPath(solutions[0]);
+        }
+        this._lastReason = (status ? this._successReason : this._failReason).evaluate({word: word});
+        return status;
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                       Predicate
@@ -69,5 +72,39 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
 /*                     Do not use outside of this module!                    */
 /*****************************************************************************/
 gamesoup.library.types.WordOnBoardPath.addMethods({
-    // Helper methods go here...
+    // Get 
+    _getSolutions: function(word) {
+        var firstLetterPattern = new RegExp(word[0], 'i');
+        var cells = this._board.cells();
+        var candidatePaths = cells.findAll(function(cell) {
+            return firstLetterPattern.match(cell.read());
+        }).collect(function(candidateCell) {
+            return $A([candidateCell]);
+        });
+        
+        // Process rest of the word
+        for(var i=1; i<word.length; i++) {
+            var newCandidatePaths = $A();
+            var nextLetterPattern = new RegExp(word[i], 'i');
+            for(var j=0; j<candidatePaths.length; j++) {
+                var candidatePath = candidatePaths[j];
+                var lastCell = candidatePath.last();
+                var cells = this._board.cells();
+                for(var k=0; k<cells.length; k++) {
+                    var cell = cells[k];
+                    if( this._board.areAdjacent(lastCell, cell) &&
+                        !candidatePath.member(cell) && 
+                        nextLetterPattern.match(cell.read())
+                        ) {
+                        var newPath = candidatePath.clone();
+                        newPath.push(cell);
+                        newCandidatePaths.push(newPath);
+                    }
+                }
+            }
+            candidatePaths = newCandidatePaths;
+            if(candidatePaths.length == 0) break;
+        }
+        return candidatePaths;
+    }
 });

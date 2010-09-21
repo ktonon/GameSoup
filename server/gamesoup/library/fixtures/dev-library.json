@@ -30,6 +30,16 @@
         }
     }, 
     {
+        "pk": 17, 
+        "model": "library.method", 
+        "fields": {
+            "interface": 7, 
+            "return_expression_text": "Array!", 
+            "name": "cells", 
+            "description": "An array where each element in the array is of type Board.cell"
+        }
+    }, 
+    {
         "pk": 15, 
         "model": "library.method", 
         "fields": {
@@ -67,6 +77,16 @@
             "return_expression_text": "[Distribution.over]", 
             "name": "getRandomObject", 
             "description": "Return a random object from a distribution"
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "library.method", 
+        "fields": {
+            "interface": 7, 
+            "return_expression_text": "0", 
+            "name": "highlightPath", 
+            "description": "Given an array of cells that form a path on the board, briefly highlights the cells in the path."
         }
     }, 
     {
@@ -156,6 +176,15 @@
             "is_built_in": false, 
             "name": "Action", 
             "description": "Represents an procedure that can be called at specific points during game play. Actions can be hooked up to a target object, given a specific event name. When the target fires the event, the action is called."
+        }
+    }, 
+    {
+        "pk": 26, 
+        "model": "library.interface", 
+        "fields": {
+            "is_built_in": true, 
+            "name": "Array!", 
+            "description": "Represents the built-in array type. See http://api.prototypejs.org/language/array/"
         }
     }, 
     {
@@ -457,6 +486,21 @@
         }
     }, 
     {
+        "pk": 26, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                16
+            ], 
+            "code": "/*\r\n * Type: If\r\n * Do something if a condition is true.\r\n */\r\ngamesoup.library.types.If = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 BUILT-INS                                 \r\n// this._showFailureReason                                             Boolean!\r\n//                                 REFERENCES                                \r\n// this._action                                                        [Action]\r\n// this._condition                                                  [Predicate]\r\n\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.If.addMethods({\r\n    \r\n    /*---------------------------------------->                          Action\r\n     * doAction()\r\n     * \r\n     * Perform the default action of this object.\r\n     */                                                               /* vVv */\r\n    doAction: function() {\r\n        if(this._condition.call()) {\r\n            this._action.doAction();\r\n        } else {\r\n            if(this._showFailureReason) {\r\n                gamesoup.matches.messageBoard.postLocally(this._condition.reason());\r\n            }\r\n        }\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.If.addMethods({ \r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        \r\n    },                                                                /* ^A^ */\r\n\r\n    /*\r\n     * Perform custom take-down.\r\n     */                                                               /* vVv */\r\n    unregister: function() {\r\n        \r\n    }                                                                 /* ^A^ */    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.If.addMethods({\r\n    // Helper methods go here...\r\n});", 
+            "description": "Do something if a condition is true.", 
+            "title": "If", 
+            "visible": false, 
+            "has_state": false, 
+            "name": "If"
+        }
+    }, 
+    {
         "pk": 2, 
         "model": "library.type", 
         "fields": {
@@ -485,6 +529,21 @@
             "visible": true, 
             "has_state": true, 
             "name": "List"
+        }
+    }, 
+    {
+        "pk": 24, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                16
+            ], 
+            "code": "/*\r\n * Type: Move\r\n * Reads and clears the source and moves the read value into the destination.\r\n */\r\ngamesoup.library.types.Move = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 REFERENCES                                \r\n// this._destination                                        [Writable<item=[]>]\r\n// this._source                                 [Clearable + Readable<item=[]>]\r\n\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.Move.addMethods({\r\n    \r\n    /*---------------------------------------->                          Action\r\n     * doAction()\r\n     * \r\n     * Perform the default action of this object.\r\n     */                                                               /* vVv */\r\n    doAction: function() {\r\n        var value = this._source.read();\r\n        this._source.clear();\r\n        this._destination.write(value);\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.Move.addMethods({ \r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        \r\n    },                                                                /* ^A^ */\r\n\r\n    /*\r\n     * Perform custom take-down.\r\n     */                                                               /* vVv */\r\n    unregister: function() {\r\n        \r\n    }                                                                 /* ^A^ */    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.Move.addMethods({\r\n    // Helper methods go here...\r\n});", 
+            "description": "Reads and clears the source and moves the read value into the destination.", 
+            "title": "Move", 
+            "visible": false, 
+            "has_state": false, 
+            "name": "Move"
         }
     }, 
     {
@@ -525,12 +584,27 @@
                 7, 
                 15
             ], 
-            "code": "/*\n * Type: SquareGrid\n * A board arranged in rows and columns.\n */\ngamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                                 Parameters                                */\n/*****************************************************************************/\n//                                 BUILT-INS                                 \n// this._colCount                                                      Integer!\n// this._rowCount                                                      Integer!\n//                                 FACTORIES                                 \n// this._cellType                       [Readable<item=[]> + Writable<item=[]>]\n\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.SquareGrid.addMethods({\n    \n    /*---------------------------------------->                           Board\n     * areAdjacent(a : [] ; b : []) : Boolean!\n     * \n     * Are a and b adjacent?\n     */                                                               /* vVv */\n    areAdjacent: function(a, b) {\n        \n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                        Iterable\n     * nextInIteration() : [Readable<item=[]> + Writable<item=[]>]\n     * \n     * Get the next object in the sequence. When the sequence is over, this should return null.\n     */                                                               /* vVv */\n    nextInIteration: function() {\n        var cell = this._cells[this._iteratorIndex];\n        this._iteratorIndex++;\n        return cell;\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                        Iterable\n     * resetIteration()\n     * \n     * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.\n     */                                                               /* vVv */\n    resetIteration: function() {\n        this._iteratorIndex = 0;\n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.SquareGrid.addMethods({ \n    \n    /*\n     * Extend the DOM and apply styling.\n     */                                                               /* vVv */\n    render: function() {\n        this._node.insert({bottom: '<div class=\"inner-container\"></div>'});\n        var container = this._node.down('.inner-container');\n        var t = new Template('<div class=\"col-#{i} row-#{j} cell\" style=\"position: absolute; left: #{left}px; top: #{top}px; width: #{width}px; height: #{height}px;\"></div>')\n        var c = {\n            left: 0,\n            top: 0,\n            width: (this._width / this._colCount).round() - 2,\n            height: (this._height / this._rowCount).round() - 2\n        };\n        for (c.i=0; c.i<this._colCount; c.i++) {\n            c.top = 0;\n            for (c.j=0; c.j<this._rowCount; c.j++) {\n                container.insert({bottom: t.evaluate(c)});\n                c.top += c.height + 2;\n            }\n            c.left += c.width + 2;\n        }\n    },                                                                /* ^A^ */\n    \n    /*\n     *\n     */                                                               /* vVv */\n    stateSchema: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     *\n     */                                                               /* vVv */\n    initialState: function() {\n        \n    },                                                                /* ^A^ */\n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        this._createCells();\n        this.resetIteration();\n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.SquareGrid.addMethods({\n    _createCells: function() {\n        this._cells = $A();\n        var selectorTemplate = new Template('.col-#{i}.row-#{j}');\n        var cellIDTemplate = new Template('#{id}-cell-#{i}-#{j}');\n        var c = {id: this._id};\n        for (c.i=0; c.i<this._colCount; c.i++) {\n            for (c.j=0; c.j<this._rowCount; c.j++) {\n                var cellContainerNode = this._node.down(selectorTemplate.evaluate(c));\n                var cell = this._instantiateCell(cellIDTemplate.evaluate(c));\n                cellContainerNode.insert({bottom: cell.getNode()});\n                this._cells.push(cell);\n            }\n        }        \n    },\n    _instantiateCell: function(cellID) {\n        var cell = new this._cellType(cellID);\n        cell.createDOM();\n        if (cell.isVisible()) {\n            cell.render();            \n        }\n        cell.register();\n        return cell;        \n    }\n});", 
+            "code": "/*\r\n * Type: SquareGrid\r\n * A board arranged in rows and columns.\r\n */\r\ngamesoup.library.types.SquareGrid = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 BUILT-INS                                 \r\n// this._colCount                                                      Integer!\r\n// this._rowCount                                                      Integer!\r\n//                                 FACTORIES                                 \r\n// this._cellType                       [Readable<item=[]> + Writable<item=[]>]\r\n\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SquareGrid.addMethods({\r\n    \r\n    /*---------------------------------------->                           Board\r\n     * areAdjacent(a : [] ; b : []) : Boolean!\r\n     * \r\n     * Are a and b adjacent?\r\n     */                                                               /* vVv */\r\n    areAdjacent: function(a, b) {\r\n        var pa = this._cellPosition(a);\r\n        var pb = this._cellPosition(b);\r\n        var r = (pa.row - pb.row).abs();\r\n        var c = (pa.col - pb.col).abs();\r\n        return r <= 1 && c <= 1 && !(r == 0 && c == 0);\r\n    },                                                                /* ^A^ */\r\n\r\n    /*---------------------------------------->                           Board\r\n     * cells() : Array!\r\n     * \r\n     * An array where each element in the array is of type Board.cell\r\n     */                                                               /* vVv */\r\n    cells: function() {\r\n        return this._cells.clone();\r\n    },                                                                /* ^A^ */\r\n\r\n    /*---------------------------------------->                           Board\r\n     * highlightPath(path : Array!)\r\n     * \r\n     * Given an array of cells that form a path on the board, briefly highlights the cells in the path.\r\n     */                                                               /* vVv */\r\n    highlightPath: function(path) {\r\n        if(this._clearHighlight) this._clearHighlight();\r\n        if(path) {\r\n            path.each(function(cell) {cell.getNode().up('.cell').addClassName('highlight')});      \r\n            this._clearHighlight = function() {\r\n                this._cells.each(function(cell) {cell.getNode().up('.cell').removeClassName('highlight')});\r\n                clearTimeout(this._clearHighlightTimeout);\r\n                this._clearHighlightTimeout = null;\r\n                this._clearHighlight = null;\r\n            };\r\n            this._clearHighlightTimeout = setTimeout(this._clearHighlight.bind(this), 1000);\r\n        }\r\n    },                                                                /* ^A^ */\r\n\r\n    /*---------------------------------------->                        Iterable\r\n     * nextInIteration() : [Readable<item=[]> + Writable<item=[]>]\r\n     * \r\n     * Get the next object in the sequence. When the sequence is over, this should return null.\r\n     */                                                               /* vVv */\r\n    nextInIteration: function() {\r\n        var cell = this._cells[this._iteratorIndex];\r\n        this._iteratorIndex++;\r\n        return cell;\r\n    },                                                                /* ^A^ */\r\n\r\n    /*---------------------------------------->                        Iterable\r\n     * resetIteration()\r\n     * \r\n     * Reset the iteraction. The next call to nextInIteration should be the first in the sequence.\r\n     */                                                               /* vVv */\r\n    resetIteration: function() {\r\n        this._iteratorIndex = 0;\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SquareGrid.addMethods({ \r\n    \r\n    /*\r\n     * Extend the DOM and apply styling.\r\n     */                                                               /* vVv */\r\n    render: function() {\r\n        this._node.insert({bottom: '<div class=\"inner-container\"></div>'});\r\n        var container = this._node.down('.inner-container');\r\n        var t = new Template('<div class=\"col-#{i} row-#{j} cell\" style=\"position: absolute; left: #{left}px; top: #{top}px; width: #{width}px; height: #{height}px;\"></div>')\r\n        var c = {\r\n            left: 0,\r\n            top: 0,\r\n            width: (this._width / this._colCount).round() - 2,\r\n            height: (this._height / this._rowCount).round() - 2\r\n        };\r\n        for (c.i=0; c.i<this._colCount; c.i++) {\r\n            c.top = 0;\r\n            for (c.j=0; c.j<this._rowCount; c.j++) {\r\n                container.insert({bottom: t.evaluate(c)});\r\n                c.top += c.height + 2;\r\n            }\r\n            c.left += c.width + 2;\r\n        }\r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     *\r\n     */                                                               /* vVv */\r\n    stateSchema: function() {\r\n        \r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     *\r\n     */                                                               /* vVv */\r\n    initialState: function() {\r\n        \r\n    },                                                                /* ^A^ */\r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        this._createCells();\r\n        this.resetIteration();\r\n    },                                                                /* ^A^ */\r\n\r\n    /*\r\n     * Perform custom take-down.\r\n     */                                                               /* vVv */\r\n    unregister: function() {\r\n        \r\n    }                                                                 /* ^A^ */    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.SquareGrid.addMethods({\r\n    _createCells: function() {\r\n        this._cells = $A();\r\n        var selectorTemplate = new Template('.col-#{i}.row-#{j}');\r\n        var cellIDTemplate = new Template('#{id}-cell-#{i}-#{j}');\r\n        var c = {id: this._id};\r\n        for (c.i=0; c.i<this._colCount; c.i++) {\r\n            for (c.j=0; c.j<this._rowCount; c.j++) {\r\n                var cellContainerNode = this._node.down(selectorTemplate.evaluate(c));\r\n                var cell = this._instantiateCell(cellIDTemplate.evaluate(c));\r\n                cellContainerNode.insert({bottom: cell.getNode()});\r\n                this._cells.push(cell);\r\n            }\r\n        }        \r\n    },\r\n    _instantiateCell: function(cellID) {\r\n        var cell = new this._cellType(cellID);\r\n        cell.createDOM();\r\n        if (cell.isVisible()) {\r\n            cell.render();            \r\n        }\r\n        cell.register();\r\n        return cell;        \r\n    },\r\n    _cellPosition: function(cell) {\r\n        var m = /^(?:.+?)-cell-(\\d+)-(\\d+)$/(cell.getIdentifier());\r\n        return {\r\n            col: new Number(m[1]),\r\n            row: new Number(m[2])\r\n            };\r\n    }\r\n});", 
             "description": "A board arranged in rows and columns.", 
             "title": "Square grid", 
             "visible": true, 
             "has_state": true, 
             "name": "SquareGrid"
+        }
+    }, 
+    {
+        "pk": 27, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                16
+            ], 
+            "code": "/*\r\n * Type: IfElse\r\n * Evaluate a condition and do one thing or another depending on the outcome.\r\n */\r\ngamesoup.library.types.IfElse = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 REFERENCES                                \r\n// this._condition                                                  [Predicate]\r\n// this._falseAction                                                   [Action]\r\n// this._trueAction                                                    [Action]\r\n\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.IfElse.addMethods({\r\n    \r\n    /*---------------------------------------->                          Action\r\n     * doAction()\r\n     * \r\n     * Perform the default action of this object.\r\n     */                                                               /* vVv */\r\n    doAction: function() {\r\n        if(this._condition.call()) {\r\n            this._trueAction.doAction();\r\n        } else {\r\n            this._falseAction.doAction();\r\n        }\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.IfElse.addMethods({ \r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        \r\n    },                                                                /* ^A^ */\r\n\r\n    /*\r\n     * Perform custom take-down.\r\n     */                                                               /* vVv */\r\n    unregister: function() {\r\n        \r\n    }                                                                 /* ^A^ */    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.IfElse.addMethods({\r\n    // Helper methods go here...\r\n});", 
+            "description": "Evaluate a condition and do one thing or another depending on the outcome.", 
+            "title": "Switch", 
+            "visible": false, 
+            "has_state": false, 
+            "name": "IfElse"
         }
     }, 
     {
@@ -549,6 +623,21 @@
             "visible": true, 
             "has_state": false, 
             "name": "TextInput"
+        }
+    }, 
+    {
+        "pk": 25, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                17
+            ], 
+            "code": "/*\r\n * Type: TextIsNumber\r\n * Does the text read from the source represent a number?\r\n */\r\ngamesoup.library.types.TextIsNumber = Class.create(gamesoup.library.types.BaseType);\r\n\r\n/*****************************************************************************/\r\n/*                                 Parameters                                */\r\n/*****************************************************************************/\r\n//                                 REFERENCES                                \r\n// this._source                                        [Readable<item=String!>]\r\n\r\n\r\n/*****************************************************************************/\r\n/*                             Interface Methods                             */\r\n/*****************************************************************************/\r\ngamesoup.library.types.TextIsNumber.addMethods({\r\n    \r\n    /*---------------------------------------->                       Predicate\r\n     * call() : Boolean!\r\n     * \r\n     * What is the truth value of this predicate object?\r\n     */                                                               /* vVv */\r\n    call: function() {\r\n        this._lastValue = this._source.read();\r\n        return /^\\s*\\-?\\s*\\d+(\\.\\d*)?$/.match(this._lastValue);\r\n    },                                                                /* ^A^ */\r\n\r\n    /*---------------------------------------->                       Predicate\r\n     * reason() : String!\r\n     * \r\n     * What was the reason for the last answer this predicate gave?\r\n     */                                                               /* vVv */\r\n    reason: function() {\r\n        return (this._lastCallSucceeded ?\r\n            this._successReason \r\n            : this._failReason).evaluate({value: this._lastValue});\r\n    }                                                                 /* ^A^ */\r\n\r\n});\r\n\r\n/*****************************************************************************/\r\n/*                                Engine Hooks                               */\r\n/*           These methods are called by the gamesoup match engine.          */\r\n/*                         Do not call them yourself!                        */\r\n/*                    They are called in the order shown.                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.TextIsNumber.addMethods({ \r\n    \r\n    /*\r\n     * Perform custom initialization.\r\n     */                                                               /* vVv */\r\n    register: function() {\r\n        this._failReason = new Template(\"#{value} is not a number\");\r\n        this._successReason = new Template(\"#{value} is a number\");\r\n        this._lastValue = null;\r\n        this._lastCallSucceeded = false;\r\n    },                                                                /* ^A^ */\r\n\r\n    /*\r\n     * Perform custom take-down.\r\n     */                                                               /* vVv */\r\n    unregister: function() {\r\n        \r\n    }                                                                 /* ^A^ */    \r\n});\r\n\r\n/*****************************************************************************/\r\n/*                           Implementation Methods                          */\r\n/*                     Do not use outside of this module!                    */\r\n/*****************************************************************************/\r\ngamesoup.library.types.TextIsNumber.addMethods({\r\n    // Helper methods go here...\r\n});", 
+            "description": "Does the text read from the source represent a number?", 
+            "title": "Text is a number?", 
+            "visible": false, 
+            "has_state": false, 
+            "name": "TextIsNumber"
         }
     }, 
     {
@@ -599,7 +688,7 @@
             "implements": [
                 17
             ], 
-            "code": "/*\n * Type: WordOnBoardPath\n * Give a word, can a sequence of adjacent cells be found on a board where letters on those cells spell out the word?\n */\ngamesoup.library.types.WordOnBoardPath = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                                 Parameters                                */\n/*****************************************************************************/\n//                                 REFERENCES                                \n// this._board                           [Board<cell=[Readable<item=String!>]>]\n// this._word                                          [Readable<item=String!>]\n\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.WordOnBoardPath.addMethods({\n    \n    /*---------------------------------------->                       Predicate\n     * call() : Boolean!\n     * \n     * What is the truth value of this predicate object?\n     */                                                               /* vVv */\n    call: function() {\n        var c = {};\n        c.word = this._word.read();\n        if (c.word.length == 0) {\n            this._lastReason = \"Please type your word in.\";\n            return false;\n        } else {\n            this._lastReason = this._failReason.evaluate(c);            \n        }\n        return true;\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                       Predicate\n     * reason() : String!\n     * \n     * What was the reason for the last answer this predicate gave?\n     */                                                               /* vVv */\n    reason: function() {\n        return this._lastReason;\n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.WordOnBoardPath.addMethods({ \n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        this._failReason = new Template(\"The word '#{word}' was not on the board\");\n        this._successReason = new Template(\"The word '#{word}' was found!\");\n        this._lastReason = \"\";\n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.WordOnBoardPath.addMethods({\n    // Helper methods go here...\n});", 
+            "code": "/*\n * Type: WordOnBoardPath\n * Give a word, can a sequence of adjacent cells be found on a board where letters on those cells spell out the word?\n */\ngamesoup.library.types.WordOnBoardPath = Class.create(gamesoup.library.types.BaseType);\n\n/*****************************************************************************/\n/*                                 Parameters                                */\n/*****************************************************************************/\n//                                 REFERENCES                                \n// this._board                           [Board<cell=[Readable<item=String!>]>]\n// this._word                                          [Readable<item=String!>]\n\n\n/*****************************************************************************/\n/*                             Interface Methods                             */\n/*****************************************************************************/\ngamesoup.library.types.WordOnBoardPath.addMethods({\n    \n    /*---------------------------------------->                       Predicate\n     * call() : Boolean!\n     * \n     * What is the truth value of this predicate object?\n     */                                                               /* vVv */\n    call: function() {\n        var word = this._word.read();\n        if (word.length == 0) {\n            this._lastReason = \"Please type your word in.\";\n            return false;\n        }\n        var solutions = this._getSolutions(word);\n        var status = solutions.length != 0;\n        if(status) {\n            this._board.highlightPath(solutions[0]);\n        }\n        this._lastReason = (status ? this._successReason : this._failReason).evaluate({word: word});\n        return status;\n    },                                                                /* ^A^ */\n\n    /*---------------------------------------->                       Predicate\n     * reason() : String!\n     * \n     * What was the reason for the last answer this predicate gave?\n     */                                                               /* vVv */\n    reason: function() {\n        return this._lastReason;\n    }                                                                 /* ^A^ */\n\n});\n\n/*****************************************************************************/\n/*                                Engine Hooks                               */\n/*           These methods are called by the gamesoup match engine.          */\n/*                         Do not call them yourself!                        */\n/*                    They are called in the order shown.                    */\n/*****************************************************************************/\ngamesoup.library.types.WordOnBoardPath.addMethods({ \n    \n    /*\n     * Perform custom initialization.\n     */                                                               /* vVv */\n    register: function() {\n        this._failReason = new Template(\"The word '#{word}' was not on the board\");\n        this._successReason = new Template(\"The word '#{word}' was found!\");\n        this._lastReason = \"\";\n    }                                                                 /* ^A^ */\n    \n});\n\n/*****************************************************************************/\n/*                           Implementation Methods                          */\n/*                     Do not use outside of this module!                    */\n/*****************************************************************************/\ngamesoup.library.types.WordOnBoardPath.addMethods({\n    // Get \n    _getSolutions: function(word) {\n        var firstLetterPattern = new RegExp(word[0], 'i');\n        var cells = this._board.cells();\n        var candidatePaths = cells.findAll(function(cell) {\n            return firstLetterPattern.match(cell.read());\n        }).collect(function(candidateCell) {\n            return $A([candidateCell]);\n        });\n        \n        // Process rest of the word\n        for(var i=1; i<word.length; i++) {\n            var newCandidatePaths = $A();\n            var nextLetterPattern = new RegExp(word[i], 'i');\n            for(var j=0; j<candidatePaths.length; j++) {\n                var candidatePath = candidatePaths[j];\n                var lastCell = candidatePath.last();\n                var cells = this._board.cells();\n                for(var k=0; k<cells.length; k++) {\n                    var cell = cells[k];\n                    if( this._board.areAdjacent(lastCell, cell) &&\n                        !candidatePath.member(cell) && \n                        nextLetterPattern.match(cell.read())\n                        ) {\n                        var newPath = candidatePath.clone();\n                        newPath.push(cell);\n                        newCandidatePaths.push(newPath);\n                    }\n                }\n            }\n            candidatePaths = newCandidatePaths;\n            if(candidatePaths.length == 0) break;\n        }\n        return candidatePaths;\n    }\n});", 
             "description": "Give a word, can a sequence of adjacent cells be found on a board where letters on those cells spell out the word?", 
             "title": "Word on board?", 
             "visible": false, 
@@ -664,6 +753,21 @@
             "expression_text": "[Action]", 
             "is_factory": false, 
             "of_type": 11, 
+            "_is_ref": true
+        }
+    }, 
+    {
+        "pk": 33, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                16
+            ], 
+            "name": "action", 
+            "_is_built_in": false, 
+            "expression_text": "[Action]", 
+            "is_factory": false, 
+            "of_type": 26, 
             "_is_ref": true
         }
     }, 
@@ -760,6 +864,36 @@
         }
     }, 
     {
+        "pk": 32, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                17
+            ], 
+            "name": "condition", 
+            "_is_built_in": false, 
+            "expression_text": "[Predicate]", 
+            "is_factory": false, 
+            "of_type": 26, 
+            "_is_ref": true
+        }
+    }, 
+    {
+        "pk": 35, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                17
+            ], 
+            "name": "condition", 
+            "_is_built_in": false, 
+            "expression_text": "[Predicate]", 
+            "is_factory": false, 
+            "of_type": 27, 
+            "_is_ref": true
+        }
+    }, 
+    {
         "pk": 16, 
         "model": "library.typeparameter", 
         "fields": {
@@ -771,6 +905,21 @@
             "expression_text": "[Writable<item=[@TransferIf.item]>]", 
             "is_factory": false, 
             "of_type": 6, 
+            "_is_ref": true
+        }
+    }, 
+    {
+        "pk": 30, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                12
+            ], 
+            "name": "destination", 
+            "_is_built_in": false, 
+            "expression_text": "[Writable<item=[@Move.item]>]", 
+            "is_factory": false, 
+            "of_type": 24, 
             "_is_ref": true
         }
     }, 
@@ -802,6 +951,21 @@
             "is_factory": false, 
             "of_type": 23, 
             "_is_ref": false
+        }
+    }, 
+    {
+        "pk": 37, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                16
+            ], 
+            "name": "falseAction", 
+            "_is_built_in": false, 
+            "expression_text": "[Action]", 
+            "is_factory": false, 
+            "of_type": 27, 
+            "_is_ref": true
         }
     }, 
     {
@@ -955,6 +1119,21 @@
         }
     }, 
     {
+        "pk": 34, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                5
+            ], 
+            "name": "showFailureReason", 
+            "_is_built_in": true, 
+            "expression_text": "Boolean!", 
+            "is_factory": false, 
+            "of_type": 26, 
+            "_is_ref": false
+        }
+    }, 
+    {
         "pk": 17, 
         "model": "library.typeparameter", 
         "fields": {
@@ -970,6 +1149,37 @@
         }
     }, 
     {
+        "pk": 29, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                24, 
+                11
+            ], 
+            "name": "source", 
+            "_is_built_in": false, 
+            "expression_text": "[Clearable + Readable<item=[@Move.item]>]", 
+            "is_factory": false, 
+            "of_type": 24, 
+            "_is_ref": true
+        }
+    }, 
+    {
+        "pk": 31, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                11
+            ], 
+            "name": "source", 
+            "_is_built_in": false, 
+            "expression_text": "[Readable<item=String!>]", 
+            "is_factory": false, 
+            "of_type": 25, 
+            "_is_ref": true
+        }
+    }, 
+    {
         "pk": 8, 
         "model": "library.typeparameter", 
         "fields": {
@@ -981,6 +1191,21 @@
             "expression_text": "[Focusable]", 
             "is_factory": false, 
             "of_type": 17, 
+            "_is_ref": true
+        }
+    }, 
+    {
+        "pk": 36, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                16
+            ], 
+            "name": "trueAction", 
+            "_is_built_in": false, 
+            "expression_text": "[Action]", 
+            "is_factory": false, 
+            "of_type": 27, 
             "_is_ref": true
         }
     }, 
@@ -1071,6 +1296,19 @@
             "_is_built_in": false, 
             "name": "item", 
             "expression_text": "[Writable.item]"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "library.methodparameter", 
+        "fields": {
+            "_interfaces": [
+                26
+            ], 
+            "of_method": 18, 
+            "_is_built_in": true, 
+            "name": "path", 
+            "expression_text": "Array!"
         }
     }, 
     {
@@ -1224,6 +1462,15 @@
         "model": "library.typetemplateparameter", 
         "fields": {
             "of_type": 20, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "library.typetemplateparameter", 
+        "fields": {
+            "of_type": 24, 
             "name": "item", 
             "expression_text": "[]"
         }

@@ -32,6 +32,9 @@ mod.BaseType = Class.create({
     },
     getNode: function() {
         return this._node;
+    },
+    getIdentifier: function() {
+        return this._id;
     }
 });
 

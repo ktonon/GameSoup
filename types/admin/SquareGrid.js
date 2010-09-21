@@ -25,7 +25,39 @@ gamesoup.library.types.SquareGrid.addMethods({
      * Are a and b adjacent?
      */                                                               /* vVv */
     areAdjacent: function(a, b) {
-        
+        var pa = this._cellPosition(a);
+        var pb = this._cellPosition(b);
+        var r = (pa.row - pb.row).abs();
+        var c = (pa.col - pb.col).abs();
+        return r <= 1 && c <= 1 && !(r == 0 && c == 0);
+    },                                                                /* ^A^ */
+
+    /*---------------------------------------->                           Board
+     * cells() : Array!
+     * 
+     * An array where each element in the array is of type Board.cell
+     */                                                               /* vVv */
+    cells: function() {
+        return this._cells.clone();
+    },                                                                /* ^A^ */
+
+    /*---------------------------------------->                           Board
+     * highlightPath(path : Array!)
+     * 
+     * Given an array of cells that form a path on the board, briefly highlights the cells in the path.
+     */                                                               /* vVv */
+    highlightPath: function(path) {
+        if(this._clearHighlight) this._clearHighlight();
+        if(path) {
+            path.each(function(cell) {cell.getNode().up('.cell').addClassName('highlight')});      
+            this._clearHighlight = function() {
+                this._cells.each(function(cell) {cell.getNode().up('.cell').removeClassName('highlight')});
+                clearTimeout(this._clearHighlightTimeout);
+                this._clearHighlightTimeout = null;
+                this._clearHighlight = null;
+            };
+            this._clearHighlightTimeout = setTimeout(this._clearHighlight.bind(this), 1000);
+        }
     },                                                                /* ^A^ */
 
     /*---------------------------------------->                        Iterable
@@ -101,8 +133,14 @@ gamesoup.library.types.SquareGrid.addMethods({
     register: function() {
         this._createCells();
         this.resetIteration();
-    }                                                                 /* ^A^ */
-    
+    },                                                                /* ^A^ */
+
+    /*
+     * Perform custom take-down.
+     */                                                               /* vVv */
+    unregister: function() {
+        
+    }                                                                 /* ^A^ */    
 });
 
 /*****************************************************************************/
@@ -132,5 +170,12 @@ gamesoup.library.types.SquareGrid.addMethods({
         }
         cell.register();
         return cell;        
+    },
+    _cellPosition: function(cell) {
+        var m = /^(?:.+?)-cell-(\d+)-(\d+)$/(cell.getIdentifier());
+        return {
+            col: new Number(m[1]),
+            row: new Number(m[2])
+            };
     }
 });

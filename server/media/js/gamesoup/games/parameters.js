@@ -17,7 +17,7 @@ mod.Parameter = Class.create({
 	release: function() {
 		
 	}
-})
+});
 
 
 mod.BuiltIn = Class.create(mod.Parameter, {
@@ -60,7 +60,23 @@ mod.BuiltIn = Class.create(mod.Parameter, {
 			});
 		}
 	}
-})
+});
+
+
+mod.Boolean = Class.create(mod.BuiltIn, {
+    initialize: function($super, node, options) {
+        $super(node, options);
+        this._widget.checked = this._originalValue == 'true';
+    },
+    createWidget: function() {
+        this._node.insert({bottom: '<input type="checkbox" value="" />'});
+        this._widget = this._node.down('input');
+    },
+    getValue: function() {
+        return this._widget.checked;
+    }
+});
+gs.tracerize('Boolean', mod.Boolean);
 
 
 mod.String = Class.create(mod.BuiltIn, {
@@ -98,7 +114,7 @@ mod.Integer = Class.create(mod.String, {
 		if (value.match(/^\d*$/) == null) errors.push('Please enter a positive integer');
 		return errors;
 	}
-})
+});
 gs.tracerize('Integer', mod.Integer);
 
 
@@ -116,7 +132,7 @@ mod.Float = Class.create(mod.String, {
 		if (value.match(/^(\d+(\.\d+)?)?$/) == null) errors.push('Please enter a positive decimal number');
 		return errors;
 	}
-})
+});
 gs.tracerize('Float', mod.Float);
 
     

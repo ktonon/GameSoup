@@ -78,7 +78,7 @@ _built_in = {
     'Integer!': int,
     'Float!': float,
     'String!': str,
-    'Boolean!': bool,
+    'Boolean!': lambda x: x == 'true',
 }
 
 
