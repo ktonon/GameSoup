@@ -336,6 +336,38 @@
         }
     }, 
     {
+        "pk": 78, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 52, 
+            "type_parameter": 38
+        }
+    }, 
+    {
+        "pk": 79, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 52, 
+            "type_parameter": 39
+        }
+    }, 
+    {
+        "pk": 80, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 53, 
+            "type_parameter": 41
+        }
+    }, 
+    {
+        "pk": 81, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 53, 
+            "type_parameter": 40
+        }
+    }, 
+    {
         "pk": 16, 
         "model": "games.objectparameterbinding", 
         "fields": {
@@ -765,11 +797,11 @@
         }
     }, 
     {
-        "pk": 90, 
+        "pk": 95, 
         "model": "games.objectparameterbinding", 
         "fields": {
             "instance": 51, 
-            "object_argument": 6, 
+            "object_argument": 52, 
             "type_argument": null, 
             "parameter": 75, 
             "built_in_argument": ""
@@ -794,6 +826,50 @@
             "object_argument": 50, 
             "type_argument": null, 
             "parameter": 77, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 96, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 52, 
+            "object_argument": 6, 
+            "type_argument": null, 
+            "parameter": 78, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 97, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 52, 
+            "object_argument": 53, 
+            "type_argument": null, 
+            "parameter": 79, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 99, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 53, 
+            "object_argument": 54, 
+            "type_argument": null, 
+            "parameter": 80, 
+            "built_in_argument": ""
+        }
+    }, 
+    {
+        "pk": 98, 
+        "model": "games.objectparameterbinding", 
+        "fields": {
+            "instance": 53, 
+            "object_argument": 8, 
+            "type_argument": null, 
+            "parameter": 81, 
             "built_in_argument": ""
         }
     }, 
@@ -1026,7 +1102,7 @@
         "pk": 1, 
         "model": "games.game", 
         "fields": {
-            "updated_at": "2010-09-21 13:10:35", 
+            "updated_at": "2010-09-21 16:03:14", 
             "created_at": "2010-09-12 06:03:54", 
             "name": "Boggle", 
             "description": ""
@@ -1099,6 +1175,20 @@
         }
     }, 
     {
+        "pk": 52, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Check both", 
+            "height": 5, 
+            "width": 5, 
+            "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 28, 
+            "per_player": false
+        }
+    }, 
+    {
         "pk": 14, 
         "model": "games.object", 
         "fields": {
@@ -1137,6 +1227,20 @@
             "y": 0, 
             "x": 0, 
             "type": 22, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 54, 
+        "model": "games.object", 
+        "fields": {
+            "name": "English dictionary", 
+            "height": 5, 
+            "width": 5, 
+            "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 29, 
             "per_player": false
         }
     }, 
@@ -1445,6 +1549,20 @@
             "y": 18, 
             "x": 0, 
             "type": 1, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 53, 
+        "model": "games.object", 
+        "fields": {
+            "name": "Word in dictionary?", 
+            "height": 5, 
+            "width": 5, 
+            "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 30, 
             "per_player": false
         }
     }, 
