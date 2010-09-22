@@ -24,7 +24,7 @@ gamesoup.library.types.WordInDictionary.addMethods({
      */                                                               /* vVv */
     call: function() {
         var word = this._word.read();
-        var status = this._dictionary.hasWord(word);
+        var status = this._dictionary.hasWord(word.toLowerCase());
         this._reason = (status ? this._successReason : this._failReason).evaluate({word: word});
         return status;
     },                                                                /* ^A^ */

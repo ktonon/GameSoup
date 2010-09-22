@@ -11,7 +11,9 @@
     text-align: center;
 }
 .cell div {color: white; font-size: 24pt; margin-top: 0.5em;} /* THIS SHOULD GO IN A GAME DEPENDANT STYLESHEET */
+.cell input[type=text] {background: inherit; color: white; border: none; text-align: center; font-size: 24pt;}
 .highlight {background: #69c;}
+
 
 input[type=button] {margin: 0;}
 input[type=text] {margin: 0; padding: 0; background: #e8e8e8; border-color: #999;}

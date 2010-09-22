@@ -36,7 +36,7 @@ gamesoup.library.types.List.addMethods({
      * Push an object on top of the stack.
      */                                                               /* vVv */
     push: function(item) {
-        this._listNode.insert(this._listItemTemplate.evaluate({item: item}));
+        this._listNode.insert({top: this._listItemTemplate.evaluate({item: item})});
         this._items.push(item);
         this._node.fire('gs:changed');
     },                                                                /* ^A^ */

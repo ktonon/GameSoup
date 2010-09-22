@@ -83,7 +83,8 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
         });
         
         // Process rest of the word
-        for(var i=1; i<word.length; i++) {
+        var i = 1;
+        while(i < word.length && candidatePaths.length > 0) {
             var newCandidatePaths = $A();
             var nextLetterPattern = new RegExp(word[i], 'i');
             for(var j=0; j<candidatePaths.length; j++) {
@@ -103,7 +104,7 @@ gamesoup.library.types.WordOnBoardPath.addMethods({
                 }
             }
             candidatePaths = newCandidatePaths;
-            if(candidatePaths.length == 0) break;
+            i += 1;
         }
         return candidatePaths;
     }
