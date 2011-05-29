@@ -40,6 +40,19 @@ $ cp localsettings_example.py localsettings.py
 and edit `localsettings.py`, following the instructions. For the `PROJECT_ROOT`
 setting you will replace `/path/to` with whatever you saw when you ran `pwd`.
 
+### Dependencies
+
+AlphaCabbage is a loose collection of Django and python utilities that gamesoup relies on. To install it, from the `PROJECT_ROOT` directory
+
+```bash
+cd support/AlphaCabbage
+sudo python setup.py install
+```
+
+If you want to see the *flow* charts of game objects, you will need to install [GraphViz](http://www.graphviz.org/Download.php) and the python bindings called [Yet Another Python Graphviz Binding](http://code.google.com/p/yapgvb/).
+
+I think that's all the dependencies, but I may be wrong. Let me know if I missed anything and I'll update these instructions. Thanks.
+
 ### Preparing the Database
 
 The default local settings configuration uses SQLite, so you will need to
