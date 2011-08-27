@@ -14,7 +14,7 @@ import os
 
 PROJECT_ROOT = os.path.dirname(__file__)
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 SECRET_KEY = '-e4ab7m@6^8zmd!i@ih$@^t*bs#@us844hn)y10*b5m(4uyos$'
 
