@@ -1,102 +1,76 @@
 GameSoup
 ========
 
-GameSoup is a two stage board game development environment.
+GameSoup is a two stage board game development environment written using Django.
 
-It is a Django website.
+Prerequisites
+-------------
 
-It is a dead project, but I plan on documenting it well enough to
+The project dependencies can be easily installed using standard Python distribution tools. If you're not already using these tools, please install them now:
 
-* explain its goals
-* describe how to install it
-* describe how to build the game of boggle
+* [pip](http://pypi.python.org/pypi/pip)
+* [virtualenv](http://pypi.python.org/pypi/virtualenv)
+* [virtualenvwrapper](http://www.doughellmann.com/projects/virtualenvwrapper/)
 
-Until then, feel free to tinker with it.
+After installing these tools you might want to set some environment variables. Assuming Bash, put this into your .bashrc file:
 
-Take care,
-
-Kevin
+```bash
+# virtualenvwrapper
+export WORKON_HOME=~/Envs
+source /usr/local/bin/virtualenvwrapper.sh
+export PIP_VIRTUALENV_BASE=$WORKON_HOME
+export PIP_RESPECT_VIRTUALENV=true
+```
 
 Getting Started
 ---------------
 
-In the following example, only enter what you see following the `$`. All other
-text is example output that results from the commands you enter.
-
-First clone the repo and then `cd` to the root directory of your copy. From the
-command line
+Create a virtual environment for gamesoup:
 
 ```bash
-$ pwd
+mkvirtualenv gamesoup --no-site-packages
 ```
 
-Remember what you see. Now,
+Clone the repo into the virtual environment:
 
 ```bash
-$ cd server/gamesoup
-$ cp localsettings_example.py localsettings.py
+workon gamesoup
+cdvirtualenv
+git clone git@github.com:ktonon/GameSoup.git
 ```
 
-and edit `localsettings.py`, following the instructions. For the `PROJECT_ROOT`
-setting you will replace `/path/to` with whatever you saw when you ran `pwd`.
-
-### Dependencies
-
-AlphaCabbage is a loose collection of Django and python utilities that gamesoup relies on. To install it, from the `PROJECT_ROOT` directory
+Install the project dependencies with pip:
 
 ```bash
-cd support/AlphaCabbage
-sudo python setup.py install
+cd GameSoup
+pip install -r gamesoup/requirements.txt
 ```
 
-If you want to see the *flow* charts of game objects, you will need to install [GraphViz](http://www.graphviz.org/Download.php) and the python bindings called [Yet Another Python Graphviz Binding](http://code.google.com/p/yapgvb/).
-
-I think that's all the dependencies, but I may be wrong. Let me know if I missed anything and I'll update these instructions. Thanks.
-
-### Preparing the Database
-
-The default local settings configuration uses SQLite, so you will need to
-install SQlite3 and also python bindings for SQLite3. Once you have done that,
-do a migration. `cd` to the `PROJECT_ROOT/server` directory and run,
+Copy the `local_settings` example file:
 
 ```bash
-$ python gamesoup/manage.py syncdb
-Creating table django_admin_log
-Creating table auth_permission
-Creating table auth_group_permissions
-...
-
-Would you like to create one now? (yes/no): yes
-Username (Leave blank to use 'kevin'): 
-E-mail address: your@email.com
-Password: 
-Password (again): 
-Superuser created successfully.
-Installing index for admin.LogEntry model
-...
+cp gamesoup/local_settings.py.template gamesoup/local_settings.py
 ```
 
-At this point the database will be empty except for the user account you just
-created. To populate it with some example data,
+Create the database:
 
 ```bash
-$ script/loaddata
-Loading dev user data
-Loading dev library data
-Loading dev games data
-Loading dev matches data
+gamesoup/manage.py syncdb
 ```
 
-Now you enough components in your gamesoup installation to play a game of
-boggle.
-
-### Running the Server
-
-From the `PROJECT_ROOT/server` directory run,
+Install sample data:
 
 ```bash
-python gamesoup/manage.py runserver
+script/loaddata
 ```
+
+Run the server:
+
+```bash
+gamesoup/manage.py runserver
+```
+
+If you want to see the *flow* charts of game objects, you will need to install [GraphViz](http://www.graphviz.org/Download.php).
 
 ### Playing
 
