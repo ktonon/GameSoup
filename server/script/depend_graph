@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-egrep -R "^[ ]*(from|import)[ ]" gamesoup | python script/depend_graph.py | dot -T png -o ~/Desktop/depend_graph.png

@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-rm db/development.sqlite
-gamesoup/manage.py syncdb
-script/loaddata $1

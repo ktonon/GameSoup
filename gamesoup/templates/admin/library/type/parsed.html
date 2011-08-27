@@ -1,0 +1,17 @@
+{% extends "admin/library/base.html" %}
+
+{% block bc_inner %}
+{{ block.super }}
+&rsaquo; <a href="{% url admin:library_type_changelist %}">Types</a>
+&rsaquo; <a href="{% url admin:library_type_change type.id %}">{{ type }}</a>
+&rsaquo; {{ title }}
+{% endblock bc_inner %}
+
+
+{% block content %}
+<div class="module"></div>
+<h2>Interface Methods</h2>
+{% for code in im_code %}
+    {{ code }}
+{% endfor %}
+{% endblock content %}

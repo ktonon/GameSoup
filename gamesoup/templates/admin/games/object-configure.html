@@ -1,0 +1,113 @@
+{% load games markup %}
+<div handler="ConfigureObject" title="{{ title }}" objectID="{{ obj.id }}">
+    <p>{{ obj.type.description|textile }}</p>
+    <fieldset class="module aligned">
+        <div class="form-row name">
+            <label>Name</label><input class="object-name" type="text" value="{{ obj.name }}" />
+            <div class="help">For game assembly only.</div>
+        </div>
+    </fieldset>
+    {% if nothing_to_configure %}
+    <h2>There is nothing to configure.</h2>
+    {% else %}
+    {% if built_ins %}
+    <h2>Simple parameters</h2>
+    <fieldset class="module aligned">
+        {% for param in built_ins %}
+        <div class="form-row built-in" interface="{{ param.final_expr }}" name="{{ param.name }}" parameterID="{{ param.id }}" value="{% if param.binding %}{{ param.binding }}{% endif %}"></div>
+        {% endfor %}
+    </fieldset>        
+    {% endif %}
+    {% if refs %}
+    <h2>References to other objects</h2>
+    <fieldset class="module aligned">
+        {% for param in refs %}
+        <div class="form-row ref {{ param.is_satisfiable|yesno:"satisfiable,unsatisfiable" }}" name="{{ param.name }}" parameterID="{{ param.id }}" boundTo="{{ param.binding }}"></div>
+        {% endfor %}
+    </fieldset>        
+    {% endif %}
+    {% if factories %}
+    <h2>Factories</h2>
+    <fieldset class="module aligned">
+        {% for param in factories %}
+        <div class="form-row factory" name="{{ param.name }}" parameterID="{{ param.id }}" boundTo="{{ param.binding.type_argument.name }}"></div>
+        {% endfor %}
+    </fieldset>        
+    {% endif %}
+    {% endif %}
+    <div class="submit-row">
+        <input class="default" type="button" value="Done" />
+    </div>
+</div>
+
+{# {% comment %} #}
+<div class="debug">
+    {% if obj.parameters.count %}
+    <table class="module" style="width: 100%">
+        <caption>Object parameters</caption>
+        <thead>
+            <tr>
+                <th>Param</th>
+                <th>Flat expr</th>
+                <th>Expr</th>
+                <th>Final expr</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for param in obj.parameters.all %}
+            <tr>
+                <td>{{ param.name }}</td>
+                <td>{{ param.flat_expr }}</td>
+                <td>{{ param.expr }}</td>
+                <td>{{ param.final_expr }}</td>
+            </tr>
+            {% endfor %}                
+        </tbody>
+    </table>
+    {% endif %}
+    {# <table class="module" style="width: 100%"> #}
+    {#     <caption>Replacing type template parameters with object template parameters</caption> #}
+    {#     <thead> #}
+    {#         <tr> #}
+    {#             <th>Param</th> #}
+    {#             <th>Expr</th> #}
+    {#             <th>Binding</th> #}
+    {#         </tr> #}
+    {#     </thead> #}
+    {#     <tbody> #}
+    {#         {% for binding in obj.template_bindings.all %} #}
+    {#         <tr> #}
+    {#             <td>{{ binding.parameter }}</td> #}
+    {#             <td>{{ binding.parameter.expr }}</td> #}
+    {#             <td>{{ binding.expr }}</td> #}
+    {#         </tr> #}
+    {#         {% endfor %} #}
+    {#     </tbody> #}
+    {# </table> #}
+    {% if obj.template_parameters.count %}
+    <table class="module" style="width: 100%">
+        <caption>Template parameters</caption>
+        <thead>
+            <tr>
+                <th>Param</th>
+                <th>Expr</th>
+                <th>Final expr</th>
+                <th>Binding</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for param in obj.template_parameters.all %}
+            <tr>
+                <td>{{ param }}</td>
+                <td>{{ param.expr }}</td>
+                <td>{{ param.final_expr }}</td>
+                {% if param.binding %}
+                <td>{{ param.binding.expr }}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{# {% endcomment %} #}

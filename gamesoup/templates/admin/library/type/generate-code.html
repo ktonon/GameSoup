@@ -1,0 +1,40 @@
+{% extends "admin/library/base.html" %}
+{% load adminmedia helpers %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+<link rel="stylesheet" href="{{ STATIC_URL }}css/gamesoup/generate-code.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+{% endblock extrastyle %}
+
+{% block bc_inner %}
+{{ block.super }}
+&rsaquo; <a href="{% url admin:library_type_changelist %}">Types</a>
+&rsaquo; <a href="{% url admin:library_type_change type.id %}">{{ type }}</a>
+&rsaquo; {{ title }}
+{% endblock bc_inner %}
+
+
+{% block content %}
+<div id="content-main">
+    <form action="." method="post">
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        <p>New code</p>
+                        {{ form.new_code }}
+                    </td>
+                    <td>
+                        <p>Old code</p>
+                        <textarea disabled="disabled">{{ type.code }}</textarea>
+                    </td>
+                </tr>
+            </table>
+            <div class="submit-row">
+                <input class="default" type="submit" name="_save" value="Save" />
+            </div>
+        </div>
+    </form>        
+</div>
+{% endblock content %}

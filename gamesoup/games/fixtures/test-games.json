@@ -1,0 +1,106 @@
+[
+    {
+        "pk": 1, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 2, 
+            "type_parameter": 1
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "games.objectparameter", 
+        "fields": {
+            "of_object": 3, 
+            "type_parameter": 2
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "games.typetemplateparameterbinding", 
+        "fields": {
+            "object": 1, 
+            "parameter": 1, 
+            "expression_text": "1.item"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "games.typetemplateparameterbinding", 
+        "fields": {
+            "object": 2, 
+            "parameter": 2, 
+            "expression_text": "2.item"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "games.objecttemplateparameter", 
+        "fields": {
+            "of_object": 1, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "games.objecttemplateparameter", 
+        "fields": {
+            "of_object": 2, 
+            "name": "item", 
+            "expression_text": "String!"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "games.game", 
+        "fields": {
+            "updated_at": "2010-09-07 09:14:26", 
+            "created_at": "2010-09-07 09:12:01", 
+            "name": "Foggle", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "games.object", 
+        "fields": {
+            "name": "IntegerPusher", 
+            "height": 5, 
+            "width": 5, 
+            "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 3, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "games.object", 
+        "fields": {
+            "name": "List", 
+            "height": 5, 
+            "width": 5, 
+            "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 1, 
+            "per_player": false
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "games.object", 
+        "fields": {
+            "name": "StringPusher", 
+            "height": 5, 
+            "width": 5, 
+            "game": 1, 
+            "y": 0, 
+            "x": 0, 
+            "type": 2, 
+            "per_player": false
+        }
+    }
+]

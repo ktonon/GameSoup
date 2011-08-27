@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+{% load i18n helpers static %}
+{% get_static_prefix as STATIC_PREFIX %}
+
+{% block title %}{{ title }} | {% trans 'GameSoup site admin' %}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{{ STATIC_PREFIX }}css/gamesoup/general.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+{% endblock extrastyle %}
+
+{% block branding %}
+<h1 id="site-name">{% trans 'GameSoup' %}</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

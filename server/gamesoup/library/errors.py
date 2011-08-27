@@ -1,1 +1,0 @@
-class SignatureParseError(Exception): pass

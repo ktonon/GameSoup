@@ -1,0 +1,1 @@
+echo 'from gamesoup.library.models import Type; Type.reset_code()' | gamesoup/manage.py shell

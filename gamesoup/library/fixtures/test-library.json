@@ -1,0 +1,167 @@
+[
+    {
+        "pk": 2, 
+        "model": "library.method", 
+        "fields": {
+            "interface": 1, 
+            "return_expression_text": "[Stack.item]", 
+            "name": "pop", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.method", 
+        "fields": {
+            "interface": 1, 
+            "return_expression_text": "0", 
+            "name": "push", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.interface", 
+        "fields": {
+            "is_built_in": true, 
+            "name": "Integer!", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.interface", 
+        "fields": {
+            "is_built_in": false, 
+            "name": "Stack", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "library.interface", 
+        "fields": {
+            "is_built_in": true, 
+            "name": "String!", 
+            "description": ""
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [
+                1
+            ], 
+            "code": "", 
+            "description": "", 
+            "title": "", 
+            "visible": true, 
+            "has_state": true, 
+            "name": "List"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [], 
+            "code": "", 
+            "description": "Push strings onto a stack.", 
+            "title": "", 
+            "visible": false, 
+            "has_state": false, 
+            "name": "StringPusher"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "library.type", 
+        "fields": {
+            "implements": [], 
+            "code": "", 
+            "description": "Push integers onto a stack.", 
+            "title": "", 
+            "visible": false, 
+            "has_state": false, 
+            "name": "IntegerPusher"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                1
+            ], 
+            "name": "stack", 
+            "_is_built_in": false, 
+            "expression_text": "[Stack<item=[@StringPusher.item]>]", 
+            "is_factory": false, 
+            "of_type": 2, 
+            "_is_ref": true
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.typeparameter", 
+        "fields": {
+            "_interfaces": [
+                1
+            ], 
+            "name": "stack", 
+            "_is_built_in": false, 
+            "expression_text": "[Stack<item=Integer!>]", 
+            "is_factory": false, 
+            "of_type": 3, 
+            "_is_ref": true
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.methodparameter", 
+        "fields": {
+            "_interfaces": [], 
+            "of_method": 1, 
+            "_is_built_in": false, 
+            "name": "item", 
+            "expression_text": "[Stack.item]"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.interfacetemplateparameter", 
+        "fields": {
+            "of_interface": 1, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.typetemplateparameter", 
+        "fields": {
+            "of_type": 1, 
+            "name": "item", 
+            "expression_text": "[]"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "library.typetemplateparameter", 
+        "fields": {
+            "of_type": 2, 
+            "name": "item", 
+            "expression_text": "String!"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "library.interfacetemplateparameterbinding", 
+        "fields": {
+            "parameter": 1, 
+            "type": 1, 
+            "expression_text": "[@List.item]"
+        }
+    }
+]

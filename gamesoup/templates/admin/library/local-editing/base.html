@@ -1,0 +1,6 @@
+{% extends "admin/library/base.html" %}
+
+{% block bc_inner %}
+{{ block.super }}
+&rsaquo; <a href="{% url library:local_editing %}">Local editing</a>
+{% endblock bc_inner %}

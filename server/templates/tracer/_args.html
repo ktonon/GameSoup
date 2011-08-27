@@ -1,6 +1,0 @@
-{% load tracer %}{% spaceless %}
-{% for arg in args %}
-  {% render_object arg %}{% if not forloop.last %}, {% endif %}{% endfor %}{{ join_comma }}
-{% for key, value in kwargs %}
-  <span class="key">{{ key }}</span> = {% render_object value %}{% if not forloop.last %}, {% endif %}{% endfor %}
-{% endspaceless %}

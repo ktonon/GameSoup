@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+cd gamesoup
+./manage.py dumpdata --indent=4 library > library/fixtures/test-library.json
+./manage.py dumpdata --indent=4 games > games/fixtures/test-games.json
+# ./manage.py dumpdata --indent=4 matches > matches/fixtures/test-matches.json

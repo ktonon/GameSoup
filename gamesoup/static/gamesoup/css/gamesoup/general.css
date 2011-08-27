@@ -1,0 +1,21 @@
+/* Django overrides */
+#header {background-color: #666;}
+.module h2, .module caption, .inline-group h2 {
+    background-color: #666;
+    background-image: none;
+}
+a:link, a:visited {
+    color: #963;
+}
+.row1 {background-color: #fff8f0;}
+
+/* General */
+.outer-container {position: absolute;}
+.inner-container {position: relative; height: 100%; width: 100%;}
+.note {font-weight: normal; font-style: italic; color: #666;}
+
+.black {color: black;}
+.blue {color: blue;}
+.red {color: red;}
+.green {color: green;}
+.bright {color: #9f9; font-weight: normal;}

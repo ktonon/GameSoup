@@ -1,0 +1,95 @@
+{% extends "admin/games/base.html" %}
+{% load adminmedia helpers games static %}
+
+{% block bc_inner %}
+{{ block.super }}
+&rsaquo; <a href="{% url admin:games_game_changelist %}">Games</a>
+&rsaquo; <a href="{% url admin:games_game_change game.id %}">{{ game }}</a>
+&rsaquo; Assemble {{ game.name.lower }}
+{% endblock bc_inner %}
+
+{% block extrahead %}
+{{ block.super }}
+{% get_static_prefix as STATIC_PREFIX %}
+<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+<link rel="stylesheet" href="{{ STATIC_PREFIX }}css/gamesoup/general.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+<link rel="stylesheet" href="{{ STATIC_PREFIX }}css/gamesoup/assembler.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+<link rel="stylesheet" href="{{ STATIC_PREFIX }}css/gamesoup/layout.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+<style type="text/css">
+	#canvas .content {background-image: url('{{ STATIC_PREFIX }}images/gamesoup/games/game-grid.png');}
+</style>
+<script type="text/javascript" charset="utf-8" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" charset="utf-8" src="{% admin_media_prefix %}js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/lib/prototype.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/lib/effects.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/lib/dragdrop.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/gamesoup.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/utils.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/urls.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/tracer.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/dialogs.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/layout/tabset.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/games/assembler.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/games/objects.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/games/canvas.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/games/handlers.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/games/parameters.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/games/selectors.js"></script>
+{% endblock extrahead %}
+
+{% block content %}
+<div id="content-main">
+    <ul class="object-tools">
+        {# Take advantage of Django's Related object lookup feature. JavaScript to search for an object using the django admin interface (in a popup window) and set a field with its ID already exists, so we'll hook into this and take over once the ID has been set. #}
+        {# The input and the link are connected by their id fields. The link must be the same as the input, with "lookup_" as a prefix. #}
+        <li>
+            <input id="id_browse" class="id-dropbox" value="" style="display: none" />
+            <a id="lookup_id_browse" class="addlink" onclick="return showRelatedObjectLookupPopup(this);" href="{% url admin:library_type_changelist %}?visible__exact=1" title="Instantiate a new object by browsing through all of the available types.">Palette</a>
+        </li>
+        <li>
+            <input id="id_search_requires" class="id-dropbox" value="" style="display: none" />
+            <a id="lookup_id_search_requires" class="addlink" href="" link="{% url admin:library_type_changelist %}" title="Find objects require existing ones as parameters.">EXPLORE: <span class="bright">?</span> &rarr; existing</a>
+        </li>
+    </ul>
+        
+    <div id="assembler" class="tabset game" gameID="{{ game.id }}">
+        <div id="object-list" class="tab tab0 outer-container">
+            <h1 class="handle">Objects</h1>
+            <div class="content inner-container">
+                {% assembler_objects game %}
+            </div>
+        </div>
+        <div id="canvas" class="tab tab1 outer-container">
+            <h1 class="handle">Canvas</h1>
+            <div class="content inner-container">
+                {% assembler_canvas game %}
+            </div>            
+        </div>
+        <div id="flow" class="tab tab2 outer-container">
+            <h1 class="handle">Flow</h1>
+            <div class="content inner-container">
+                {% assembler_flow game %}
+            </div>
+        </div>
+    </div>
+    
+    <div id="curtain" style="display: none"></div>
+
+    <div id="scratch" style="display: none">
+        <div class="inner-container">        
+        </div>
+    </div>
+    
+    <div id="dialog" style="display: none">
+        <div class="inner-container">
+            <h1>&nbsp;</h1>
+            <div class="content"></div>
+            <div class="close-button" title="Close this dialog">x</div>
+            <div class="curtain" style="display: none"></div>
+        </div>
+    </div>
+    
+    <div id="message-box"></div>
+    
+</div>
+{% endblock content %}

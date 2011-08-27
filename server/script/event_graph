@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-egrep -R "(\.fire\(|.observe\()" media/js/gamesoup | python script/event_graph.py | dot -T png -o ~/Desktop/event_graph.png
