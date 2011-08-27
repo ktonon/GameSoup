@@ -36,7 +36,7 @@ Clone the repo into the virtual environment:
 ```bash
 workon gamesoup
 cdvirtualenv
-git clone git@github.com:ktonon/GameSoup.git
+git clone git://github.com/ktonon/GameSoup.git
 ```
 
 Install the project dependencies with pip:
