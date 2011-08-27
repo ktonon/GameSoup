@@ -1,3 +1,8 @@
 .DS_Store
 *.egg-info
 *.pyc
+*~
+build
+dist
+*.sqlite
+gamesoup/local_settings.py
