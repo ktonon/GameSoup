@@ -1,5 +1,5 @@
 {% extends "admin/matches/match/base.html" %}
-{% load helpers %}
+{% load helpers static %}
 
 {% block bc_inner %}
 {{ block.super }}
@@ -10,20 +10,21 @@
 
 {% block extrahead %}
 {{ block.super }}
-<link rel="stylesheet" href="{{ STATIC_URL }}css/gamesoup/general.css" type="text/css" media="screen" title="no title" charset="utf-8" />
-<link rel="stylesheet" href="{{ STATIC_URL }}css/gamesoup/play.css" type="text/css" media="screen" title="no title" charset="utf-8" />
-<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/lib/prototype.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/lib/effects.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/lib/dragdrop.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/gamesoup/gamesoup.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/gamesoup/utils.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/gamesoup/urls.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/gamesoup/tracer.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/gamesoup/dialogs.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/gamesoup/library/types.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/gamesoup/library/mixins.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/gamesoup/matches/engine.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{ STATIC_URL }}js/gamesoup/matches/messages.js"></script>
+{% get_static_prefix as STATIC_PREFIX %}
+<link rel="stylesheet" href="{{ STATIC_PREFIX }}css/gamesoup/general.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+<link rel="stylesheet" href="{{ STATIC_PREFIX }}css/gamesoup/play.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/lib/prototype.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/lib/effects.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/lib/dragdrop.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/gamesoup.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/utils.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/urls.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/tracer.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/dialogs.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/library/types.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/library/mixins.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/matches/engine.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{ STATIC_PREFIX }}js/gamesoup/matches/messages.js"></script>
 <script type="text/javascript" charset="utf-8" src="{% url games:game_code game.id %}"></script>
 {% endblock extrahead %}
 
